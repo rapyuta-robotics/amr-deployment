@@ -1,0 +1,10 @@
+# Configurable Parameters
+deployment_prefix: rr-yu
+deprovision_routed_network: true
+
+# Global Parameters
+PROJECT_ID: project-hmmqngaaosddlexwjodovncr
+AUTH_TOKEN: RIBQpCTalJDpGcbflpowSlzojZHz2jenAGrVJBHJ
+
+#io-build, Docker from io-builder or other docker repo
+SECRET: secret-thoyszgdlnymuechgfsigcmt

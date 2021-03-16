@@ -1,0 +1,5 @@
+jinja2==2.11.2
+deepdiff==3.3.0
+docker==2.5.1
+pyyaml
+https://storage.googleapis.com/rio-sdk-python/rapyuta_io-0.20.2-py2.py3-none-any.whl

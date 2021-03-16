@@ -1,0 +1,91 @@
+{
+  "name": "rio_gwm",
+  "packageVersion": "v1.0.4",
+  "description": "",
+  "bindable": true,
+  "plans": [
+    {
+      "name": "default",
+      "metadata": {
+        
+      },
+      "singleton": false,
+      "components": [
+        {
+          "name": "core",
+          "description": "",
+          "cloudInfra": {
+            "replicas": 1,
+            "endpoints": [
+              {
+                "name": "GWM_CORE_URL",
+                "exposeExternally": true,
+                "port": 443,
+                "targetPort": 8000,
+                "proto": "HTTPS"
+              }
+            ]
+          },
+          "ros": {
+            "topics": [
+              
+            ],
+            "services": [
+              
+            ],
+            "actions": [
+              
+            ],
+            "isROS": false
+          },
+          "requiredRuntime": "cloud",
+          "architecture": "amd64",
+          "executables": [
+            {
+              "name": "core",
+              "simulationOptions": {
+                "simulation": false
+              },
+              {%- for key in source %}
+                 "{{key}}": "{{ source[key] }}",
+              {%- endfor %}
+              "cmd": [
+                "/bin/bash",
+                "-c",
+                "python manage.py runserver 0.0.0.0:8000"
+              ],
+              "limits": {
+                "cpu": 0.5,
+                "memory": 2048
+              }
+            }
+          ],
+          "parameters": [
+            {
+              "default": "true",
+              "name": "DEBUG",
+              "description": ""
+            },
+            {
+              "default": "true",
+              "name": "AUTOBOOTSTRAP",
+              "description": ""
+            }
+          ]
+        }
+      ],
+      "includePackages": [
+        
+      ],
+      "dependentDeployments": [
+        
+      ],
+      "inboundROSInterfaces": {
+        "anyIncomingScopedOrTargetedRosConfig": false
+      },
+      "exposedParameters": [
+        
+      ]
+    }
+  ]
+}
