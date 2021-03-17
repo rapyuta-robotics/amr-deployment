@@ -1,0 +1,109 @@
+{
+  "name": "rio_db",
+  "packageVersion": "v1.0.0",
+  "description": "",
+  "bindable": true,
+  "plans": [
+    {
+      "name": "default",
+      "metadata": {
+        
+      },
+      "singleton": false,
+      "components": [
+        {
+          "name": "postgres",
+          "description": "",
+          "cloudInfra": {
+            "replicas": 1,
+            "endpoints": [
+              {
+                "name": "POSTGRES",
+                "exposeExternally": false,
+                "proto": "TCP",
+                "port": 5432,
+                "targetPort": 5432
+              }
+            ]
+          },
+          "ros": {
+            "topics": [
+              
+            ],
+            "services": [
+              
+            ],
+            "actions": [
+              
+            ],
+            "isROS": false
+          },
+          "requiredRuntime": "cloud",
+          "architecture": "amd64",
+          "executables": [
+            {
+              "name": "pgsql",
+              "simulationOptions": {
+                "simulation": false
+              },
+              {%- for key in source %}
+                 "{{key}}": "{{ source[key] }}",
+              {%- endfor %}
+              "cmd": [
+                
+              ],
+              "docker": "rrdockerhub/rr_amr_postgres:nightly",
+              "limits": {
+                "cpu": 0.5,
+                "memory": 2048
+              }
+            }
+          ],
+          "parameters": [
+            {
+              "default": "postgres",
+              "name": "POSTGRES_PASSWORD",
+              "description": ""
+            },
+            {
+              "default": "postgres",
+              "name": "POSTGRES_USER",
+              "description": ""
+            },
+            {
+              "default": "gwm_core",
+              "name": "POSTGRES_DB",
+              "description": ""
+            }
+          ]
+        }
+      ],
+      "includePackages": [
+        
+      ],
+      "dependentDeployments": [
+        
+      ],
+      "inboundROSInterfaces": {
+        "anyIncomingScopedOrTargetedRosConfig": false
+      },
+      "exposedParameters": [
+        {
+          "component": "postgres",
+          "param": "POSTGRES_PASSWORD",
+          "targetParam": "POSTGRES_PASSWORD"
+        },
+        {
+          "component": "postgres",
+          "param": "POSTGRES_USER",
+          "targetParam": "POSTGRES_USER"
+        },
+        {
+          "component": "postgres",
+          "param": "POSTGRES_DB",
+          "targetParam": "POSTGRES_DB"
+        }
+      ]
+    }
+  ]
+}
