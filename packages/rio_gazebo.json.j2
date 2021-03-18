@@ -1,6 +1,6 @@
 {
   "name": "rio_gazebo",
-  "packageVersion": "v1.0.3",
+  "packageVersion": "v1.0.4",
   "description": "",
   "bindable": true,
   "plans": [
@@ -100,6 +100,13 @@
               }
             ],
             "services": [
+              {
+                "name": "/gazebo/delete_model",
+                "timeout": 60,
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
               {
                 "name": "/plc/lock_vertical_conveyor",
                 "timeout": 60,

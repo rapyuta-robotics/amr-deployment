@@ -5,10 +5,25 @@ This repo is for deploying io-amr simulation on rapyuta.io
 - python 3
 
 # Clone Repo, Install dependencies
+## Linux Instructions
 ```
+sudo apt install git
 git clone https://github.com/rapyuta-robotics/amr-deployment.git
+cd amr-deployment
 sudo apt-get install python3.6
 sudo apt install python3-pip
+python3 -m venv venv
+source venv/bin/activate
+pip3 install -r requirements.txt
+```
+
+## MAC instructions
+```
+brew install git
+git clone https://github.com/rapyuta-robotics/amr-deployment.git
+cd amr-deployment
+brew install python3.6
+brew install python3-pip
 python3 -m venv venv
 source venv/bin/activate
 pip3 install -r requirements.txt

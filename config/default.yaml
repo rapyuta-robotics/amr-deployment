@@ -15,7 +15,7 @@ DOCKER_PASSWORD: ENTER_IOAMRREADONLY_PASSWORD
 DOCKER_EMAIL: 'rss2.admin@rapyuta-robotics.com'
 BUILD:
     PA:
-      DOCKER_IMAGE: rrdockerhub/io_amr_pa:iogen-build-kukpvatjitrmjzeqydkhdabz-2
+      DOCKER_IMAGE: rrdockerhub/io_amr_pa:iogen-build-kukpvatjitrmjzeqydkhdabz-3
     AMR_UI:
       DOCKER_IMAGE: rrdockerhub/rr_amr_ui:iogen-build-vkegfawvahcbocorvqlnfctl-2
     GWM:
@@ -60,7 +60,7 @@ GAZEBO_PARAMS:
   DEBUG: true
   RACK: true
   WORLD: tatsumi
-  ITEM_SPAWN_FROM: YAML
+  ITEM_SPAWN_FROM: AUTO
 
 AMR_COMMON_PARAMS:
   ROBOT_MODEL: rr_pa_amr
