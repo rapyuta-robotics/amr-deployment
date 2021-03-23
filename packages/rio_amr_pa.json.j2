@@ -1,6 +1,6 @@
 {
   "name": "rio_amr_pa",
-  "packageVersion": "v1.0.6",
+  "packageVersion": "v1.0.7",
   "description": "",
   "bindable": false,
   "plans": [
@@ -221,7 +221,7 @@
               "cmd": [
                 "/bin/bash",
                 "-c",
-                "source ~/catkin_ws/install/setup.bash && sleep 20 && stdbuf -oL roslaunch bringup agent.launch simulation:=true & rosrun topic_tools relay /gazebo/clock /clock || sleep infinity"
+                "source ~/catkin_ws/install/setup.bash && ROS_NAMESPACE=$RIO_ROS_ENV_ALIAS stdbuf -oL roslaunch bringup agent.launch simulation:=true || sleep infinity"
               ],
               "limits": {
                 "cpu": 2,

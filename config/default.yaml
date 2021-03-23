@@ -1,6 +1,6 @@
 # Configurable Parameters
 deployment_prefix: example
-deprovision_routed_network: true
+deprovision_native_network: true
 deprovision_db: yes
 deprovision_gwm: yes
 
