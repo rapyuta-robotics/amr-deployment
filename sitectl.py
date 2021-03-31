@@ -43,9 +43,10 @@ session.mount(GWM_URL, HTTPAdapter(max_retries=retries))
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='SiteCtl to manage sites.')
     parser.add_argument('--site', metavar='site', type=str, help='name of site', default='tatsumi')
-    parser.add_argument('--path', metavar='path', type=str, help='path on disk', default='')
+    parser.add_argument('--path', metavar='path', type=str, help='path on disk with bootstrap sites', default='')
     parser.add_argument('--action', metavar='action', type=str, help='create or harvest', default='create',
                         choices=['create', 'harvest'])
+    parser.add_argument('--package', metavar='package', type=str, help='rospackage in which site folder lies', default='')
     parser.add_argument('-f', action="store_true", help='force overwrite')
 
     args, unknown = parser.parse_known_args()
@@ -54,13 +55,20 @@ if __name__ == "__main__":
     if unknown_nonfiltered:
         sys.exit("{}\nUnknown option: {}".format(sys.argv, unknown_nonfiltered[0]))
     site = args.site
-    if args.path == "":
+    path = args.path
+    if args.package != "":
+        if path != "":
+            sys.exit("Cannot set both package and path")
+        import rospkg
+        r = rospkg.RosPack()
+        path = r.get_path(args.package)
+    if path == "":
         site_path = os.path.join(dir_path, site)
     else:
-        if os.path.isabs(args.path):
-            site_path = args.path
+        if os.path.isabs(os.path.join(path, args.site)):
+            site_path = os.path.join(path, args.site)
         else:
-            site_path = os.path.normpath(os.path.join(dir_path, args.path))
+            site_path = os.path.normpath(os.path.join(dir_path, path, args.site))
     if args.action == "create":
         print("import path : %s" % site_path)
         if not os.path.isdir(site_path):
@@ -103,7 +111,6 @@ if __name__ == "__main__":
             if result.status_code != 200:
                 print(result.text)
     else:
-        site_path = os.path.join(site_path, site)
         print("export path : %s" % site_path)
         if os.path.isdir(site_path):
             if args.f:
