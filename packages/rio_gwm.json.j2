@@ -1,6 +1,6 @@
 {
   "name": "rio_gwm",
-  "packageVersion": "v1.0.5",
+  "packageVersion": "v1.0.6",
   "description": "",
   "bindable": true,
   "plans": [
@@ -70,7 +70,28 @@
               "default": "true",
               "name": "AUTOBOOTSTRAP",
               "description": ""
-            }
+            },
+            {
+              "default": "autobootstrap",
+              "name": "AUTO_ORG_NAME",
+              "description": "Autocreated organisation name"
+            },
+            {
+              "default": "autobootstrap",
+              "name": "AUTO_ROOT_USER",
+              "description": "Autocreated username"
+            },
+            {
+              "default": "autobootstrap",
+              "name": "AUTO_ROOT_PASS",
+              "description": "Autocreated root password"
+            },
+            {
+              "default": "autobootstrap",
+              "name": "AUTO_AUTH_TOKEN",
+              "description": "Autocreated initial token"
+            },
+
           ]
         }
       ],
@@ -83,8 +104,11 @@
       "inboundROSInterfaces": {
         "anyIncomingScopedOrTargetedRosConfig": false
       },
-      "exposedParameters": [
-        
+      "exposedParameters":[ 
+        {"component":"core",
+        "param":"GWM_AUTH_TOKEN",
+        "targetParam":"AUTO_AUTH_TOKEN"
+        }
       ]
     }
   ]
