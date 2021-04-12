@@ -60,9 +60,12 @@ The password of ioamrreadonly dockerhub account. This is needed to pull the IO A
 
 ## Set Autocreated Credential settings
 Set the following in the `GWM_PARAMS` to determine their value on auto-bootstrapping of the GWM 
-```AUTO_ROOT_USER```: autobootstrap
-```AUTO_ROOT_PASS```: autobootstrap
-```AUTO_AUTH_TOKEN```: autobootstrap
+
+`AUTO_ROOT_USER`: autobootstrap
+
+`AUTO_ROOT_PASS`: autobootstrap
+
+`AUTO_AUTH_TOKEN`: autobootstrap
 
 
 # FAQ
