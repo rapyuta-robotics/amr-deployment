@@ -10,3 +10,9 @@ AUTH_TOKEN: ENTER_AUTH_TOKEN
 
 # Docker Parameters
 DOCKER_PASSWORD: ENTER_IOAMRREADONLY_PASSWORD
+
+# GWM Autobootstarp credentials
+GWM_PARAMS:
+  AUTO_ROOT_USER: autobootstrap
+  AUTO_ROOT_PASS: autobootstrap
+  AUTO_AUTH_TOKEN: autobootstrap

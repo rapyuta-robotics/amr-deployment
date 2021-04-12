@@ -58,6 +58,16 @@ The Auth token to authenticate the script to your project\
 ```DOCKER_PASSWORD```\
 The password of ioamrreadonly dockerhub account. This is needed to pull the IO AMR images for the simulation
 
+## Set Autocreated Credential settings
+Set the following in the `GWM_PARAMS` to determine their value on auto-bootstrapping of the GWM 
+
+`AUTO_ROOT_USER`: autobootstrap
+
+`AUTO_ROOT_PASS`: autobootstrap
+
+`AUTO_AUTH_TOKEN`: autobootstrap
+
+
 # FAQ
 - authorization failed: update AUTH_TOKEN in config/basic_user_config.yaml. [ref](https://userdocs.rapyuta.io/3_how-tos/35_tooling_and_debugging/rapyuta-io-python-sdk/#auth-token)
 - The Gazebo password is `rapyuta`
