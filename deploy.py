@@ -146,10 +146,13 @@ def load_config(config_file, deployment_prefix):
             GWM_PARAMS = data.pop('GWM_PARAMS')
             config.update(data)
             config['GWM_PARAMS'].update(GWM_PARAMS)
+            config['GBC_PARAMS']['GWM_AUTH_TOKEN'] = config['GWM_PARAMS']['GWM_AUTH_TOKEN']
+            config['GAZEBO_PARAMS']['GWM_AUTH_TOKEN'] = config['GWM_PARAMS']['GWM_AUTH_TOKEN']
 
     if deployment_prefix is not None:
         config['deployment_prefix'] = deployment_prefix
-
+    print(config)
+    exit
     return config
 
 

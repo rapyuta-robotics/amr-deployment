@@ -48,8 +48,7 @@ GBC_PARAMS:
   GWM_INTERFACE_SITE: tatsumi
   AUTOBOOTSTRAP: "true"
   GWM_INTERFACE_ORG_ID: 1
-  GWM_INTERFACE_SITE_ID: 1
-  GWM_INTERFACE_TOKEN: autobootstrap
+  GWM_AUTH_TOKEN: autobootstrap
   IO_AMR_GWM_INTERFACE_NODE_NAME: rr_gwm_interface
   ROSCONSOLE_FORMAT: "[$${severity}] [$${time}] [$${node} $${logger} $${function} $${line}]: $${message}"
 
@@ -61,6 +60,7 @@ GAZEBO_PARAMS:
   RACK: true
   WORLD: tatsumi
   ITEM_SPAWN_FROM: AUTO
+  GWM_AUTH_TOKEN: autobootstrap
 
 AMR_COMMON_PARAMS:
   ROBOT_MODEL: rr_pa_amr
