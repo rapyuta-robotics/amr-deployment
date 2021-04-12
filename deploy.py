@@ -142,7 +142,10 @@ def load_config(config_file, deployment_prefix):
 
     if config_file is not None:
         with open(config_file, 'r') as stream:
-            config.update(yaml.safe_load(stream))
+            data = yaml.safe_load(stream)
+            GWM_PARAMS = data.pop('GWM_PARAMS')
+            config.update(data)
+            config['GWM_PARAMS'].update(GWM_PARAMS)
 
     if deployment_prefix is not None:
         config['deployment_prefix'] = deployment_prefix
