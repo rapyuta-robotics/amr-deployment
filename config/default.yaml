@@ -15,11 +15,11 @@ DOCKER_PASSWORD: ENTER_IOAMRREADONLY_PASSWORD
 DOCKER_EMAIL: 'rss2.admin@rapyuta-robotics.com'
 BUILD:
     PA:
-      DOCKER_IMAGE: rrdockerhub/io_amr_pa:iogen-build-kukpvatjitrmjzeqydkhdabz-3
+      DOCKER_IMAGE: rrdockerhub/io_amr_pa:release_04_23
     AMR_UI:
-      DOCKER_IMAGE: rrdockerhub/rr_amr_ui:iogen-build-vkegfawvahcbocorvqlnfctl-2
+      DOCKER_IMAGE: rrdockerhub/rr_amr_ui:release_04_23
     GWM:
-      DOCKER_IMAGE: rrdockerhub/rr_amr_gwm:iogen-build-tcerisgjaabebvgsaqqamtqc-2
+      DOCKER_IMAGE: rrdockerhub/rr_amr_gwm:release_04_23
     DB:
       DOCKER_IMAGE: rrdockerhub/rr_amr_postgres:nightly
 
