@@ -29,8 +29,22 @@ source venv/bin/activate
 pip3 install -r requirements.txt
 ```
 
+## Windows instructions
+1. Install [git](https://desktop.github.com/)
+2. Install [python3.6](https://www.python.org/ftp/python/3.6.8/python-3.6.8.exe) and **check Add Python 3.6 to PATH**
+3. Open windows terminal
+```
+cd amr-deployment
+python -m venv venv
+venv\Scripts\activate.bat
+pip install -r requirements.txt
+```
+
 # Steps to follow *before* deploying
 1. Find Project ID from the drop down in top left corner of [here](https://console.rapyuta.io)
+  - Go to next `projects` in left panel.
+  - Select your project
+  - The project id should be something like `project-*`
 2. Find the Authentication token from [here](https://auth.rapyuta.io/authToken/)
 3. Find the ioamrreadonly dockerhub account password sent to your email address
 4. Edit config/basic_user_config.yaml to enter Project ID, Authentication token and Dockerhub account password
