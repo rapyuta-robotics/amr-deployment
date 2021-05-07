@@ -318,24 +318,26 @@ def deploy(client, config):
 def deploy_network(client, config):
     # Native Network
     native_network_name = config['deployment_prefix'] + '_native_network'
-    routed_network_name = config['deployment_prefix'] + '_routed_network'
     native_network = get_network_by_name(client, native_network_name, 'native')
-    routed_network = get_network_by_name(client, routed_network_name, 'routed')
     if not native_network:
         print(native_network_name + ": deploy")
         parameters = Parameters(NativeNetworkLimits.SMALL)
         native_network = NativeNetwork(native_network_name, Runtime.CLOUD, ROSDistro.MELODIC, parameters=parameters)
         client._catalog_client.create_native_network(native_network)
-    if not routed_network:
-        print(routed_network_name + ": deploy")
-        parameters = { 'limits': { 'cpu': 1, 'memory': 4096 } }
-        client._catalog_client.create_routed_network(
-            name=routed_network_name,
-            runtime='cloud', # TODO: Move to device directlys
-            rosDistro=ROSDistro.MELODIC,
-            shared=True,
-            parameters=parameters
-        )
+
+    if config['ADD_DEBUG_DEVICE']:
+        routed_network_name = config['deployment_prefix'] + '_routed_network'
+        routed_network = get_network_by_name(client, routed_network_name, 'routed')
+        if not routed_network:
+            print(routed_network_name + ": deploy")
+            parameters = { 'limits': { 'cpu': 1, 'memory': 4096 } }
+            client._catalog_client.create_routed_network(
+                name=routed_network_name,
+                runtime='cloud', # TODO: Move to device directlys
+                rosDistro=ROSDistro.MELODIC,
+                shared=True,
+                parameters=parameters
+            )
 
 
 def wait_network_deploy(client, network_type, name, sleep=10):
@@ -484,10 +486,26 @@ def deploy_intelligence(client, config):
     print(" AMR UI deployed successfully: " +
           result['componentInfo'][0]['networkEndpoints']['GWM_UI'])
 
+    # Dummy
+    if config['ADD_DEBUG_DEVICE']:
+        routed_network = wait_network_deploy(client, 'routed', config['deployment_prefix'] + '_routed_network')
+        print("Dummy is deploying...")
+        rio_dummy_package = client.get_package('pkg-wnvtvqqkvvkwbyeslfryimuc')
+        rio_dummy_configuration = rio_dummy_package.get_provision_configuration('plan-pfuhowwarhgogernroopmsri')
+        device = client.get_device(get_device_by_name(client, config['DEBUG_DEVICE']).deviceId)
+        rio_dummy_configuration.add_device('dummy', device)
+        rio_dummy_configuration.add_routed_networks([routed_network])
+
+        rio_dummy_deployment = rio_amr_ui_package.provision(deployment_name=config['deployment_prefix'] + '_dummy', 
+                                                            provision_configuration=rio_dummy_configuration)
+        rio_dummy_deployment.poll_deployment_till_ready(retry_count=150, sleep_interval=6)
+        print(" Dummy deployed successfully")
+
 
 def deploy_simulation(client, config):
     native_network = wait_network_deploy(client, 'native', config['deployment_prefix'] + '_native_network')
-    routed_network = wait_network_deploy(client, 'routed', config['deployment_prefix'] + '_routed_network')
+    if config['ADD_DEBUG_DEVICE']:
+        routed_network = wait_network_deploy(client, 'routed', config['deployment_prefix'] + '_routed_network')
 
     # Gazebo Deployment
     print("GAZEBO is deploying...")
@@ -508,7 +526,8 @@ def deploy_simulation(client, config):
             config['deployment_prefix'] + "-gazebo-ui")
     )
     gazebo_configuration.add_native_network(native_network)
-    gazebo_configuration.add_routed_networks([routed_network])
+    if config['ADD_DEBUG_DEVICE']:
+        gazebo_configuration.add_routed_networks([routed_network])
     gazebo_configuration.set_component_alias('gazebo', 'gazebo')
     gazebo_deployment = gazebo_package.provision(
         deployment_name=config['deployment_prefix'] + '_gazebo',
@@ -569,10 +588,12 @@ def deprovision(client, config):
     gwm_deployment_name = config['deployment_prefix'] + '_gwm'
     amr_deployment_prefix = config['deployment_prefix'] + \
         '_' + 'amr'  # to find amr deployment
+    dummy_deployment_prefix = config['deployment_prefix'] + '_dummy'
 
     for deployment in deployments:
         if (deployment.name in deployment_names or
             amr_deployment_prefix == deployment.name[0:len(amr_deployment_prefix)] or
+            dummy_deployment_prefix == deployment.name[0:len(dummy_deployment_prefix)] or
             (config['deprovision_db'] and deployment.name == db_deployment_name) or
                 (config['deprovision_gwm'] and deployment.name == gwm_deployment_name)):
             print("Deprovisioning " + deployment.name)
@@ -580,11 +601,13 @@ def deprovision(client, config):
 
     if config['deprovision_native_network']:
         native_networks = client.list_native_networks()
-        routed_networks = client.get_all_routed_networks()
         for network in native_networks:
             if config['deployment_prefix'] in network.name:
                 client.delete_native_network(network.guid)
                 break
+
+    if config['ADD_DEBUG_DEVICE']:
+        routed_networks = client.get_all_routed_networks()
         for network in routed_networks:
             if config['deployment_prefix'] in network.name:
                 network.delete()
@@ -626,6 +649,8 @@ if __name__ == '__main__':
     config = load_config(args.config, valid_prefix)
     client = Client(config['AUTH_TOKEN'], config['PROJECT_ID'])
     create_secret(client=client)
+
+    client = Client('fWU48K2ghDGYc8qeFNwYoOmglao8VqyyQFq6FA71', 'project-pskiyirrlmxarapzlyfbosap')
 
     if args.deprovision:
         deprovision(client, config)

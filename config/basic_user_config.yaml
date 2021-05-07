@@ -11,6 +11,10 @@ AUTH_TOKEN: ENTER_AUTH_TOKEN
 # Docker Parameters
 DOCKER_PASSWORD: ENTER_IOAMRREADONLY_PASSWORD
 
+# Registered user device for debug
+ADD_DEBUG_DEVICE: false
+DEBUG_DEVICE: DEVICE_HOSTNAME
+
 # GWM Autobootstarp credentials
 GWM_PARAMS:
   AUTO_ROOT_USER: autobootstrap
