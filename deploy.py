@@ -10,7 +10,7 @@ from deepdiff import diff
 import time
 from multiprocessing import Process
 
-from rapyuta_io import Client, DiskType, Secret, SecretConfigDocker, DeploymentPhaseConstants, DeploymentStatusConstants
+from rapyuta_io import Client, DeviceArch, DiskType, Secret, SecretConfigDocker, DeploymentPhaseConstants, DeploymentStatusConstants
 from rapyuta_io.clients.native_network import NativeNetwork, Parameters, NativeNetworkLimits
 from rapyuta_io.clients.package import Runtime, ROSDistro
 
@@ -103,11 +103,26 @@ def get_build_id_by_name(client, name):
     return build_id
 
 
+def get_device_by_name(client, name):
+    devices = client.get_all_devices(True, arch_list=DeviceArch.AMD64, retry_limit=3)
+    device = None
+    for dev in devices:
+        if dev.name == name:
+            device = dev
+            break
+    return device
+
+
 def get_network_by_name(
         client,
         name,
+        network_type,
         status='Running'):
-    networks = client.list_native_networks()
+    if network_type == 'native':
+        networks = client.list_native_networks()
+    else:
+        networks = client.get_all_routed_networks()
+
     network = None
     for net in networks:
         if net.name == name and net.get_status().status == status:
@@ -302,18 +317,32 @@ def deploy(client, config):
 
 def deploy_network(client, config):
     # Native Network
-    network_name = config['deployment_prefix'] + '_native_network'
-    network = get_network_by_name(client, network_name)
-    if not network:
-        print(network_name + ": deploy")
+    native_network_name = config['deployment_prefix'] + '_native_network'
+    routed_network_name = config['deployment_prefix'] + '_routed_network'
+    native_network = get_network_by_name(client, native_network_name, 'native')
+    routed_network = get_network_by_name(client, routed_network_name, 'routed')
+    if not native_network:
+        print(native_network_name + ": deploy")
         parameters = Parameters(NativeNetworkLimits.SMALL)
-        native_network = NativeNetwork(
-            network_name, Runtime.CLOUD, ROSDistro.MELODIC, parameters=parameters)
+        native_network = NativeNetwork(native_network_name, Runtime.CLOUD, ROSDistro.MELODIC, parameters=parameters)
         client._catalog_client.create_native_network(native_network)
+    if not routed_network:
+        print(routed_network_name + ": deploy")
+        parameters = { 'limits': { 'cpu': 1, 'memory': 4096 } }
+        client._catalog_client.create_routed_network(
+            name=routed_network_name,
+            runtime='cloud', # TODO: Move to device directlys
+            rosDistro=ROSDistro.MELODIC,
+            shared=True,
+            parameters=parameters
+        )
 
 
-def wait_network_deploy(client, name, sleep=10):
-    networks = client.list_native_networks()
+def wait_network_deploy(client, network_type, name, sleep=10):
+    if network_type == 'native':
+        networks = client.list_native_networks()
+    else:
+        networks = client.get_all_routed_networks()
     network = None
     while(True):
         for net in networks:
@@ -392,10 +421,7 @@ def deploy_intelligence(client, config):
             rio_gwm_deployment_name +
             " was found and will be used.")
 
-    network = wait_network_deploy(
-        client,
-        config['deployment_prefix'] +
-        '_native_network')
+    network = wait_network_deploy(client, 'native', config['deployment_prefix'] + '_native_network')
 
     # GBC deployment
     print("GBC is deploying...")
@@ -460,10 +486,9 @@ def deploy_intelligence(client, config):
 
 
 def deploy_simulation(client, config):
-    network = wait_network_deploy(
-        client,
-        config['deployment_prefix'] +
-        '_native_network')
+    native_network = wait_network_deploy(client, 'native', config['deployment_prefix'] + '_native_network')
+    routed_network = wait_network_deploy(client, 'routed', config['deployment_prefix'] + '_routed_network')
+
     # Gazebo Deployment
     print("GAZEBO is deploying...")
     gazebo_package = client.get_package(config['rio_gazebo']['packageId'])
@@ -482,7 +507,8 @@ def deploy_simulation(client, config):
         static_route=client.get_static_route_by_name(
             config['deployment_prefix'] + "-gazebo-ui")
     )
-    gazebo_configuration.add_native_network(network)
+    gazebo_configuration.add_native_network(native_network)
+    gazebo_configuration.add_routed_networks([routed_network])
     gazebo_configuration.set_component_alias('gazebo', 'gazebo')
     gazebo_deployment = gazebo_package.provision(
         deployment_name=config['deployment_prefix'] + '_gazebo',
@@ -508,7 +534,7 @@ def deploy_simulation(client, config):
             amr_configuration.add_parameter(
                 'amr', key, config['AMR_PARAMS'][i][key])
         amr_configuration.set_component_alias('amr', 'amr' + str(i + 1))
-        amr_configuration.add_native_network(network)
+        amr_configuration.add_native_network(native_network)
 
         amr_deployments[i] = amr_package.provision(
             deployment_name=config['deployment_prefix'] + '_amr' + str(i + 1),
@@ -553,10 +579,15 @@ def deprovision(client, config):
             deployment.deprovision(3)
 
     if config['deprovision_native_network']:
-        networks = client.list_native_networks()
-        for network in networks:
+        native_networks = client.list_native_networks()
+        routed_networks = client.get_all_routed_networks()
+        for network in native_networks:
             if config['deployment_prefix'] in network.name:
                 client.delete_native_network(network.guid)
+                break
+        for network in routed_networks:
+            if config['deployment_prefix'] in network.name:
+                network.delete()
                 break
 
 
