@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-
+import os
 import yaml
 import json
 import argparse
@@ -170,8 +170,21 @@ def update_package_version(
     # patterns
     # 1. pull from specified docker tag
     # 2. use io-builder
-    package_name_sufix = ''
-    if 'DOCKER_IMAGE' in config['BUILD'][PACKAGES[package_name]].keys(
+    if ci_deployment:
+        print(package_name)
+        if package_name == 'rio_amr_pa' or package_name == 'rio_gazebo' or package_name == 'rio_gbc':
+            docker_image_name = 'rrdockerhub/io_amr_pa:' + os.getenv('DEVTAG')
+        elif package_name == 'rio_amr_ui':
+            docker_image_name = 'rrdockerhub/rr_amr_ui:' + os.getenv('DEVTAG')
+        elif package_name == 'rio_gwm':
+            docker_image_name = 'rrdockerhub/rr_amr_gwm:' + os.getenv('DEVTAG')
+        elif package_name == 'rio_db':
+            docker_image_name = 'rrdockerhub/rr_amr_postgres:nightly'
+        template_args = {
+            'docker': docker_image_name,
+            'secret': secret_id
+        }
+    elif 'DOCKER_IMAGE' in config['BUILD'][PACKAGES[package_name]].keys(
     ):  # pull from specified docker tag
         template_args = {
             'docker': config['BUILD'][PACKAGES[package_name]]['DOCKER_IMAGE'],
@@ -196,7 +209,7 @@ def update_package_version(
     if ci_deployment:
         # file_data = Template(file_data).render(tag=docker_image_tag, secret=config['SECRET'])
         # manifest = json.loads(file_data)
-        manifest['name'] = manifest['name'] + " "
+        manifest['name'] = manifest['name'] + " " + os.getenv('DEVTAG')
         subpackages = [
             package for package in packages if package['packageName'] == manifest['name']]
         for p in subpackages:
@@ -573,6 +586,12 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description='Deployment script for io_amr')
     parser.add_argument(
+        '--ci-deployment',
+        action='store_const',
+        const=sum,
+        default=False,
+        help='Create Packages for CI, will be deleted later')
+    parser.add_argument(
         '--prefix',
         default=None,
         help='Deployment prefix for the deployment on rapyuta.io')
@@ -599,8 +618,8 @@ if __name__ == '__main__':
     if args.deprovision:
         deprovision(client, config)
     else:
-        update_packages(client, config)
+        update_packages(client, config, args.ci_deployment)
         deprovision(client, config)
         deploy(client, config)
-        if input("Deprovision? (y/N)").lower() == "y":
+        if input("Deprovision? (y/N)").lower() == "y" and not args.ci_deployment:
             deprovision(client, config)
