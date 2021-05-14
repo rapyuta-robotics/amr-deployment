@@ -175,11 +175,11 @@ def update_package_version(
         if package_name == 'rio_amr_pa' or package_name == 'rio_gazebo' or package_name == 'rio_gbc':
             docker_image_name = 'rrdockerhub/io_amr_pa:' + os.getenv('DEVTAG')
         elif package_name == 'rio_amr_ui':
-            docker_image_name = 'rrdockerhub/rr_amr_ui:' + os.getenv('DEVTAG')
+            docker_image_name = 'rrdockerhub/io_amr_ui:' + os.getenv('DEVTAG')
         elif package_name == 'rio_gwm':
-            docker_image_name = 'rrdockerhub/rr_amr_gwm:' + os.getenv('DEVTAG')
+            docker_image_name = 'rrdockerhub/io_amr_gwm:' + os.getenv('DEVTAG')
         elif package_name == 'rio_db':
-            docker_image_name = 'rrdockerhub/rr_amr_postgres:nightly'
+            docker_image_name = 'mdillon/postgis:latest'
         template_args = {
             'docker': docker_image_name,
             'secret': secret_id
@@ -621,5 +621,5 @@ if __name__ == '__main__':
         update_packages(client, config, args.ci_deployment)
         deprovision(client, config)
         deploy(client, config)
-        if input("Deprovision? (y/N)").lower() == "y" and not args.ci_deployment:
+        if input("Deprovision? (y/N)").lower() == "y" and args.ci_deployment == False:
             deprovision(client, config)
