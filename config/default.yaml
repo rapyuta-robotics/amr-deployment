@@ -17,11 +17,11 @@ BUILD:
     PA:
       DOCKER_IMAGE: rrdockerhub/io_amr_pa:release_04_27
     AMR_UI:
-      DOCKER_IMAGE: rrdockerhub/rr_amr_ui:release_04_27
+      DOCKER_IMAGE: rrdockerhub/io_amr_ui:release_04_27
     GWM:
-      DOCKER_IMAGE: rrdockerhub/rr_amr_gwm:release_04_27
+      DOCKER_IMAGE: rrdockerhub/io_amr_gwm:release_04_27
     DB:
-      DOCKER_IMAGE: rrdockerhub/rr_amr_postgres:nightly
+      DOCKER_IMAGE: rrdockerhub/mdillon/postgis:latest
 
 # DB
 DB_PARAMS:
