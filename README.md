@@ -12,7 +12,8 @@ git clone https://github.com/rapyuta-robotics/amr-deployment.git
 cd amr-deployment
 sudo apt-get install python3.6
 sudo apt install python3-pip
-bash install.sh
+pip install https://storage.googleapis.com/rio-sdk-python/rapyuta_io-0.21.0-py2.py3-none-any.whlv
+ansible-galaxy collection install abhinavg97.rr_io
 ```
 
 ## MAC instructions
@@ -22,7 +23,8 @@ git clone https://github.com/rapyuta-robotics/amr-deployment.git
 cd amr-deployment
 brew install python3.6
 brew install python3-pip
-bash install.sh
+pip install https://storage.googleapis.com/rio-sdk-python/rapyuta_io-0.21.0-py2.py3-none-any.whl
+ansible-galaxy collection install abhinavg97.rr_io
 ```
 
 # Steps to follow *before* deploying
