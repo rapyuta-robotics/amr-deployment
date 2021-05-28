@@ -1,0 +1,14 @@
+{
+    "present": "false",
+    "docker_password": "#3=L#L_UVSDT{enY",
+    "rio_amr_pa_image": "rrdockerhub/io_amr_pa:release_0514hotfix",
+    "rio_gwm_ui_image": "rrdockerhub/rr_amr_ui:release_05_21",
+    "rio_db_image": "rrdockerhub/rr_amr_postgres:nightly",
+    "rio_gazebo_image": "rrdockerhub/io_amr_pa:release_0514hotfix",
+    "rio_gbc_image": "rrdockerhub/io_amr_pa:release_0514hotfix",
+    "rio_gwm_image": "rrdockerhub/rr_amr_gwm:release_05_21",
+    "rr_gwm_static_route": "rr-gwm-test1",
+    "rr_gbc_static_route": "rr-gbc-test1",
+    "amr_ui_static_route": "amr-ui-test1",
+    "gazebo_ui_static_route": "gazebo-ui-test1"
+  }

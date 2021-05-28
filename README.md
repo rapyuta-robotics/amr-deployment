@@ -37,7 +37,7 @@ ansible-galaxy collection install abhinavg97.rr_io
 
 *Navigate to the root of the repository.* 
 ```
-ansible-playbook playbooks/test.yaml -vvv
+ansible-playbook playbooks/test.yaml -vvv --extra-vars "@deploy_configs.json"
 ```
 
 # Basic User Config Parameters:

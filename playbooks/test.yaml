@@ -21,12 +21,22 @@
     - copy:
         src: rio_gwm.json
         dest: /tmp/rio_gwm.json
+    - name: Docker Secret
+      async: 100
+      poll: 0
+      abhinavg97.rr_io.secrets:
+        name: dockerhub
+        present: "{{ present }}"
+        type: docker
+        username: ioamrreadonly
+        password: "{{ docker_password }}"
+        email: rss2.admin@rapyuta-robotics.com
     - name: Network Deployment
       async: 100
       poll: 0
       abhinavg97.rr_io.networks:
         name: native_network
-        present: false
+        present: "{{ present }}"
         type: native_network
         ros_distro: melodic
         resource_type: small
@@ -34,29 +44,29 @@
       async: 100
       poll: 0
       abhinavg97.rr_io.networks:
-        name: rr-gwm
-        present: false
+        name: "{{ rr_gwm_static_route }}"
+        present: "{{ present }}"
         type: static_route
     - name: GBC Static Route
       async: 100
       poll: 0
       abhinavg97.rr_io.networks:
-        name: rr-gbc
-        present: false
+        name: "{{ rr_gbc_static_route }}"
+        present: "{{ present }}"
         type: static_route
     - name: AMR UI Static Route
       async: 100
       poll: 0
       abhinavg97.rr_io.networks:
-        name: amr-ui
-        present: false
+        name: "{{ amr_ui_static_route }}"
+        present: "{{ present }}"
         type: static_route
     - name: Gazebo UI Static Route
       async: 100
       poll: 0
       abhinavg97.rr_io.networks:
-        name: gazebo-ui
-        present: false
+        name: "{{ gazebo_ui_static_route }}"
+        present: "{{ present }}"
         type: static_route
     - name: rio_amr_pa build
       async: 100
@@ -64,7 +74,7 @@
       abhinavg97.rr_io.builds:
         name: rio_amr_pa
         strategy_type: docker
-        present: false
+        present: "{{ present }}"
         repository: git@github.com:rapyuta-robotics/io_amr.git
         branch: release
         docker_file_path: docker/amrrobot/Dockerfile
@@ -81,7 +91,7 @@
       abhinavg97.rr_io.builds:
         name: rio_gwm_ui
         strategy_type: docker
-        present: false
+        present: "{{ present }}"
         repository: git@github.com:rapyuta-robotics/io_amr.git
         context_directory: rr_amr_ui
         branch: release
@@ -99,7 +109,7 @@
       abhinavg97.rr_io.builds:
         name: rio_gwm
         strategy_type: docker
-        present: false
+        present: "{{ present }}"
         repository: git@github.com:rapyuta-robotics/io_amr.git
         context_directory: rr_amr_gwm/gwm_core
         branch: release
@@ -116,10 +126,10 @@
       poll: 0
       abhinavg97.rr_io.packages:
         name: rio_amr_pa
-        present: false
+        present: "{{ present }}"
         type: docker
         build: rio_amr_pa
-        docker_image: rrdockerhub/io_amr_pa:release_04_27
+        docker_image: "{{ rio_amr_pa_image }}"
         secret: dockerhub
         manifest_path: /tmp/rio_amr_pa.json
       register: testout
@@ -128,9 +138,9 @@
       poll: 0
       abhinavg97.rr_io.packages:
         name: rio_gwm_ui
-        present: false
+        present: "{{ present }}"
         type: docker
-        docker_image: rrdockerhub/rr_amr_ui:release_04_27
+        docker_image: "{{ rio_gwm_ui_image }}"
         build: rio_gwm_ui
         secret: dockerhub
         manifest_path: /tmp/rio_amr_ui.json
@@ -140,9 +150,9 @@
       poll: 0
       abhinavg97.rr_io.packages:
         name: rio_db
-        present: false
+        present: "{{ present }}"
         type: docker
-        docker_image: rrdockerhub/rr_amr_postgres:nightly
+        docker_image: "{{ rio_db_image }}"
         secret: dockerhub
         manifest_path: /tmp/rio_db.json
       register: testout
@@ -151,9 +161,9 @@
       poll: 0
       abhinavg97.rr_io.packages:
         name: rio_gazebo
-        present: false
+        present: "{{ present }}"
         type: docker
-        docker_image: rrdockerhub/io_amr_pa:release_04_27
+        docker_image: "{{ rio_gazebo_image }}"
         build: rio_amr_pa
         secret: dockerhub
         manifest_path: /tmp/rio_gazebo.json
@@ -163,9 +173,9 @@
       poll: 0
       abhinavg97.rr_io.packages:
         name: rio_gbc
-        present: false
+        present: "{{ present }}"
         type: docker
-        docker_image: rrdockerhub/io_amr_pa:release_04_27
+        docker_image: "{{ rio_gbc_image }}"
         build: rio_amr_pa
         secret: dockerhub
         manifest_path: /tmp/rio_gbc.json
@@ -175,9 +185,9 @@
       poll: 0
       abhinavg97.rr_io.packages:
         name: rio_gwm
-        present: false
+        present: "{{ present }}"
         type: docker
-        docker_image: rrdockerhub/rr_amr_gwm:release_04_27
+        docker_image: "{{ rio_gwm_image }}"
         build: rio_gwm
         secret: dockerhub
         manifest_path: /tmp/rio_gwm.json
@@ -196,7 +206,7 @@
       abhinavg97.rr_io.deployments:
         name: postgres
         component_name: postgres
-        present: false
+        present: "{{ present }}"
         package_name: rio_db
         component_params:
           POSTGRES_DB: gwm_core
@@ -209,14 +219,14 @@
       abhinavg97.rr_io.deployments:
         name: rr_gwm
         component_name: core
-        present: false
+        present: "{{ present }}"
         package_name: rio_gwm
         depends:
           deployments:
             - postgres
         networks:
           static_routes:
-            - name: rr-gwm
+            - name: "{{ rr_gwm_static_route }}"
               endpoint_name: GWM_CORE_URL
         component_params:
           AUTOBOOTSTRAP: true
@@ -229,7 +239,7 @@
       abhinavg97.rr_io.deployments:
         name: rr_gbc
         component_name: gbc
-        present: false
+        present: "{{ present }}"
         package_name: rio_gbc
         depends:
           deployments:
@@ -237,7 +247,7 @@
             - rr_gwm
         networks:
           static_routes:
-            - name: rr-gbc
+            - name: "{{ rr_gbc_static_route }}"
               endpoint_name: GWM_INTERFACE_ENDPOINT
           native_networks:
             - name: native_network
@@ -255,7 +265,7 @@
       abhinavg97.rr_io.deployments:
         name: amr_ui
         component_name: gwm-ui
-        present: false
+        present: "{{ present }}"
         package_name: rio_gwm_ui
         depends:
           deployments:
@@ -263,7 +273,7 @@
             - rr_gbc
         networks:
           static_routes:
-            - name: amr-ui
+            - name: "{{ amr_ui_static_route }}"
               endpoint_name: GWM_UI
         component_params:
           SKIP_PREFLIGHT_CHECK: true
@@ -287,11 +297,11 @@
         name: gazebo
         component_name: gazebo
         component_alias: gazebo
-        present: false
+        present: "{{ present }}"
         package_name: rio_gazebo
         networks:
           static_routes:
-            - name: gazebo-ui
+            - name: "{{ gazebo_ui_static_route }}"
               endpoint_name: VNC_EP
           native_networks:
             - name: native_network
@@ -311,7 +321,7 @@
         name: amr1
         component_name: amr
         component_alias: amr1
-        present: false
+        present: "{{ present }}"
         package_name: rio_amr_pa
         networks:
           native_networks:
@@ -340,7 +350,7 @@
         name: amr2
         component_name: amr
         component_alias: amr2
-        present: false
+        present: "{{ present }}"
         package_name: rio_amr_pa
         networks:
           native_networks:
@@ -369,7 +379,7 @@
         name: amr3
         component_name: amr
         component_alias: amr3
-        present: false
+        present: "{{ present }}"
         package_name: rio_amr_pa
         networks:
           native_networks:
@@ -392,14 +402,13 @@
           YAW: 1.57
       register: amr3_id
     
-     - name: "AMR3 - check on async status"
-       async_status:
-         jid: "{{ amr3_id.ansible_job_id}}"
-       register: amr3_log
-       until: amr3_log.finished
-       retries: 30
+    - name: "AMR3 - check on async status"
+      async_status:
+        jid: "{{ amr3_id.ansible_job_id}}"
+      register: amr3_log
+      until: amr3_log.finished
+      retries: 30
 
     - name: dump test output
       debug:
         msg: '{{ amr3_id }}'
-
