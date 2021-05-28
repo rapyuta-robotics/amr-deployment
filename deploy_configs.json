@@ -1,6 +1,6 @@
 {
     "present": "false",
-    "docker_password": "#3=L#L_UVSDT{enY",
+    "docker_password": "ENTER_IOAMR_DOCKER_PASSWORD",
     "rio_amr_pa_image": "rrdockerhub/io_amr_pa:release_0514hotfix",
     "rio_gwm_ui_image": "rrdockerhub/rr_amr_ui:release_05_21",
     "rio_db_image": "rrdockerhub/rr_amr_postgres:nightly",
