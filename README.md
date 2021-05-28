@@ -30,8 +30,13 @@ ansible-galaxy collection install abhinavg97.rr_io
 # Steps to follow *before* deploying
 1. Find Project ID from the drop down in top left corner of [here](https://console.rapyuta.io)
 2. Find the Authentication token from [here](https://auth.rapyuta.io/authToken/)
-3. Find the ioamrreadonly dockerhub account password sent to your email address
-4. Edit config/basic_user_config.yaml to enter Project ID, Authentication token and Dockerhub account password
+3. Find the ioamrreadonly dockerhub account password sent to your email address and edit deploy_configs.json to enter Dockerhub account password.
+4. Run the below code in your terminal.
+
+```
+export RIO_PROJECT_ID=PROJECT_ID
+export RIO_AUTH_TOKEN=AUTH_TOKEN
+```
 
 # Deploy simulation on rapyuta.io
 
