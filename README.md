@@ -12,7 +12,7 @@ git clone https://github.com/rapyuta-robotics/amr-deployment.git
 cd amr-deployment
 sudo apt-get install python3.6
 sudo apt install python3-pip
-pip install https://storage.googleapis.com/rio-sdk-python/rapyuta_io-0.21.0-py2.py3-none-any.whlv
+pip install https://storage.googleapis.com/rio-sdk-python/rapyuta_io-0.26.0-py2.py3-none-any.whl
 ansible-galaxy collection install abhinavg97.rr_io
 ```
 
@@ -23,7 +23,7 @@ git clone https://github.com/rapyuta-robotics/amr-deployment.git
 cd amr-deployment
 brew install python3.6
 brew install python3-pip
-pip install https://storage.googleapis.com/rio-sdk-python/rapyuta_io-0.21.0-py2.py3-none-any.whl
+pip install https://storage.googleapis.com/rio-sdk-python/rapyuta_io-0.26.0-py2.py3-none-any.whl
 ansible-galaxy collection install abhinavg97.rr_io
 ```
 
@@ -42,16 +42,33 @@ export RIO_AUTH_TOKEN=AUTH_TOKEN
 
 *Navigate to the root of the repository.* 
 ```
-ansible-playbook playbooks/test.yaml -vvv --extra-vars "@deploy_configs.json"
+ansible-playbook playbooks/play.yaml -vvv --extra-vars "@deploy_configs.json"
 ```
 
-# Basic User Config Parameters:
-```PROJECT_ID```\
-Project ID in which you want to create the deployment\
-```AUTH_TOKEN```\
-The Auth token to authenticate the script to your project\
-```DOCKER_PASSWORD```\
-The password of ioamrreadonly dockerhub account. This is needed to pull the IO AMR images for the simulation
+# deploy_configs Parameters:
+
+```present```\
+Whether the deployment artifacts should be present in your project.\
+```docker_password```\
+The password of ioamrreadonly dockerhub account. This is needed to pull the IO AMR images for the simulation\
+```rio_amr_pa_image```\
+amr_pa docker image to be used for the simulation.\
+```rio_gwm_ui_image```\
+gwm_ui docker image to be used for the simulation.\
+```rio_db_image```\
+db docker image to be used for the simulation.\
+```rio_gazebo_image```\
+gazebo docker image to be used for the simulation.\
+```rio_gbc_image```\
+gbc docker image to be used for the simulation.\
+```rr_gwm_static_route```\
+gwm static route used by the gwm deployment.\
+```rr_gbc_static_route```\
+gbc static route used by the gbc deployment.\
+```amr_ui_static_route```\
+amr_ui static route used by the amr_ui deployment.\
+```gazebo_ui_static_route```\
+gazebo static route used by the gazebo deployment.
 
 # FAQ
 - authorization failed: update AUTH_TOKEN in config/basic_user_config.yaml. [ref](https://userdocs.rapyuta.io/3_how-tos/35_tooling_and_debugging/rapyuta-io-python-sdk/#auth-token)
