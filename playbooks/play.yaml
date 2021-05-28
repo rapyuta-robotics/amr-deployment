@@ -128,6 +128,7 @@
         name: rio_amr_pa
         present: "{{ present }}"
         type: docker
+        version: auto
         build: rio_amr_pa
         docker_image: "{{ rio_amr_pa_image }}"
         secret: dockerhub
@@ -140,6 +141,7 @@
         name: rio_gwm_ui
         present: "{{ present }}"
         type: docker
+        version: auto
         docker_image: "{{ rio_gwm_ui_image }}"
         build: rio_gwm_ui
         secret: dockerhub
@@ -152,6 +154,7 @@
         name: rio_db
         present: "{{ present }}"
         type: docker
+        version: auto
         docker_image: "{{ rio_db_image }}"
         secret: dockerhub
         manifest_path: /tmp/rio_db.json
@@ -163,6 +166,7 @@
         name: rio_gazebo
         present: "{{ present }}"
         type: docker
+        version: auto
         docker_image: "{{ rio_gazebo_image }}"
         build: rio_amr_pa
         secret: dockerhub
@@ -175,6 +179,7 @@
         name: rio_gbc
         present: "{{ present }}"
         type: docker
+        version: auto
         docker_image: "{{ rio_gbc_image }}"
         build: rio_amr_pa
         secret: dockerhub
@@ -187,6 +192,7 @@
         name: rio_gwm
         present: "{{ present }}"
         type: docker
+        version: auto
         docker_image: "{{ rio_gwm_image }}"
         build: rio_gwm
         secret: dockerhub
@@ -407,7 +413,7 @@
         jid: "{{ amr3_id.ansible_job_id}}"
       register: amr3_log
       until: amr3_log.finished
-      retries: 30
+      retries: 3000000
 
     - name: dump test output
       debug:
