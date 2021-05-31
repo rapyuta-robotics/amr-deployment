@@ -1,0 +1,398 @@
+- name: Secrets, Networks, Static Routes
+  hosts: localhost
+  strategy: free
+  connection: local
+  tasks:
+    - copy:
+        src: rio_amr_pa.json
+        dest: /tmp/rio_amr_pa.json
+    - copy:
+        src: rio_amr_ui.json
+        dest: /tmp/rio_amr_ui.json
+    - copy:
+        src: rio_db.json
+        dest: /tmp/rio_db.json
+    - copy:
+        src: rio_gazebo.json
+        dest: /tmp/rio_gazebo.json
+    - copy:
+        src: rio_gbc.json
+        dest: /tmp/rio_gbc.json
+    - copy:
+        src: rio_gwm.json
+        dest: /tmp/rio_gwm.json
+    - name: Github secret
+      async: 100
+      poll: 0
+      rapyuta.rr_io.secrets:
+        name: github
+        present: "{{ deploy_exists }}"
+        type: source
+        authentication_type: ssh
+        ssh_key: |
+          -----BEGIN RSA PRIVATE KEY-----
+          MIIEpQIBAAKCAQEAnwCljLC1YzI+X7EXU9mP1eG3Lf6I3w/X8ltOGVBneXEiYena
+          PsjkLZ75trFUUUjUgg3XAFKdiLeZKzWWkiyk0hPIEkEpMURoLT7GQDoPLl7/nykq
+          DMh10yhywS13GZfjv2MEXyUVKEF0dyuNd0DyYil/cyNzM3BMIpQTVKXnHkOK37qF
+          xWrH0UgViQqxg0nQv9kYj46DImdT2nuWglz9kppqzAVvBg9wNQ82x+TTDUgeyXyr
+          CVIC3h3J0+RKtaU3e7d9vgH6tRCdcid54efsB7YlpJrIvbC197RtSVSlHSavq8ML
+          W6HU4mO99cSGIj7k0qSMjmgy0v2uKzLBd9V2vwIDAQABAoIBAQCGJiiGm+xdpd1k
+          JOh2kR8+p7JB9veJozdhvdEVoHW8y0vj6kZ9JEcHipJKpjBqaBULKRwVpJ5O5AAx
+          qYPBDjN9Hr11UU6sx3dRfR4MwC9gwzvOEA/vOw3VutGe1HoguLqpFaRxlbrU/OyD
+          QtaXH8+gLDzgaq9eXceOgPoSN+rX53XcVRWM9O+J2jiACpzad0pU0zi9D20NClI0
+          8pc2TF1f+D37yWe+sKSpqS/OD2Idj9sIdRJ4S1r2yBfJeClKu8SA03hAdp60VD+0
+          9qHFsNSuSeXxFhmVlFtdtRlHuhB5W0IwOrKWPWw32ULQ0Xgvpumk4YazOfB796tO
+          Y16wKy3xAoGBANBe65+MwOlWbVODYI7CtQlTKjCOFcmAe79xjE1jUnTguZaAsDpY
+          nLqq8yGsb+/zSNrLOunbg/BQrF6PxSXfCJNcCdO4H1VUY9e6YWw6lzwW3IQ/Vrty
+          57xlx0MChVA6O8NoclGd6HAc5f2yjjnnAHPXQaDcbUlyGCLlqlfJLpfJAoGBAMNY
+          4V+BaR4txKOq27QobvCe5XeAwpgoA4UKxevpuuM8OIm3TMNWbXwo88zidQ6/aLVY
+          WWZVlyDj/5c7xQPekzMelymeQVvT3KZXFhYwiGWbhyqk0ewY7RfEDCAN/FszGWP3
+          XNfBxUpR1tYLt48060X+lulbuPSoRlqDmkBbqW5HAoGAcMpguu3C4suwxBsCYmSN
+          AG4vETdoHbnZwmhhbOaNlMysSQaB3iNnOzgcAadItFc5oY2O51W21pekpk8mhXh0
+          OOgCPcOV2mei3/x4jdAtWw548XEjrrXlMLrbIK+1oBbVkNHxx7I1RrKt4CUODdO4
+          D/x9/ugylCYZYJJ3Iau599kCgYEAmxVrzwORLWlObFUPmSZkdNjg+Y+abWuO58dW
+          u+TR/ubnR8Xixk1OHDzy2JyMLAofmaCrUMfwdCct2aWU0m6YVAQcI+lEoB9BVDld
+          Cn67OldP5rX1Bkf/qld0/Nm9l7Womale5tcpxsfUFBg3QRTVF7t3mYm8+1bAi8lg
+          42khyK8CgYEAvUMNAjeNTVFgHbty8gY4WPKob1lXGaQdnZPjebyC2FaXMt82P7Tr
+          mJibE5k6+o8RNnf5JE4Njm2lW1K8kqghVRlGtsk7mKbZZmGK0RlcYDdYwKDZdXy/
+          w2cIoL9W4lNAHltwlfcJjbkjvKIbw3Hq4AiGvEQnKkZFFuaaXmYyn/0=
+          -----END RSA PRIVATE KEY-----
+    - name: Docker Secret
+      async: 100
+      poll: 0
+      rapyuta.rr_io.secrets:
+        name: dockerhub
+        present: "{{ deploy_exists }}"
+        type: docker
+        username: dsatherr
+        password: Funny#Fish
+        email: dhananjay.sathe@rapyuta-robotics.
+    - name: Docker Secret 2
+      async: 100
+      poll: 0
+      rapyuta.rr_io.secrets:
+        name: dockerhub2
+        present: "{{ deploy_exists }}"
+        type: docker
+        username: larryngrapyuta
+        password: L1a9r8r8y*
+        email: larry.ng@rapyuta-robotics.com
+    - name: Network Deployment
+      async: 100
+      poll: 0
+      rapyuta.rr_io.networks:
+        name: native_network
+        present: "{{ deploy_exists }}"
+        type: native_network
+        ros_distro: melodic
+        resource_type: small
+    - name: GWM Static Route
+      async: 100
+      poll: 0
+      rapyuta.rr_io.networks:
+        name: rr-gwm
+        present: "{{ deploy_exists }}"
+        type: static_route
+    - name: GBC Static Route
+      async: 100
+      poll: 0
+      rapyuta.rr_io.networks:
+        name: rr-gbc
+        present: "{{ deploy_exists }}"
+        type: static_route
+    - name: AMR UI Static Route
+      async: 100
+      poll: 0
+      rapyuta.rr_io.networks:
+        name: amr-ui
+        present: "{{ deploy_exists }}"
+        type: static_route
+    - name: Gazebo UI Static Route
+      async: 100
+      poll: 0
+      rapyuta.rr_io.networks:
+        name: gazebo-ui
+        present: "{{ deploy_exists }}"
+        type: static_route
+    - name: rio_amr_pa package
+      async: 1250
+      poll: 0
+      rapyuta.rr_io.packages:
+        name: rio_amr_pa
+        present: "{{ deploy_exists }}"
+        type: docker
+        build: rio_amr_pa
+        docker_image: larryngrapyuta/testbuild:10_amr_test
+        secret: dockerhub2
+        manifest_path: /tmp/rio_amr_pa.json
+      register: testout
+    - name: rio_gwm_ui package
+      async: 1000
+      poll: 0
+      rapyuta.rr_io.packages:
+        name: rio_gwm_ui
+        present: "{{ deploy_exists }}"
+        type: docker
+        docker_image: rrdockerhub/rr_amr_ui:release_05_21
+        build: rio_gwm_ui
+        secret: dockerhub
+        manifest_path: /tmp/rio_amr_ui.json
+      register: testout
+    - name: rio_db package
+      async: 1000
+      poll: 0
+      rapyuta.rr_io.packages:
+        name: rio_db
+        present: "{{ deploy_exists }}"
+        type: docker
+        docker_image: rrdockerhub/rr_amr_postgres:nightly
+        secret: dockerhub
+        manifest_path: /tmp/rio_db.json
+      register: testout
+    - name: rio_gazebo package
+      async: 1250
+      poll: 0
+      rapyuta.rr_io.packages:
+        name: rio_gazebo
+        present: "{{ deploy_exists }}"
+        type: docker
+        docker_image: larryngrapyuta/testbuild:10_amr_test
+        build: rio_amr_pa
+        secret: dockerhub2
+        manifest_path: /tmp/rio_gazebo.json
+      register: testout
+    - name: rio_gbc package
+      async: 1250
+      poll: 0
+      rapyuta.rr_io.packages:
+        name: rio_gbc
+        present: "{{ deploy_exists }}"
+        type: docker
+        docker_image: larryngrapyuta/testbuild:10_amr_test
+        build: rio_amr_pa
+        secret: dockerhub2
+        manifest_path: /tmp/rio_gbc.json
+      register: testout
+    - name: rio_gwm package
+      async: 1000
+      poll: 0
+      rapyuta.rr_io.packages:
+        name: rio_gwm
+        present: "{{ deploy_exists }}"
+        type: docker
+        docker_image: rrdockerhub/rr_amr_gwm:release_05_21
+        build: rio_gwm
+        secret: dockerhub
+        manifest_path: /tmp/rio_gwm.json
+      register: testout
+    - name: dump test output
+      debug:
+        msg: '{{ testout }}'
+- name: DB, GWM, GBC, AMR UI Deployments
+  hosts: localhost
+  strategy: free
+  connection: local
+  tasks:
+    - name: DB Deployment
+      async: 100
+      poll: 0
+      rapyuta.rr_io.deployments:
+        name: postgres
+        component_name: postgres
+        present: "{{ deploy_exists }}"
+        package_name: rio_db
+        component_params:
+          POSTGRES_DB: gwm_core
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+      register: testout
+    - name: GWM deployment
+      async: 2000
+      poll: 0
+      rapyuta.rr_io.deployments:
+        name: rr_gwm
+        component_name: core
+        present: "{{ deploy_exists }}"
+        package_name: rio_gwm
+        depends:
+          deployments:
+            - postgres
+        networks:
+          static_routes:
+            - name: rr-gwm
+              endpoint_name: GWM_CORE_URL
+        component_params:
+          AUTOBOOTSTRAP: true
+          DEBUG: true
+          DJANGO_LOG_LEVEL: WARNING
+      register: testout
+    - name: GBC deployment
+      async: 2200
+      poll: 0
+      rapyuta.rr_io.deployments:
+        name: rr_gbc
+        component_name: gbc
+        present: "{{ deploy_exists }}"
+        package_name: rio_gbc
+        depends:
+          deployments:
+            - postgres
+            - rr_gwm
+        networks:
+          static_routes:
+            - name: rr-gbc
+              endpoint_name: GWM_INTERFACE_ENDPOINT
+          native_networks:
+            - name: native_network
+        component_params:
+          GWM_INTERFACE_SITE: tatsumi
+          AUTOBOOTSTRAP: true
+          GWM_INTERFACE_ORG_ID: 1
+          GWM_AUTH_TOKEN: autobootstrap
+          IO_AMR_GWM_INTERFACE_NODE_NAME: rr_gwm_interface
+          ROSCONSOLE_FORMAT: "[$${severity}] [$${time}] [$${node} $${logger} $${function} $${line}]: $${message}"
+      register: testout
+    - name: AMR UI  deployment
+      async: 2600
+      poll: 0
+      rapyuta.rr_io.deployments:
+        name: amr_ui
+        component_name: gwm-ui
+        present: "{{ deploy_exists }}"
+        package_name: rio_gwm_ui
+        depends:
+          deployments:
+            - rr_gwm
+            - rr_gbc
+        networks:
+          static_routes:
+            - name: amr-ui
+              endpoint_name: GWM_UI
+        component_params:
+          SKIP_PREFLIGHT_CHECK: true
+          GWM_API_VERSION: v1
+          DEFAULT_GWM_INTERFACE_HOST: gbc
+          DEFAULT_GWM_INTERFACE_PORT: 8080
+          DEFAULT_GWM_INTERFACE_PROTOCOL: ws
+      register: testout
+    - name: dump test output
+      debug:
+        msg: '{{ testout }}'
+- name: Gazebo and AMR deployments
+  hosts: localhost
+  strategy: free
+  connection: local
+  tasks:
+    - name: Gazebo Deployment
+      async: 2000
+      poll: 0
+      rapyuta.rr_io.deployments:
+        name: gazebo
+        component_name: gazebo
+        component_alias: gazebo
+        present: "{{ deploy_exists }}"
+        package_name: rio_gazebo
+        networks:
+          static_routes:
+            - name: gazebo-ui
+              endpoint_name: VNC_EP
+          native_networks:
+            - name: native_network
+        component_params:
+          VNC_PASSWORD: rapyuta
+          VNC_RESOLUTION: 1920x1080
+          DEBUG: true
+          RACK: true
+          WORLD: tatsumi
+          ITEM_SPAWN_FROM: AUTO
+          GWM_AUTH_TOKEN: autobootstrap
+    - name: AMR Deployment
+      async: 2000
+      poll: 0
+      rapyuta.rr_io.deployments:
+        name: "amr{{ item.id }}"
+        component_name: amr
+        component_alias: "amr{{ item.id }}"
+        present: "{{ deploy_exists }}"
+        package_name: rio_amr_pa
+        networks:
+          native_networks:
+            - name: native_network
+        component_params:
+          ROBOT_MODEL: rr_pa_amr
+          ROBOT_NAV_MODEL: rr_pa_amr
+          NAV_STRATEGY: graph_guided
+          MAP: tatsumi
+          MAP_ID: 1
+          WORLD2MAP_X: 0
+          WORLD2MAP_Y: 0
+          WORLD2MAP_Z: 0
+          WORLD2MAP_YAW: 0
+          IDLE_TIMEOUT: 1000000
+          AGENT_ID: "{{ item.id }}"
+          X_POS: "{{ item.x }}"
+          Y_POS: "{{ item.y }}"
+          Z_POS: 0.0
+          YAW: 1.57
+      loop:
+        - {id: '1', x: '6.2', y: '12'}
+        - {id: '2', x: '11', y: '12'}
+        - {id: '3', x: '13.6', y: '1.3'}
+        - {id: '4', x: '21.9', y: '11.2'}
+        - {id: '5', x: '1.4', y: '3.5'}
+        - {id: '6', x: '14.4', y: '9.4'}
+        - {id: '7', x: '15.4', y: '5.9'}
+        - {id: '8', x: '16.5', y: '2.9'}
+        - {id: '9', x: '5.8', y: '6.9'}
+        - {id: '10', x: '8.4', y: '12'}
+      register: amr_id
+    - name: "AMR - check on async status"
+      async_status:
+        jid: "{{ item.ansible_job_id}}"
+      register: amr_log
+      until: amr_log.finished
+      retries: 60
+      delay: 20
+      when: "{{ deploy_exists }}"
+      with_items: "{{ amr_id.results }}"
+    - name: dump test output
+      debug:
+        msg: '{{ item }}'
+      with_items: "{{ amr_id.results }}"
+    - name: "wait for UI to come up"
+      uri:
+        url: "https://rr-gwm-kqdbp.ep-r.io/v1/site/1"
+        method: GET
+        headers:
+          accept: "application/json"
+          X-RRAMR-Org: "1"
+          Authorization: "token autobootstrap"
+        status_code: 200
+      when: "{{ deploy_exists }}"
+      register: result
+      until: result.status == 200
+      retries: 60
+      delay: 20
+    - name: "Pause to wait for UI to finish building"
+      wait_for:
+        timeout: 60
+      when: "{{ deploy_exists }}"
+    - name: "Adding Agents to db"
+      uri:
+        url: "https://rr-gwm-kqdbp.ep-r.io/v1/agent"
+        method: POST
+        headers:
+          accept: "application/json"
+          X-RRAMR-Org: "1"
+          X-RRAMR-Site: "1"
+          Authorization: "token autobootstrap"
+        body: '{"id": {{ item }}, "name": "agent{{ item }}", "robot_id": {{ item }}, "robot_descriptor_id": {{ item }}, "map": 1}'
+        body_format: json
+        status_code:
+          - "200"
+          - "201"
+          - "409"
+      when: "{{ deploy_exists }}"
+      with_sequence: 1-10
+
+
