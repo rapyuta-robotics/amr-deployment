@@ -1,4 +1,4 @@
-- name: Secrets, Networks, Static Routes
+- name: Copy files for remote execution
   hosts: localhost
   strategy: free
   connection: local
@@ -21,6 +21,12 @@
     - copy:
         src: rio_gwm.json
         dest: /tmp/rio_gwm.json
+
+- name:  Secrets, Networks, Static Routes
+  hosts: localhost
+  strategy: free
+  connection: local
+  tasks:
     - name: Docker Secret
       async: 100
       poll: 0
@@ -31,6 +37,8 @@
         username: ioamrreadonly
         password: "{{ docker_password }}"
         email: rss2.admin@rapyuta-robotics.com
+      register: docker_secret_id
+
     - name: Network Deployment
       async: 100
       poll: 0
@@ -40,6 +48,8 @@
         type: native_network
         ros_distro: melodic
         resource_type: small
+      register: native_network_id
+
     - name: GWM Static Route
       async: 100
       poll: 0
@@ -47,6 +57,8 @@
         name: "{{ rr_gwm_static_route }}"
         present: "{{ present }}"
         type: static_route
+      register: gwm_static_route_id
+
     - name: GBC Static Route
       async: 100
       poll: 0
@@ -54,6 +66,8 @@
         name: "{{ rr_gbc_static_route }}"
         present: "{{ present }}"
         type: static_route
+      register: gbc_static_route_id
+
     - name: AMR UI Static Route
       async: 100
       poll: 0
@@ -61,6 +75,8 @@
         name: "{{ amr_ui_static_route }}"
         present: "{{ present }}"
         type: static_route
+      register: amr_ui_static_route_id
+
     - name: Gazebo UI Static Route
       async: 100
       poll: 0
@@ -68,59 +84,77 @@
         name: "{{ gazebo_ui_static_route }}"
         present: "{{ present }}"
         type: static_route
-    - name: rio_amr_pa build
-      async: 100
-      poll: 0
-      abhinavg97.rr_io.builds:
-        name: rio_amr_pa
-        strategy_type: docker
-        present: "{{ present }}"
-        repository: git@github.com:rapyuta-robotics/io_amr.git
-        branch: release
-        docker_file_path: docker/amrrobot/Dockerfile
-        source_secret: github
-        docker_pull_secret: dockerhub
-        docker_push_secret: dockerhub
-        docker_image_repository: docker.io/rrdockerhub/io_amr_pa
-        trigger: false
-        trigger_name: ansible_ci
-        tag_name: ansible_ci
-    - name: rio_gwm_ui build
-      async: 100
-      poll: 0
-      abhinavg97.rr_io.builds:
-        name: rio_gwm_ui
-        strategy_type: docker
-        present: "{{ present }}"
-        repository: git@github.com:rapyuta-robotics/io_amr.git
-        context_directory: rr_amr_ui
-        branch: release
-        docker_file_path: Dockerfile
-        source_secret: github
-        docker_pull_secret: dockerhub
-        docker_push_secret: dockerhub
-        docker_image_repository: docker.io/rrdockerhub/rr_amr_ui
-        trigger: false
-        trigger_name: ansible_ci
-        tag_name: ansible_ci
-    - name: rio_gwm build
-      async: 100
-      poll: 0
-      abhinavg97.rr_io.builds:
-        name: rio_gwm
-        strategy_type: docker
-        present: "{{ present }}"
-        repository: git@github.com:rapyuta-robotics/io_amr.git
-        context_directory: rr_amr_gwm/gwm_core
-        branch: release
-        docker_file_path: Dockerfile.full
-        source_secret: github
-        docker_pull_secret: dockerhub
-        docker_push_secret: dockerhub
-        docker_image_repository: docker.io/rrdockerhub/rr_amr_gwm
-        trigger: false
-        trigger_name: ansible_ci
-        tag_name: ansible_ci
+      register: gazebo_static_route_id
+
+#- name:  Builds
+#  hosts: localhost
+#  strategy: free
+#  connection: local
+#  tasks:
+#    - name: rio_amr_pa build
+#      async: 100
+#      poll: 0
+#      abhinavg97.rr_io.builds:
+#        name: rio_amr_pa
+#        strategy_type: docker
+#        present: "{{ present }}"
+#        repository: git@github.com:rapyuta-robotics/io_amr.git
+#        branch: release
+#        docker_file_path: docker/amrrobot/Dockerfile
+#        source_secret: github
+#        docker_pull_secret: dockerhub
+#        docker_push_secret: dockerhub
+#        docker_image_repository: docker.io/rrdockerhub/io_amr_pa
+#        trigger: false
+#        trigger_name: ansible_ci
+#        tag_name: ansible_ci
+#      register: amr_pa_build_id
+#
+#    - name: rio_gwm_ui build
+#      async: 100
+#      poll: 0
+#      abhinavg97.rr_io.builds:
+#        name: rio_gwm_ui
+#        strategy_type: docker
+#        present: "{{ present }}"
+#        repository: git@github.com:rapyuta-robotics/io_amr.git
+#        context_directory: rr_amr_ui
+#        branch: release
+#        docker_file_path: Dockerfile
+#        source_secret: github
+#        docker_pull_secret: dockerhub
+#        docker_push_secret: dockerhub
+#        docker_image_repository: docker.io/rrdockerhub/rr_amr_ui
+#        trigger: false
+#        trigger_name: ansible_ci
+#        tag_name: ansible_ci
+#      register: gwm_ui_build_id
+#
+#    - name: rio_gwm build
+#      async: 100
+#      poll: 0
+#      abhinavg97.rr_io.builds:
+#        name: rio_gwm
+#        strategy_type: docker
+#        present: "{{ present }}"
+#        repository: git@github.com:rapyuta-robotics/io_amr.git
+#        context_directory: rr_amr_gwm/gwm_core
+#        branch: release
+#        docker_file_path: Dockerfile.full
+#        source_secret: github
+#        docker_pull_secret: dockerhub
+#        docker_push_secret: dockerhub
+#        docker_image_repository: docker.io/rrdockerhub/rr_amr_gwm
+#        trigger: false
+#        trigger_name: ansible_ci
+#        tag_name: ansible_ci
+#      register: gwm_build_id
+
+- name:  Packages
+  hosts: localhost
+  strategy: free
+  connection: local
+  tasks:
     - name: rio_amr_pa package
       async: 1250
       poll: 0
@@ -128,12 +162,13 @@
         name: rio_amr_pa
         present: "{{ present }}"
         type: docker
-        version: auto
+        version: max
         build: rio_amr_pa
         docker_image: "{{ rio_amr_pa_image }}"
         secret: dockerhub
         manifest_path: /tmp/rio_amr_pa.json
-      register: testout
+      register: amr_pa_package_id
+
     - name: rio_gwm_ui package
       async: 1000
       poll: 0
@@ -141,12 +176,13 @@
         name: rio_gwm_ui
         present: "{{ present }}"
         type: docker
-        version: auto
+        version: max
         docker_image: "{{ rio_gwm_ui_image }}"
         build: rio_gwm_ui
         secret: dockerhub
         manifest_path: /tmp/rio_amr_ui.json
-      register: testout
+      register: gwm_ui_package_id
+
     - name: rio_db package
       async: 1000
       poll: 0
@@ -154,11 +190,12 @@
         name: rio_db
         present: "{{ present }}"
         type: docker
-        version: auto
+        version: max
         docker_image: "{{ rio_db_image }}"
         secret: dockerhub
         manifest_path: /tmp/rio_db.json
-      register: testout
+      register: db_package_id
+
     - name: rio_gazebo package
       async: 1250
       poll: 0
@@ -166,12 +203,13 @@
         name: rio_gazebo
         present: "{{ present }}"
         type: docker
-        version: auto
+        version: max
         docker_image: "{{ rio_gazebo_image }}"
         build: rio_amr_pa
         secret: dockerhub
         manifest_path: /tmp/rio_gazebo.json
-      register: testout
+      register: gazebo_package_id
+
     - name: rio_gbc package
       async: 1250
       poll: 0
@@ -179,12 +217,13 @@
         name: rio_gbc
         present: "{{ present }}"
         type: docker
-        version: auto
+        version: max
         docker_image: "{{ rio_gbc_image }}"
         build: rio_amr_pa
         secret: dockerhub
         manifest_path: /tmp/rio_gbc.json
-      register: testout
+      register: gbc_package_id
+
     - name: rio_gwm package
       async: 1000
       poll: 0
@@ -192,15 +231,13 @@
         name: rio_gwm
         present: "{{ present }}"
         type: docker
-        version: auto
+        version: max
         docker_image: "{{ rio_gwm_image }}"
         build: rio_gwm
         secret: dockerhub
         manifest_path: /tmp/rio_gwm.json
-      register: testout
-    - name: dump test output
-      debug:
-        msg: '{{ testout }}'
+      register: gwm_package_id
+
 - name: DB, GWM, GBC, AMR UI Deployments
   hosts: localhost
   strategy: free
@@ -218,7 +255,8 @@
           POSTGRES_DB: gwm_core
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
-      register: testout
+      register: db_id
+
     - name: GWM deployment
       async: 2000
       poll: 0
@@ -238,7 +276,8 @@
           AUTOBOOTSTRAP: true
           DEBUG: true
           DJANGO_LOG_LEVEL: WARNING
-      register: testout
+      register: gwm_id
+
     - name: GBC deployment
       async: 2200
       poll: 0
@@ -264,7 +303,8 @@
           GWM_AUTH_TOKEN: autobootstrap
           IO_AMR_GWM_INTERFACE_NODE_NAME: rr_gwm_interface
           ROSCONSOLE_FORMAT: "[$${severity}] [$${time}] [$${node} $${logger} $${function} $${line}]: $${message}"
-      register: testout
+      register: gbc_id
+
     - name: AMR UI  deployment
       async: 2600
       poll: 0
@@ -287,10 +327,8 @@
           DEFAULT_GWM_INTERFACE_HOST: gbc
           DEFAULT_GWM_INTERFACE_PORT: 8080
           DEFAULT_GWM_INTERFACE_PROTOCOL: ws
-      register: testout
-    - name: dump test output
-      debug:
-        msg: '{{ testout }}'
+      register: amr_ui_id
+
 - name: Gazebo and AMR deployments
   hosts: localhost
   strategy: free
@@ -319,6 +357,7 @@
           WORLD: tatsumi
           ITEM_SPAWN_FROM: AUTO
           GWM_AUTH_TOKEN: autobootstrap
+      register: gazebo_id
 
     - name: AMR1 Deployment
       async: 2000
@@ -348,6 +387,7 @@
           Y_POS: 12
           Z_POS: 0.0
           YAW: 1.57
+      register: amr1_id
 
     - name: AMR2 Deployment
       async: 2000
@@ -377,6 +417,7 @@
           Y_POS: 12
           Z_POS: 0.0
           YAW: 1.57
+      register: amr2_id
 
     - name: AMR3 Deployment
       async: 2000
@@ -407,14 +448,228 @@
           Z_POS: 0.0
           YAW: 1.57
       register: amr3_id
-    
+
+- name: Poll Artifacts
+  hosts: localhost
+  strategy: free
+  connection: local
+  tasks:
+    - name: "Docker secret - check on async status"
+      async_status:
+        jid: "{{ docker_secret_id.ansible_job_id}}"
+      register: docker_secret_log
+      until: docker_secret_log.finished
+      retries: 3000000
+
+    - name: "Native network - check on async status"
+      async_status:
+        jid: "{{ native_network_id.ansible_job_id}}"
+      register: native_network_log
+      until: native_network_log.finished
+      retries: 3000000
+
+    - name: "GWM Static Route - check on async status"
+      async_status:
+        jid: "{{ gwm_static_route_id.ansible_job_id}}"
+      register: gwm_static_route_log
+      until: gwm_static_route_log.finished
+      retries: 3000000
+
+    - name: "GBC Static Route - check on async status"
+      async_status:
+        jid: "{{ gbc_static_route_id.ansible_job_id}}"
+      register: gbc_static_route_log
+      until: gbc_static_route_log.finished
+      retries: 3000000
+
+    - name: "AMR UI Static Route - check on async status"
+      async_status:
+        jid: "{{ amr_ui_static_route_id.ansible_job_id}}"
+      register: amr_ui_static_route_log
+      until: amr_ui_static_route_log.finished
+      retries: 3000000
+
+    - name: "Gazebo Static Route - check on async status"
+      async_status:
+        jid: "{{ gazebo_static_route_id.ansible_job_id}}"
+      register: gazebo_static_route_log
+      until: gazebo_static_route_log.finished
+      retries: 3000000
+
+    - name: "AMR PA Package - check on async status"
+      async_status:
+        jid: "{{ amr_pa_package_id.ansible_job_id}}"
+      register: amr_pa_package_log
+      until: amr_pa_package_log.finished
+      retries: 3000000
+
+    - name: "GWM UI Package - check on async status"
+      async_status:
+        jid: "{{ gwm_ui_package_id.ansible_job_id}}"
+      register: gwm_ui_package_log
+      until: gwm_ui_package_log.finished
+      retries: 3000000
+
+    - name: "GWM Package - check on async status"
+      async_status:
+        jid: "{{ gwm_package_id.ansible_job_id}}"
+      register: gwm_package_log
+      until: gwm_package_log.finished
+      retries: 3000000
+
+    - name: "GBC Package - check on async status"
+      async_status:
+        jid: "{{ gbc_package_id.ansible_job_id}}"
+      register: gbc_package_log
+      until: gbc_package_log.finished
+      retries: 3000000
+
+    - name: "Gazebo Package - check on async status"
+      async_status:
+        jid: "{{ gazebo_package_id.ansible_job_id}}"
+      register: gazebo_package_log
+      until: gazebo_package_log.finished
+      retries: 3000000
+
+    - name: "DB Package - check on async status"
+      async_status:
+        jid: "{{ db_package_id.ansible_job_id}}"
+      register: db_package_log
+      until: db_package_log.finished
+      retries: 3000000
+
+    - name: "DB Deployment - check on async status"
+      async_status:
+        jid: "{{ db_id.ansible_job_id}}"
+      register: db_deployment_log
+      until: db_deployment_log.finished
+      retries: 3000000
+
+    - name: "GWM Deployment - check on async status"
+      async_status:
+        jid: "{{ gwm_id.ansible_job_id}}"
+      register: gwm_deployment_log
+      until: gwm_deployment_log.finished
+      retries: 3000000
+
+    - name: "GBC Deployment - check on async status"
+      async_status:
+        jid: "{{ gbc_id.ansible_job_id}}"
+      register: gbc_deployment_log
+      until: gbc_deployment_log.finished
+      retries: 3000000
+
+    - name: "AMR UI Deployment - check on async status"
+      async_status:
+        jid: "{{ amr_ui_id.ansible_job_id}}"
+      register: amr_ui_deployment_log
+      until: amr_ui_deployment_log.finished
+      retries: 3000000
+
+    - name: "Gazebo - check on async status"
+      async_status:
+        jid: "{{ gazebo_id.ansible_job_id}}"
+      register: gazebo_deployment_log
+      until: gazebo_deployment_log.finished
+      retries: 3000000
+
+    - name: "AMR1 - check on async status"
+      async_status:
+        jid: "{{ amr1_id.ansible_job_id}}"
+      register: amr1_deployment_log
+      until: amr1_deployment_log.finished
+      retries: 3000000
+
+    - name: "AMR2 - check on async status"
+      async_status:
+        jid: "{{ amr2_id.ansible_job_id}}"
+      register: amr2_deployment_log
+      until: amr2_deployment_log.finished
+      retries: 3000000
+
     - name: "AMR3 - check on async status"
       async_status:
         jid: "{{ amr3_id.ansible_job_id}}"
-      register: amr3_log
-      until: amr3_log.finished
+      register: amr3_deployment_log
+      until: amr3_deployment_log.finished
       retries: 3000000
 
-    - name: dump test output
+    - name: Docker secret Status
       debug:
-        msg: '{{ amr3_id }}'
+        msg: '{{ docker_secret_log }}'
+
+    - name: Native network Status
+      debug:
+        msg: '{{ native_network_log }}'
+
+    - name: GWM Static Route
+      debug:
+        msg: '{{ gwm_static_route_log }}'
+
+    - name: GBC Static Route
+      debug:
+        msg: '{{ gbc_static_route_log }}'
+
+    - name: AMR UI Static Route
+      debug:
+        msg: '{{ amr_ui_static_route_log }}'
+
+    - name: Gazebo Static Route
+      debug:
+        msg: '{{ gazebo_static_route_log }}'
+
+    - name: DB Package Status
+      debug:
+        msg: '{{ db_package_log }}'
+
+    - name: GWM Package Status
+      debug:
+        msg: '{{ gwm_package_log }}'
+
+    - name: GBC Package Status
+      debug:
+        msg: '{{ gbc_package_log }}'
+
+    - name: Gazebo Package Status
+      debug:
+        msg: '{{ gazebo_package_log }}'
+
+    - name: AMR PA Package Status
+      debug:
+        msg: '{{ amr_pa_package_log }}'
+
+    - name: GWM UI Package Status
+      debug:
+        msg: '{{ gwm_ui_package_log }}'
+
+    - name: DB Deployment Status
+      debug:
+        msg: '{{ db_deployment_log }}'
+
+    - name: GWM Deployment Status
+      debug:
+        msg: '{{ gwm_deployment_log }}'
+
+    - name: GBC Deployment Status
+      debug:
+        msg: '{{ gbc_deployment_log }}'
+
+    - name: AMR UI Deployment Status
+      debug:
+        msg: '{{ amr_ui_deployment_log }}'
+
+    - name: Gazebo Deployment status
+      debug:
+        msg: '{{ gazebo_deployment_log }}'
+
+    - name: AMR 1 Deployment status
+      debug:
+        msg: '{{ amr1_deployment_log }}'
+
+    - name: AMR 2 Deployment status
+      debug:
+        msg: '{{ amr2_deployment_log }}'
+
+    - name: AMR 3 Deployment status
+      debug:
+        msg: '{{ amr3_deployment_log }}'
