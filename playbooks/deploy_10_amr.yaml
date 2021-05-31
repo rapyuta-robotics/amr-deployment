@@ -28,19 +28,9 @@
         name: dockerhub
         present: "{{ present }}"
         type: docker
-        username: dsatherr
-        password: Funny#Fish
-        email: dhananjay.sathe@rapyuta-robotics.
-    - name: Docker Secret 2
-      async: 100
-      poll: 0
-      rapyuta.rr_io.secrets:
-        name: dockerhub2
-        present: "{{ present }}"
-        type: docker
-        username: larryngrapyuta
-        password: L1a9r8r8y*
-        email: larry.ng@rapyuta-robotics.com
+        username: ioamrreadonly
+        password: "{{ docker_password }}"
+        email: rss2.admin@rapyuta-robotics.com
     - name: Network Deployment
       async: 100
       poll: 0
@@ -54,28 +44,28 @@
       async: 100
       poll: 0
       rapyuta.rr_io.networks:
-        name: rr-gwm
+        name: "rr-gwm-{{ static_route_postfix }}"
         present: "{{ present }}"
         type: static_route
     - name: GBC Static Route
       async: 100
       poll: 0
       rapyuta.rr_io.networks:
-        name: rr-gbc
+        name: "rr-gbc-{{ static_route_postfix }}"
         present: "{{ present }}"
         type: static_route
     - name: AMR UI Static Route
       async: 100
       poll: 0
       rapyuta.rr_io.networks:
-        name: amr-ui
+        name: "amr-ui-{{ static_route_postfix }}"
         present: "{{ present }}"
         type: static_route
     - name: Gazebo UI Static Route
       async: 100
       poll: 0
       rapyuta.rr_io.networks:
-        name: gazebo-ui
+        name: "gazebo-ui-{{ static_route_postfix }}"
         present: "{{ present }}"
         type: static_route
     - name: rio_amr_pa package
@@ -86,8 +76,8 @@
         present: "{{ present }}"
         type: docker
         build: rio_amr_pa
-        docker_image: larryngrapyuta/testbuild:10_amr_test
-        secret: dockerhub2
+        docker_image: "{{ rio_amr_pa_image }}"
+        secret: dockerhub
         manifest_path: /tmp/rio_amr_pa.json
       register: testout
     - name: rio_gwm_ui package
@@ -97,7 +87,7 @@
         name: rio_gwm_ui
         present: "{{ present }}"
         type: docker
-        docker_image: rrdockerhub/rr_amr_ui:release_05_21
+        docker_image: "{{ rio_gwm_ui_image }}"
         build: rio_gwm_ui
         secret: dockerhub
         manifest_path: /tmp/rio_amr_ui.json
@@ -109,7 +99,7 @@
         name: rio_db
         present: "{{ present }}"
         type: docker
-        docker_image: rrdockerhub/rr_amr_postgres:nightly
+        docker_image: "{{ rio_db_image }}"
         secret: dockerhub
         manifest_path: /tmp/rio_db.json
       register: testout
@@ -120,9 +110,9 @@
         name: rio_gazebo
         present: "{{ present }}"
         type: docker
-        docker_image: larryngrapyuta/testbuild:10_amr_test
+        docker_image: "{{ rio_amr_pa_image }}"
         build: rio_amr_pa
-        secret: dockerhub2
+        secret: dockerhub
         manifest_path: /tmp/rio_gazebo.json
       register: testout
     - name: rio_gbc package
@@ -132,9 +122,9 @@
         name: rio_gbc
         present: "{{ present }}"
         type: docker
-        docker_image: larryngrapyuta/testbuild:10_amr_test
+        docker_image: "{{ rio_amr_pa_image }}"
         build: rio_amr_pa
-        secret: dockerhub2
+        secret: dockerhub
         manifest_path: /tmp/rio_gbc.json
       register: testout
     - name: rio_gwm package
@@ -144,7 +134,7 @@
         name: rio_gwm
         present: "{{ present }}"
         type: docker
-        docker_image: rrdockerhub/rr_amr_gwm:release_05_21
+        docker_image: "{{ rio_gwm_image }}"
         build: rio_gwm
         secret: dockerhub
         manifest_path: /tmp/rio_gwm.json
@@ -183,7 +173,7 @@
             - postgres
         networks:
           static_routes:
-            - name: rr-gwm
+            - name: "rr-gwm-{{ static_route_postfix }}"
               endpoint_name: GWM_CORE_URL
         component_params:
           AUTOBOOTSTRAP: true
@@ -204,7 +194,7 @@
             - rr_gwm
         networks:
           static_routes:
-            - name: rr-gbc
+            - name: "rr-gbc-{{ static_route_postfix }}"
               endpoint_name: GWM_INTERFACE_ENDPOINT
           native_networks:
             - name: native_network
@@ -230,7 +220,7 @@
             - rr_gbc
         networks:
           static_routes:
-            - name: amr-ui
+            - name: "amr-ui-{{ static_route_postfix }}"
               endpoint_name: GWM_UI
         component_params:
           SKIP_PREFLIGHT_CHECK: true
@@ -258,7 +248,7 @@
         package_name: rio_gazebo
         networks:
           static_routes:
-            - name: gazebo-ui
+            - name: "gazebo-ui-{{ static_route_postfix }}"
               endpoint_name: VNC_EP
           native_networks:
             - name: native_network
@@ -323,40 +313,40 @@
       debug:
         msg: '{{ item }}'
       with_items: "{{ amr_id.results }}"
-#    - name: "wait for UI to come up"
-#      uri:
-#        url: "https://rr-gwm-kqdbp.ep-r.io/v1/site/1"
-#        method: GET
-#        headers:
-#          accept: "application/json"
-#          X-RRAMR-Org: "1"
-#          Authorization: "token autobootstrap"
-#        status_code: 200
-#      when: "{{ present }}"
-#      register: result
-#      until: result.status == 200
-#      retries: 60
-#      delay: 20
-#    - name: "Pause to wait for UI to finish building"
-#      wait_for:
-#        timeout: 60
-#      when: "{{ present }}"
-#    - name: "Adding Agents to db"
-#      uri:
-#        url: "https://rr-gwm-kqdbp.ep-r.io/v1/agent"
-#        method: POST
-#        headers:
-#          accept: "application/json"
-#          X-RRAMR-Org: "1"
-#          X-RRAMR-Site: "1"
-#          Authorization: "token autobootstrap"
-#        body: '{"id": {{ item }}, "name": "agent{{ item }}", "robot_id": {{ item }}, "robot_descriptor_id": {{ item }}, "map": 1}'
-#        body_format: json
-#        status_code:
-#          - "200"
-#          - "201"
-#          - "409"
-#      when: "{{ present }}"
-#      with_sequence: 1-10
+    - name: "wait for UI to come up"
+      uri:
+        url: "https://rr-gwm-{{ static_route_postfix }}-kqdbp.ep-r.io/v1/site/1"
+        method: GET
+        headers:
+          accept: "application/json"
+          X-RRAMR-Org: "1"
+          Authorization: "token autobootstrap"
+        status_code: 200
+      when: "{{ present }}"
+      register: result
+      until: result.status == 200
+      retries: 60
+      delay: 20
+    - name: "Pause to wait for UI to finish building"
+      wait_for:
+        timeout: 60
+      when: "{{ present }}"
+    - name: "Adding Agents to db"
+      uri:
+        url: "https://rr-gwm-{{ static_route_postfix }}-kqdbp.ep-r.io/v1/agent"
+        method: POST
+        headers:
+          accept: "application/json"
+          X-RRAMR-Org: "1"
+          X-RRAMR-Site: "1"
+          Authorization: "token autobootstrap"
+        body: '{"id": {{ item }}, "name": "agent{{ item }}", "robot_id": {{ item }}, "robot_descriptor_id": {{ item }}, "map": 1}'
+        body_format: json
+        status_code:
+          - "200"
+          - "201"
+          - "409"
+      when: "{{ present }}"
+      with_sequence: 1-10
 
 

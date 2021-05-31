@@ -147,7 +147,7 @@
               "cmd": [
                 "/bin/bash",
                 "-c",
-                "source ~/catkin_ws/install/setup.bash && rosrun gwm_interface sitectl.py -f && sleep 10 && roslaunch bringup global.launch simulation:=true & rosrun topic_tools relay /gazebo/clock /clock || sleep infinity\""
+                "source ~/catkin_ws/install/setup.bash && rosrun gwm_interface sitectl.py -f && sleep 10 && roslaunch bringup global.launch simulation:=true & rosrun topic_tools relay /gazebo/clock /clock || sleep infinity"
               ],
               "limits": {
                 "cpu": 1,
