@@ -273,7 +273,7 @@
       abhinavg97.rr_io.deployments:
         name: "{{ prefix_name }}_amr{{ item.id }}"
         component_name: amr
-        component_alias: "{{ prefix_name }}_amr{{ item.id }}"
+        component_alias: "amr{{ item.id }}"
         present: "{{ present }}"
         package_name: rio_amr_pa
         networks:
