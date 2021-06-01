@@ -1,5 +1,5 @@
 # About
-This repo is for deploying io-amr simulation on rapyuta.io 
+This repo is for deploying io-amr simulation on rapyuta.io
 
 # Prerequisites
 - python 3
@@ -7,6 +7,10 @@ This repo is for deploying io-amr simulation on rapyuta.io
 # Clone Repo, Install dependencies
 ## Linux Instructions
 ```
+sudo apt update
+sudo apt install software-properties-common
+sudo add-apt-repository --yes --update ppa:ansible/ansible
+sudo apt install ansible
 sudo apt install git
 git clone https://github.com/rapyuta-robotics/amr-deployment.git
 cd amr-deployment
@@ -40,7 +44,7 @@ export RIO_AUTH_TOKEN=AUTH_TOKEN
 
 # Deploy simulation on rapyuta.io
 
-*Navigate to the root of the repository.* 
+*Navigate to the root of the repository.*
 ```
 ansible-playbook playbooks/play.yaml -vvv --extra-vars "@deploy_configs.json"
 ```
