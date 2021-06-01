@@ -161,7 +161,7 @@
       poll: 0
       abhinavg97.rr_io.deployments:
         name: "{{ prefix_name }}_postgres"
-        component_name: "postgres"
+        component_name: postgres
         present: "{{ present }}"
         package_name: rio_db
         component_params:
@@ -173,7 +173,7 @@
       async: 2000
       poll: 0
       abhinavg97.rr_io.deployments:
-        name: "{{ prefix_name }}_gwm"
+        name: "{{ prefix_name }}_rr_gwm"
         component_name: core
         present: "{{ present }}"
         package_name: rio_gwm
@@ -193,14 +193,14 @@
       async: 2200
       poll: 0
       abhinavg97.rr_io.deployments:
-        name: "{{ prefix_name }}_gbc"
+        name: "{{ prefix_name }}_rr_gbc"
         component_name: gbc
         present: "{{ present }}"
         package_name: rio_gbc
         depends:
           deployments:
             - "{{ prefix_name }}_postgres"
-            - "{{ prefix_name }}_gwm"
+            - "{{ prefix_name }}_rr_gwm"
         networks:
           static_routes:
             - name: "{{ prefix_name }}-gbc"
@@ -225,8 +225,8 @@
         package_name: rio_gwm_ui
         depends:
           deployments:
-            - "{{ prefix_name }}_gwm"
-            - "{{ prefix_name }}_gbc"
+            - "{{ prefix_name }}_rr_gwm"
+            - "{{ prefix_name }}_rr_gbc"
         networks:
           static_routes:
             - name: "{{ prefix_name }}-amr-ui"

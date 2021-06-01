@@ -1,7 +1,13 @@
 #!/bin/bash
+<<<<<<< HEAD
 NUM_AGENTS="10"
 HEAD="-H 'accept: application/json' -H 'X-RRAMR-Org: 1' -H 'X-RRAMR-Site: 1'  -H 'Authorization: token autobootstrap' -H 'Content-Type: application/json'"
 URL="https://mydemo-gwm-kqdbp.ep-r.io/v1/agent"
+=======
+NUM_AGENTS="$2"
+HEAD="-H 'accept: application/json' -H 'X-RRAMR-Org: 1' -H 'X-RRAMR-Site: 1'  -H 'Authorization: token autobootstrap' -H 'Content-Type: application/json'"
+URL="https://$1-gwm-kqdbp.ep-r.io/v1/agent"
+>>>>>>> ansible-10amr-deployment
 for AGENT in $(seq 1 $NUM_AGENTS)
 do
   BODY="{\"id\": $AGENT, \"name\": \"agent$AGENT\", \"robot_id\": $AGENT, \"robot_descriptor_id\": $AGENT, \"map\": 1}"

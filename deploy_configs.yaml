@@ -1,6 +1,6 @@
 present: "true"
 docker_password: "some_password_here"
-prefix_name: "mydemo"
+prefix_name: test
 rio_amr_pa_image: "rrdockerhub/io_amr_pa:release_05_21-10_amr"
 rio_gwm_ui_image: "rrdockerhub/rr_amr_ui:release_05_21"
 rio_db_image: "rrdockerhub/rr_amr_postgres:nightly"
