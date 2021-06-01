@@ -36,7 +36,7 @@
       async: 100
       poll: 0
       abhinavg97.rr_io.networks:
-        name: native_network
+        name: "{{ prefix_name }}_native_network"
         present: "{{ present }}"
         type: native_network
         ros_distro: melodic
@@ -46,7 +46,7 @@
       async: 100
       poll: 0
       abhinavg97.rr_io.networks:
-        name: "rr-gwm-{{ static_route_postfix }}"
+        name: "{{ prefix_name }}-gwm"
         present: "{{ present }}"
         type: static_route
       register: gwm_static_route_id
@@ -54,7 +54,7 @@
       async: 100
       poll: 0
       abhinavg97.rr_io.networks:
-        name: "rr-gbc-{{ static_route_postfix }}"
+        name: "{{ prefix_name }}-gbc"
         present: "{{ present }}"
         type: static_route
       register: gbc_static_route_id
@@ -62,7 +62,7 @@
       async: 100
       poll: 0
       abhinavg97.rr_io.networks:
-        name: "amr-ui-{{ static_route_postfix }}"
+        name: "{{ prefix_name }}-amr-ui"
         present: "{{ present }}"
         type: static_route
       register: amr_ui_static_route_id
@@ -70,7 +70,7 @@
       async: 100
       poll: 0
       abhinavg97.rr_io.networks:
-        name: "gazebo-ui-{{ static_route_postfix }}"
+        name: "{{ prefix_name }}-gazebo-ui"
         present: "{{ present }}"
         type: static_route
       register: gazebo_ui_static_route_id
@@ -154,7 +154,7 @@
       async: 100
       poll: 0
       abhinavg97.rr_io.deployments:
-        name: postgres
+        name: "{{ prefix_name }}_postgres"
         component_name: postgres
         present: "{{ present }}"
         package_name: rio_db
@@ -167,16 +167,16 @@
       async: 2000
       poll: 0
       abhinavg97.rr_io.deployments:
-        name: rr_gwm
+        name: "{{ prefix_name }}_rr_gwm"
         component_name: core
         present: "{{ present }}"
         package_name: rio_gwm
         depends:
           deployments:
-            - postgres
+            - "{{ prefix_name }}_postgres"
         networks:
           static_routes:
-            - name: "rr-gwm-{{ static_route_postfix }}"
+            - name: "{{ prefix_name }}-gwm"
               endpoint_name: GWM_CORE_URL
         component_params:
           AUTOBOOTSTRAP: true
@@ -187,20 +187,20 @@
       async: 2200
       poll: 0
       abhinavg97.rr_io.deployments:
-        name: rr_gbc
+        name: "{{ prefix_name }}_rr_gbc"
         component_name: gbc
         present: "{{ present }}"
         package_name: rio_gbc
         depends:
           deployments:
-            - postgres
-            - rr_gwm
+            - "{{ prefix_name }}_postgres"
+            - "{{ prefix_name }}_rr_gwm"
         networks:
           static_routes:
-            - name: "rr-gbc-{{ static_route_postfix }}"
+            - name: "{{ prefix_name }}-gbc"
               endpoint_name: GWM_INTERFACE_ENDPOINT
           native_networks:
-            - name: native_network
+            - name: "{{ prefix_name }}_native_network"
         component_params:
           GWM_INTERFACE_SITE: tatsumi
           AUTOBOOTSTRAP: true
@@ -213,17 +213,17 @@
       async: 2600
       poll: 0
       abhinavg97.rr_io.deployments:
-        name: amr_ui
+        name: "{{ prefix_name }}_amr_ui"
         component_name: gwm-ui
         present: "{{ present }}"
         package_name: rio_gwm_ui
         depends:
           deployments:
-            - rr_gwm
-            - rr_gbc
+            - "{{ prefix_name }}_rr_gwm"
+            - "{{ prefix_name }}_rr_gbc"
         networks:
           static_routes:
-            - name: "amr-ui-{{ static_route_postfix }}"
+            - name: "{{ prefix_name }}-amr-ui"
               endpoint_name: GWM_UI
         component_params:
           SKIP_PREFLIGHT_CHECK: true
@@ -241,17 +241,17 @@
       async: 2000
       poll: 0
       abhinavg97.rr_io.deployments:
-        name: gazebo
+        name: "{{ prefix_name }}_gazebo"
         component_name: gazebo
         component_alias: gazebo
         present: "{{ present }}"
         package_name: rio_gazebo
         networks:
           static_routes:
-            - name: "gazebo-ui-{{ static_route_postfix }}"
+            - name: "{{ prefix_name }}-gazebo-ui"
               endpoint_name: VNC_EP
           native_networks:
-            - name: native_network
+            - name: "{{ prefix_name }}_native_network"
         component_params:
           VNC_PASSWORD: rapyuta
           VNC_RESOLUTION: 1920x1080
@@ -265,14 +265,14 @@
       async: 2000
       poll: 0
       abhinavg97.rr_io.deployments:
-        name: "amr{{ item.id }}"
+        name: "{{ prefix_name }}_amr{{ item.id }}"
         component_name: amr
         component_alias: "amr{{ item.id }}"
         present: "{{ present }}"
         package_name: rio_amr_pa
         networks:
           native_networks:
-            - name: native_network
+            - name: "{{ prefix_name }}_native_network"
         component_params:
           ROBOT_MODEL: rr_pa_amr
           ROBOT_NAV_MODEL: rr_pa_amr
@@ -306,7 +306,7 @@
       with_items: "{{ amr_id.results }}"
     - name: "wait for UI to come up"
       uri:
-        url: "https://rr-gwm-{{ static_route_postfix }}-kqdbp.ep-r.io/v1/site/1"
+        url: "https://{{ prefix_name }}-gwm-kqdbp.ep-r.io/v1/site/1"
         method: GET
         headers:
           accept: "application/json"
@@ -324,7 +324,7 @@
       when: "{{ present }}"
     - name: "Adding Agents to db"
       uri:
-        url: "https://rr-gwm-{{ static_route_postfix }}-kqdbp.ep-r.io/v1/agent"
+        url: "https://{{ prefix_name }}-gwm-kqdbp.ep-r.io/v1/agent"
         method: POST
         headers:
           accept: "application/json"
