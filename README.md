@@ -46,7 +46,13 @@ export RIO_AUTH_TOKEN=AUTH_TOKEN
 
 *Navigate to the root of the repository.*
 ```
-ansible-playbook playbooks/play.yaml -vvv --extra-vars "@deploy_configs.json"
+ansible-playbook playbooks/play.yaml -vvv --extra-vars "@deploy_configs.yaml"
+```
+
+Once all robots are up in the UI, please verify that you can properly send an adhoc move to robot 10.
+If an error arises please run the `fix` files by doing
+```
+./fix <prefix_name> <number_of_deployed_robot>
 ```
 
 # deploy_configs Parameters:
