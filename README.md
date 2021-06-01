@@ -51,15 +51,19 @@ wget raw.github.com/transcode-open/apt-cyg/master/apt-cyg
 chmod +x apt-cyg
 mv apt-cyg /usr/local/bin
 which -a apt-cyg >/dev/null 2>&1 && echo ok
-apt-cyg install git python3-devel curl dos2unix zip unzip
-wget https://bootstrap.pypa.io/get-pip.py
-python3 get-pip.py
-apt-cyg install openssl openssl-devel libffi-devel vim
-apt-cyg install python3-{jinja2,six,yaml,crypto,cryptography}
-
+apt-cyg install python-{devel,pip,jinja2,six,yaml,crypto,cryptography}
+apt-cyg install git curl dos2unix zip unzip openssl openssl-devel libffi-devel vim
+mkdir /opt && cd /opt
+git clone git://github.com/ansible/ansible
+cd ansible && git checkout v2.9.22 # Or any version above
+python2.7 setup.py install
 ```
-
-
+Then we can install rapyuta libs
+```
+apt-cyg install python3 python3-pip
+pip3 install https://storage.googleapis.com/rio-sdk-python/rapyuta_io-0.26.0-py2.py3-none-any.whl
+ansible-galaxy collection install abhinavg97.rr_io
+```
 
 # Steps to follow *before* deploying
 1. Find Project ID from the drop down in top left corner of [here](https://console.rapyuta.io)
