@@ -31,6 +31,36 @@ pip install https://storage.googleapis.com/rio-sdk-python/rapyuta_io-0.26.0-py2.
 ansible-galaxy collection install abhinavg97.rr_io
 ```
 
+## Windows instructions
+Using WSL2 or a VM is the easiest.
+If these are not an option, then ansible can be run through cygwin.
+
+Download [cygwin](https://cygwin.com/install.html)
+Run the .exe
+Option to select during the installation:
+ - Install from internet
+ - Specify your folder (ex C:\tools\cygwin64)
+ - Specify the local package directory (ex C:\tools)
+ - Select Direct connection
+ - Select a server (https://ftp.jaist.ac.jp for Japan is fast)
+ - At the package selection change View to Full and search for wget. Under the `New` section, choose the latest version
+ - Press Next and wait for the installation
+Run C:\tools\cygwin64\Cygwin.bat and in the terminal
+```
+wget raw.github.com/transcode-open/apt-cyg/master/apt-cyg
+chmod +x apt-cyg
+mv apt-cyg /usr/local/bin
+which -a apt-cyg >/dev/null 2>&1 && echo ok
+apt-cyg install git python3-devel curl dos2unix zip unzip
+wget https://bootstrap.pypa.io/get-pip.py
+python3 get-pip.py
+apt-cyg install openssl openssl-devel libffi-devel vim
+apt-cyg install python3-{jinja2,six,yaml,crypto,cryptography}
+
+```
+
+
+
 # Steps to follow *before* deploying
 1. Find Project ID from the drop down in top left corner of [here](https://console.rapyuta.io)
 2. Find the Authentication token from [here](https://auth.rapyuta.io/authToken/)
