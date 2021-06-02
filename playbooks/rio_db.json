@@ -1,8 +1,8 @@
 {
-  "name": "rio_gwm_ui",
-  "packageVersion": "v1.0.16",
+  "name": "rio_db",
+  "packageVersion": "v1.0.0",
   "description": "",
-  "bindable": false,
+  "bindable": true,
   "plans": [
     {
       "name": "default",
@@ -12,17 +12,17 @@
       "singleton": false,
       "components": [
         {
-          "name": "gwm-ui",
+          "name": "postgres",
           "description": "",
           "cloudInfra": {
             "replicas": 1,
             "endpoints": [
               {
-                "name": "GWM_UI",
-                "exposeExternally": true,
-                "port": 443,
-                "targetPort": 3000,
-                "proto": "HTTPS"
+                "name": "POSTGRES",
+                "exposeExternally": false,
+                "proto": "TCP",
+                "port": 5432,
+                "targetPort": 5432
               }
             ]
           },
@@ -42,16 +42,14 @@
           "architecture": "amd64",
           "executables": [
             {
-              "name": "core",
+              "name": "pgsql",
               "simulationOptions": {
                 "simulation": false
               },
-              {%- for key in source %}
-                 "{{key}}": "{{ source[key] }}",
-              {%- endfor %}
               "cmd": [
                 
               ],
+              "docker": "rrdockerhub/rr_amr_postgres:nightly",
               "limits": {
                 "cpu": 0.5,
                 "memory": 2048
@@ -60,28 +58,18 @@
           ],
           "parameters": [
             {
-              "default": "ws",
-              "name": "DEFAULT_GWM_INTERFACE_PROTOCOL",
+              "default": "postgres",
+              "name": "POSTGRES_PASSWORD",
               "description": ""
             },
             {
-              "default": "8080",
-              "name": "DEFAULT_GWM_INTERFACE_PORT",
+              "default": "postgres",
+              "name": "POSTGRES_USER",
               "description": ""
             },
             {
-              "default": "gbc",
-              "name": "DEFAULT_GWM_INTERFACE_HOST",
-              "description": ""
-            },
-            {
-              "default": "true",
-              "name": "SKIP_PREFLIGHT_CHECK",
-              "description": ""
-            },
-            {
-              "default": "v1",
-              "name": "GWM_API_VERSION",
+              "default": "gwm_core",
+              "name": "POSTGRES_DB",
               "description": ""
             }
           ]
@@ -97,7 +85,21 @@
         "anyIncomingScopedOrTargetedRosConfig": false
       },
       "exposedParameters": [
-        
+        {
+          "component": "postgres",
+          "param": "POSTGRES_PASSWORD",
+          "targetParam": "POSTGRES_PASSWORD"
+        },
+        {
+          "component": "postgres",
+          "param": "POSTGRES_USER",
+          "targetParam": "POSTGRES_USER"
+        },
+        {
+          "component": "postgres",
+          "param": "POSTGRES_DB",
+          "targetParam": "POSTGRES_DB"
+        }
       ]
     }
   ]

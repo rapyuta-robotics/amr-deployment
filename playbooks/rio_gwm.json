@@ -1,6 +1,6 @@
 {
-  "name": "rio_db",
-  "packageVersion": "v1.0.13",
+  "name": "rio_gwm",
+  "packageVersion": "v1.0.0",
   "description": "",
   "bindable": true,
   "plans": [
@@ -12,17 +12,17 @@
       "singleton": false,
       "components": [
         {
-          "name": "postgres",
+          "name": "core",
           "description": "",
           "cloudInfra": {
             "replicas": 1,
             "endpoints": [
               {
-                "name": "POSTGRES",
-                "exposeExternally": false,
-                "proto": "TCP",
-                "port": 5432,
-                "targetPort": 5432
+                "name": "GWM_CORE_URL",
+                "exposeExternally": true,
+                "port": 443,
+                "targetPort": 8000,
+                "proto": "HTTPS"
               }
             ]
           },
@@ -42,17 +42,15 @@
           "architecture": "amd64",
           "executables": [
             {
-              "name": "pgsql",
+              "name": "core",
               "simulationOptions": {
                 "simulation": false
               },
-              {%- for key in source %}
-                 "{{key}}": "{{ source[key] }}",
-              {%- endfor %}
               "cmd": [
-                
+                "/bin/bash",
+                "-c",
+                "python manage.py runserver 0.0.0.0:8000"
               ],
-              "docker": "rrdockerhub/rr_amr_postgres:nightly",
               "limits": {
                 "cpu": 0.5,
                 "memory": 2048
@@ -61,20 +59,36 @@
           ],
           "parameters": [
             {
-              "default": "postgres",
-              "name": "POSTGRES_PASSWORD",
+              "default": "true",
+              "name": "DEBUG",
               "description": ""
             },
             {
-              "default": "postgres",
-              "name": "POSTGRES_USER",
+              "default": "true",
+              "name": "AUTOBOOTSTRAP",
               "description": ""
             },
             {
-              "default": "gwm_core",
-              "name": "POSTGRES_DB",
-              "description": ""
+              "default": "autobootstrap",
+              "name": "AUTO_ORG_NAME",
+              "description": "Autocreated organisation name"
+            },
+            {
+              "default": "autobootstrap",
+              "name": "AUTO_ROOT_USER",
+              "description": "Autocreated username"
+            },
+            {
+              "default": "autobootstrap",
+              "name": "AUTO_ROOT_PASS",
+              "description": "Autocreated root password"
+            },
+            {
+              "default": "autobootstrap",
+              "name": "AUTO_AUTH_TOKEN",
+              "description": "Autocreated initial token"
             }
+
           ]
         }
       ],
@@ -87,21 +101,10 @@
       "inboundROSInterfaces": {
         "anyIncomingScopedOrTargetedRosConfig": false
       },
-      "exposedParameters": [
-        {
-          "component": "postgres",
-          "param": "POSTGRES_PASSWORD",
-          "targetParam": "POSTGRES_PASSWORD"
-        },
-        {
-          "component": "postgres",
-          "param": "POSTGRES_USER",
-          "targetParam": "POSTGRES_USER"
-        },
-        {
-          "component": "postgres",
-          "param": "POSTGRES_DB",
-          "targetParam": "POSTGRES_DB"
+      "exposedParameters":[ 
+        {"component":"core",
+        "param":"GWM_AUTH_TOKEN",
+        "targetParam":"AUTO_AUTH_TOKEN"
         }
       ]
     }
