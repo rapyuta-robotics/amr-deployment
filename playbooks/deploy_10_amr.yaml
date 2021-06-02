@@ -28,7 +28,7 @@
         name: dockerhub
         present: "{{ present }}"
         type: docker
-        username: dsatherr
+        username: ioamrreadonly
         password: "{{ docker_password }}"
         email: rss2.admin@rapyuta-robotics.com
       register: docker_secret_id
