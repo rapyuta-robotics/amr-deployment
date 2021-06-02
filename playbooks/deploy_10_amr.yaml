@@ -289,6 +289,12 @@
           Y_POS: "{{ item.y }}"
           Z_POS: 0.0
           YAW: 1.57
+          CHARGE_POS_X: "{{ item.charge_x }}"
+          CHARGE_POS_Y: "{{ item.charge_y }}"
+          CHARGE_POS_YAW: 0.0
+          IDLE_POS_X: "{{ item.idle_x }}"
+          IDLE_POS_Y: "{{ item.idle_y }}"
+          IDLE_POS_YAW: 1.57
       loop: "{{  agent_list  }}"
       register: amr_id
     - name: "AMR - check on async status"

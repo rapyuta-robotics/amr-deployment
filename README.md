@@ -84,9 +84,9 @@ ansible-playbook playbooks/deploy_10_amr.yaml -vvv --extra-vars "@deploy_configs
 ```
 
 Once all robots are up in the UI, please verify that you can properly send an adhoc move to robot 10.
-If an error arises please run the `fix` files by doing
+If an error arises or gbc crashed. Update deployment of GBC and run the `fix` files by doing
 ```
-./fix <prefix_name> <number_of_deployed_robot>
+./scripts/fix <prefix_name> <number_of_deployed_robot> <gwm_auth_token>
 ```
 
 # deploy_configs Parameters:
