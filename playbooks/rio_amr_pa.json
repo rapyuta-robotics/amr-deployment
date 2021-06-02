@@ -1,6 +1,6 @@
 {
   "name": "rio_amr_pa",
-  "packageVersion": "v1.0.30",
+  "packageVersion": "v1.0.0",
   "description": "",
   "bindable": false,
   "plans": [
@@ -215,9 +215,6 @@
               "simulationOptions": {
                 "simulation": true
               },
-              {%- for key in source %}
-                 "{{key}}": "{{ source[key] }}",
-              {%- endfor %}
               "cmd": [
                 "/bin/bash",
                 "-c",

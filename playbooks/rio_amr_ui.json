@@ -1,8 +1,8 @@
 {
-  "name": "rio_gwm",
-  "packageVersion": "v1.0.20",
+  "name": "rio_gwm_ui",
+  "packageVersion": "v1.0.0",
   "description": "",
-  "bindable": true,
+  "bindable": false,
   "plans": [
     {
       "name": "default",
@@ -12,16 +12,16 @@
       "singleton": false,
       "components": [
         {
-          "name": "core",
+          "name": "gwm-ui",
           "description": "",
           "cloudInfra": {
             "replicas": 1,
             "endpoints": [
               {
-                "name": "GWM_CORE_URL",
+                "name": "GWM_UI",
                 "exposeExternally": true,
                 "port": 443,
-                "targetPort": 8000,
+                "targetPort": 3000,
                 "proto": "HTTPS"
               }
             ]
@@ -46,13 +46,8 @@
               "simulationOptions": {
                 "simulation": false
               },
-              {%- for key in source %}
-                 "{{key}}": "{{ source[key] }}",
-              {%- endfor %}
               "cmd": [
-                "/bin/bash",
-                "-c",
-                "python manage.py runserver 0.0.0.0:8000"
+                
               ],
               "limits": {
                 "cpu": 0.5,
@@ -62,36 +57,30 @@
           ],
           "parameters": [
             {
-              "default": "true",
-              "name": "DEBUG",
+              "default": "ws",
+              "name": "DEFAULT_GWM_INTERFACE_PROTOCOL",
+              "description": ""
+            },
+            {
+              "default": "8080",
+              "name": "DEFAULT_GWM_INTERFACE_PORT",
+              "description": ""
+            },
+            {
+              "default": "gbc",
+              "name": "DEFAULT_GWM_INTERFACE_HOST",
               "description": ""
             },
             {
               "default": "true",
-              "name": "AUTOBOOTSTRAP",
+              "name": "SKIP_PREFLIGHT_CHECK",
               "description": ""
             },
             {
-              "default": "autobootstrap",
-              "name": "AUTO_ORG_NAME",
-              "description": "Autocreated organisation name"
-            },
-            {
-              "default": "autobootstrap",
-              "name": "AUTO_ROOT_USER",
-              "description": "Autocreated username"
-            },
-            {
-              "default": "autobootstrap",
-              "name": "AUTO_ROOT_PASS",
-              "description": "Autocreated root password"
-            },
-            {
-              "default": "autobootstrap",
-              "name": "AUTO_AUTH_TOKEN",
-              "description": "Autocreated initial token"
+              "default": "v1",
+              "name": "GWM_API_VERSION",
+              "description": ""
             }
-
           ]
         }
       ],
@@ -104,11 +93,8 @@
       "inboundROSInterfaces": {
         "anyIncomingScopedOrTargetedRosConfig": false
       },
-      "exposedParameters":[ 
-        {"component":"core",
-        "param":"GWM_AUTH_TOKEN",
-        "targetParam":"AUTO_AUTH_TOKEN"
-        }
+      "exposedParameters": [
+        
       ]
     }
   ]
