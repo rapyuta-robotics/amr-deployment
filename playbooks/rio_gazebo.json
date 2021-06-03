@@ -223,7 +223,7 @@
               "cmd": [
                 "/bin/bash",
                 "-c",
-                "/home/rr/headless/install/vnc_startup.sh 'roslaunch bringup simulator.launch paused:=false gzclient:=true' || sleep infinity"
+                "/home/rr/headless/install/vnc_startup.sh 'roslaunch bringup simulator.launch paused:=false gzclient:=true item:=YAML' || sleep infinity"
               ],
               "limits": {
                 "cpu": 8,
