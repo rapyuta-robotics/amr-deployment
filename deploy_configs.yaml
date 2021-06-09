@@ -4,8 +4,12 @@ rio_amr_pa_image: "rrdockerhub/io_amr_pa:2021_06_01-10amr"
 rio_gwm_ui_image: "docker.io/rrdockerhub/rr_amr_ui:2021_06_01"
 rio_db_image: "rrdockerhub/rr_amr_postgres:nightly"
 rio_gwm_image: "rrdockerhub/rr_amr_gwm:2021_06_01"
-static_route_postfix: ""
 prefix_name: customPrefix
+
+# AMR common parameters
+amr_idle_timeout: 30 # s
+amr_charge_time: 7200.0 # s
+
 agent_list:
   - { id: '1', x: '6.2', y: '12', charge_x: '6.2', charge_y: '14.02', idle_x: '6.2', idle_y: '12.0' }
   - { id: '2', x: '11', y: '12', charge_x: '8.38', charge_y: '14.02', idle_x: '11.0', idle_y: '12.0' }

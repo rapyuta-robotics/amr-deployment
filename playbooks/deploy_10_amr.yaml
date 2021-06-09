@@ -289,7 +289,8 @@
           WORLD2MAP_Y: 0
           WORLD2MAP_Z: 0
           WORLD2MAP_YAW: 0
-          IDLE_TIMEOUT: 1000000
+          IDLE_TIMEOUT: "{{ amr_idle_timeout }}"
+          CHARGE_TIME: "{{ amr_charge_time }}"
           AGENT_ID: "{{ item.id }}"
           X_POS: "{{ item.x }}"
           Y_POS: "{{ item.y }}"
