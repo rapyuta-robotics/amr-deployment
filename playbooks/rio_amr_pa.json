@@ -218,7 +218,7 @@
               "cmd": [
                 "/bin/bash",
                 "-c",
-                "source ~/catkin_ws/install/setup.bash && ROS_NAMESPACE=$RIO_ROS_ENV_ALIAS stdbuf -oL roslaunch bringup agent.launch simulation:=true item:=YAML || sleep infinity"
+                "source ~/catkin_ws/install/setup.bash && ROS_NAMESPACE=$RIO_ROS_ENV_ALIAS stdbuf -oL roslaunch bringup agent.launch simulation:=true || sleep infinity"
               ],
               "limits": {
                 "cpu": 2,
