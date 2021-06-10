@@ -22,7 +22,7 @@
         src: rio_gwm.json
         dest: /tmp/rio_gwm.json
     - name: amr_pa_build
-      async: 2600
+      async: 12000
       poll: 0
       abhinavg97.rr_io.builds:
         name: "{{ prefix_name }}_rio_amr_pa"
@@ -40,7 +40,7 @@
         tag_name: "{{ prefix_name }}"
       register: amr_pa_build_id
     - name: rio_gwm_ui_build
-      async: 2600
+      async: 12000
       poll: 0
       abhinavg97.rr_io.builds:
         name: "{{ prefix_name }}_rio_gwm_ui"
@@ -59,7 +59,7 @@
         tag_name: "{{ prefix_name }}"
       register: rio_gwm_ui_build_id
     - name: rio_gwm_build
-      async: 2600
+      async: 12000
       poll: 0
       abhinavg97.rr_io.builds:
         name: "{{ prefix_name }}_rio_gwm"
@@ -78,7 +78,7 @@
         tag_name: "{{ prefix_name }}"
       register: rio_gwm_build_id
     - name: Network Deployment
-      async: 100
+      async: 12000
       poll: 0
       abhinavg97.rr_io.networks:
         name: "{{ prefix_name }}_native_network"
@@ -88,7 +88,7 @@
         resource_type: small
       register: native_network_id
     - name: GWM Static Route
-      async: 100
+      async: 12000
       poll: 0
       abhinavg97.rr_io.networks:
         name: "{{ prefix_name }}-gwm"
@@ -96,7 +96,7 @@
         type: static_route
       register: gwm_static_route_id
     - name: GBC Static Route
-      async: 100
+      async: 12000
       poll: 0
       abhinavg97.rr_io.networks:
         name: "{{ prefix_name }}-gbc"
@@ -104,7 +104,7 @@
         type: static_route
       register: gbc_static_route_id
     - name: AMR UI Static Route
-      async: 100
+      async: 12000
       poll: 0
       abhinavg97.rr_io.networks:
         name: "{{ prefix_name }}-amr-ui"
@@ -112,7 +112,7 @@
         type: static_route
       register: amr_ui_static_route_id
     - name: Gazebo UI Static Route
-      async: 100
+      async: 12000
       poll: 0
       abhinavg97.rr_io.networks:
         name: "{{ prefix_name }}-gazebo-ui"
@@ -120,7 +120,7 @@
         type: static_route
       register: gazebo_ui_static_route_id
     - name: rio_amr_pa package
-      async: 1250
+      async: 12000
       poll: 0
       abhinavg97.rr_io.packages:
         name: "{{ prefix_name }}_rio_amr_pa"
@@ -131,7 +131,7 @@
         manifest_path: /tmp/rio_amr_pa.json
       register: rio_amr_pa_package_id
     - name: rio_gwm_ui package
-      async: 1000
+      async: 12000
       poll: 0
       abhinavg97.rr_io.packages:
         name: "{{ prefix_name }}_rio_gwm_ui"
@@ -142,7 +142,7 @@
         manifest_path: /tmp/rio_amr_ui.json
       register: rio_gwm_ui_package_id
     - name: rio_db package
-      async: 1000
+      async: 12000
       poll: 0
       abhinavg97.rr_io.packages:
         name: "{{ prefix_name }}_rio_db"
@@ -153,7 +153,7 @@
         manifest_path: /tmp/rio_db.json
       register: rio_db_package_id
     - name: rio_gazebo package
-      async: 1250
+      async: 12000
       poll: 0
       abhinavg97.rr_io.packages:
         name: "{{ prefix_name }}_rio_gazebo"
@@ -164,7 +164,7 @@
         manifest_path: /tmp/rio_gazebo.json
       register: rio_gazebo_package_id
     - name: rio_gbc package
-      async: 1250
+      async: 12000
       poll: 0
       abhinavg97.rr_io.packages:
         name: "{{ prefix_name }}_rio_gbc"
@@ -175,7 +175,7 @@
         manifest_path: /tmp/rio_gbc.json
       register: rio_gbc_package_id
     - name: rio_gwm package
-      async: 1000
+      async: 12000
       poll: 0
       abhinavg97.rr_io.packages:
         name: "{{ prefix_name }}_rio_gwm"
@@ -191,7 +191,7 @@
   connection: local
   tasks:
     - name: DB Deployment
-      async: 100
+      async: 12000
       poll: 0
       abhinavg97.rr_io.deployments:
         name: "{{ prefix_name }}_postgres"
@@ -204,7 +204,7 @@
           POSTGRES_PASSWORD: postgres
       register: db_deploy_id
     - name: GWM deployment
-      async: 2000
+      async: 12000
       poll: 0
       abhinavg97.rr_io.deployments:
         name: "{{ prefix_name }}_rr_gwm"
@@ -224,7 +224,7 @@
           DJANGO_LOG_LEVEL: WARNING
       register: rr_gwm_deploy_id
     - name: GBC deployment
-      async: 2200
+      async: 12000
       poll: 0
       abhinavg97.rr_io.deployments:
         name: "{{ prefix_name }}_rr_gbc"
@@ -250,7 +250,7 @@
           ROSCONSOLE_FORMAT: "[$${severity}] [$${time}] [$${node} $${logger} $${function} $${line}]: $${message}"
       register: rr_gbc_deploy_id
     - name: AMR UI  deployment
-      async: 2600
+      async: 12000
       poll: 0
       abhinavg97.rr_io.deployments:
         name: "{{ prefix_name }}_amr_ui"
@@ -278,7 +278,7 @@
   connection: local
   tasks:
     - name: Gazebo Deployment
-      async: 2000
+      async: 12000
       poll: 0
       abhinavg97.rr_io.deployments:
         name: "{{ prefix_name }}_gazebo"
@@ -302,7 +302,7 @@
           GWM_AUTH_TOKEN: autobootstrap
       register: gazebo_deploy_id
     - name: AMR Deployment
-      async: 2000
+      async: 12000
       poll: 0
       abhinavg97.rr_io.deployments:
         name: "{{ prefix_name }}_amr{{ item.id }}"
@@ -339,7 +339,7 @@
         jid: "{{ item.ansible_job_id}}"
       register: build_log
       until: build_log.finished
-      retries: 60
+      retries: 600
       delay: 20
       when: "{{ present }}"
       loop:
@@ -351,7 +351,7 @@
         jid: "{{ item.ansible_job_id}}"
       register: amr_log
       until: amr_log.finished
-      retries: 60
+      retries: 600
       delay: 20
       when: "{{ present }}"
       with_items: "{{ amr_id.results }}"
@@ -364,14 +364,14 @@
         jid: "{{ rr_gwm_deploy_id.ansible_job_id }}"
       register: amr_log
       until: amr_log.finished
-      retries: 60
+      retries: 600
       delay: 20
     - name: "gazebo deployment - check on async status"
       async_status:
         jid: "{{ gazebo_deploy_id.ansible_job_id }}"
       register: gazebo_log
       until: gazebo_log.finished
-      retries: 60
+      retries: 600
       delay: 20
     - name: "wait for UI to come up"
       uri:
@@ -385,7 +385,7 @@
       when: "{{ present }}"
       register: result
       until: result.status == 200
-      retries: 60
+      retries: 600
       delay: 20
     - name: "Pause to wait for UI to finish building"
       wait_for:
