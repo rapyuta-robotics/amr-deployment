@@ -302,6 +302,7 @@
           IDLE_POS_X: "{{ item.idle_x }}"
           IDLE_POS_Y: "{{ item.idle_y }}"
           IDLE_POS_YAW: 1.57
+          ENABLE_SAFETY_ZONES: true
       loop: "{{  agent_list  }}"
       register: amr_id
     - name: "AMR - check on async status"

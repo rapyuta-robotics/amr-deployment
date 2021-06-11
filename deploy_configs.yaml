@@ -1,6 +1,6 @@
 present: "true"
 docker_password: "insert password"
-rio_amr_pa_image: "rrdockerhub/io_amr_pa:2021_06_01-10amr"
+rio_amr_pa_image: "rrdockerhub/io_amr_pa:2021_06_01-10amr-region-fix"
 rio_gwm_ui_image: "docker.io/rrdockerhub/rr_amr_ui:2021_06_01"
 rio_db_image: "rrdockerhub/rr_amr_postgres:nightly"
 rio_gwm_image: "rrdockerhub/rr_amr_gwm:2021_06_01"
