@@ -17,7 +17,13 @@
           "cloudInfra": {
             "replicas": 1,
             "endpoints": [
-              
+              {
+                "name": "VNC_EP",
+                "exposeExternally": true,
+                "port": 443,
+                "targetPort": 6901,
+                "proto": "HTTPS"
+              }
             ]
           },
           "ros": {
@@ -218,7 +224,7 @@
               "cmd": [
                 "/bin/bash",
                 "-c",
-                "source ~/catkin_ws/install/setup.bash && ROS_NAMESPACE=$RIO_ROS_ENV_ALIAS stdbuf -oL roslaunch bringup agent.launch simulation:=true || sleep infinity"
+                "source ~/catkin_ws/install/setup.bash && ROS_NAMESPACE=$RIO_ROS_ENV_ALIAS stdbuf -oL /home/rr/headless/install/vnc_startup.sh 'roslaunch bringup agent.launch simulation:=true' || sleep infinity"
               ],
               "limits": {
                 "cpu": 2,
@@ -310,6 +316,16 @@
             {
               "default": "1",
               "name": "AGENT_ID",
+              "description": ""
+            },
+            {
+              "default": "1280x720",
+              "name": "VNC_RESOLUTION",
+              "description": ""
+            },
+            {
+              "default": "rapyuta",
+              "name": "VNC_PASSWORD",
               "description": ""
             }
           ],
