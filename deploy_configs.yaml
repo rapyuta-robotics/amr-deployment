@@ -1,0 +1,15 @@
+present: "true"
+hitachi_docker_read_password: ""
+dockerhub_read_password: ""
+rio_amr_pa_image: "docker-registry-default.apps.rapyuta.io/hitachi/hitachi_io_amr_pa:2021_06_09"
+rio_gwm_ui_image: "docker-registry-default.apps.rapyuta.io/hitachi/rr_amr_ui:release_05_21"
+rio_db_image: "rrdockerhub/rr_amr_postgres:nightly"
+rio_gwm_image: "docker-registry-default.apps.rapyuta.io/hitachi/rr_amr_gwm:2021_06_09"
+prefix_name: hitachitest
+site_name: toyama
+agent_list:
+  - { id: '1001', x: '43.65', y: '24.74', yaw: '3.14', map_name: toyama_1F}
+  - { id: '1002', x: '28.5', y: '38.7', yaw: '-1.57', map_name: toyama_1F }
+  - { id: '1003', x: '45.1', y: '21.73', yaw: '0', map_name: toyama_1F }
+  - { id: '1005', x: '30.23', y: '10.47', yaw: '1.57', map_name: toyama_1F }
+
