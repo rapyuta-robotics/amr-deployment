@@ -21,242 +21,162 @@
     - copy:
         src: rio_gwm.json
         dest: /tmp/rio_gwm.json
-    - name: Docker Secret
-      async: 100
-      poll: 0
-      abhinavg97.rr_io.secrets:
-        name: dockerhub
-        present: "{{ present }}"
-        type: docker
-        username: ioamrreadonly
-        password: "{{ docker_password }}"
-        email: rss2.admin@rapyuta-robotics.com
     - name: Network Deployment
-      async: 100
+      async: 12000
       poll: 0
       abhinavg97.rr_io.networks:
-        name: native_network
+        name: "{{ prefix_name }}_native_network"
         present: "{{ present }}"
         type: native_network
         ros_distro: melodic
         resource_type: small
+      register: native_network_id
     - name: GWM Static Route
-      async: 100
+      async: 12000
       poll: 0
       abhinavg97.rr_io.networks:
-        name: "{{ rr_gwm_static_route }}"
+        name: "{{ prefix_name }}-gwm"
         present: "{{ present }}"
         type: static_route
+      register: gwm_static_route_id
     - name: GBC Static Route
-      async: 100
+      async: 12000
       poll: 0
       abhinavg97.rr_io.networks:
-        name: "{{ rr_gbc_static_route }}"
+        name: "{{ prefix_name }}-gbc"
         present: "{{ present }}"
         type: static_route
+      register: gbc_static_route_id
     - name: AMR UI Static Route
-      async: 100
+      async: 12000
       poll: 0
       abhinavg97.rr_io.networks:
-        name: "{{ amr_ui_static_route }}"
+        name: "{{ prefix_name }}-amr-ui"
         present: "{{ present }}"
         type: static_route
-    - name: Gazebo UI Static Route
-      async: 100
-      poll: 0
-      abhinavg97.rr_io.networks:
-        name: "{{ gazebo_ui_static_route }}"
-        present: "{{ present }}"
-        type: static_route
-    - name: rio_amr_pa build
-      async: 100
-      poll: 0
-      abhinavg97.rr_io.builds:
-        name: rio_amr_pa
-        strategy_type: docker
-        present: "{{ present }}"
-        repository: git@github.com:rapyuta-robotics/io_amr.git
-        branch: release
-        docker_file_path: docker/amrrobot/Dockerfile
-        source_secret: github
-        docker_pull_secret: dockerhub
-        docker_push_secret: dockerhub
-        docker_image_repository: docker.io/rrdockerhub/io_amr_pa
-        trigger: false
-        trigger_name: ansible_ci
-        tag_name: ansible_ci
-    - name: rio_gwm_ui build
-      async: 100
-      poll: 0
-      abhinavg97.rr_io.builds:
-        name: rio_gwm_ui
-        strategy_type: docker
-        present: "{{ present }}"
-        repository: git@github.com:rapyuta-robotics/io_amr.git
-        context_directory: rr_amr_ui
-        branch: release
-        docker_file_path: Dockerfile
-        source_secret: github
-        docker_pull_secret: dockerhub
-        docker_push_secret: dockerhub
-        docker_image_repository: docker.io/rrdockerhub/rr_amr_ui
-        trigger: false
-        trigger_name: ansible_ci
-        tag_name: ansible_ci
-    - name: rio_gwm build
-      async: 100
-      poll: 0
-      abhinavg97.rr_io.builds:
-        name: rio_gwm
-        strategy_type: docker
-        present: "{{ present }}"
-        repository: git@github.com:rapyuta-robotics/io_amr.git
-        context_directory: rr_amr_gwm/gwm_core
-        branch: release
-        docker_file_path: Dockerfile.full
-        source_secret: github
-        docker_pull_secret: dockerhub
-        docker_push_secret: dockerhub
-        docker_image_repository: docker.io/rrdockerhub/rr_amr_gwm
-        trigger: false
-        trigger_name: ansible_ci
-        tag_name: ansible_ci
+      register: amr_ui_static_route_id
     - name: rio_amr_pa package
-      async: 1250
+      async: 12000
       poll: 0
       abhinavg97.rr_io.packages:
-        name: rio_amr_pa
+        name: "{{ prefix_name }}_rio_amr_pa"
         present: "{{ present }}"
         type: docker
-        version: auto
-        build: rio_amr_pa
         docker_image: "{{ rio_amr_pa_image }}"
-        secret: dockerhub
+        secret: "docker"
         manifest_path: /tmp/rio_amr_pa.json
-      register: testout
+      register: rio_amr_pa_package_id
+    - name: rio_amr_pa_hw package
+      async: 12000
+      poll: 0
+      abhinavg97.rr_io.packages:
+        name: "{{ prefix_name }}_rio_amr_pa_hw"
+        present: "{{ present }}"
+        type: docker
+        docker_image: "{{ rio_amr_pa_hw_image }}"
+        secret: "docker"
+        manifest_path: /tmp/rio_amr_pa.json
+      register: rio_amr_pa_hw_package_id
     - name: rio_gwm_ui package
-      async: 1000
+      async: 12000
       poll: 0
       abhinavg97.rr_io.packages:
-        name: rio_gwm_ui
+        name: "{{ prefix_name }}_rio_gwm_ui"
         present: "{{ present }}"
         type: docker
-        version: auto
         docker_image: "{{ rio_gwm_ui_image }}"
-        build: rio_gwm_ui
-        secret: dockerhub
+        secret: "docker"
         manifest_path: /tmp/rio_amr_ui.json
-      register: testout
+      register: rio_gwm_ui_package_id
     - name: rio_db package
-      async: 1000
+      async: 12000
       poll: 0
       abhinavg97.rr_io.packages:
-        name: rio_db
+        name: "{{ prefix_name }}_rio_db"
         present: "{{ present }}"
         type: docker
-        version: auto
-        docker_image: "{{ rio_db_image }}"
-        secret: dockerhub
+        docker_image: "rrdockerhub/rr_amr_postgres:nightly"
+        secret: "docker"
         manifest_path: /tmp/rio_db.json
-      register: testout
-    - name: rio_gazebo package
-      async: 1250
-      poll: 0
-      abhinavg97.rr_io.packages:
-        name: rio_gazebo
-        present: "{{ present }}"
-        type: docker
-        version: auto
-        docker_image: "{{ rio_gazebo_image }}"
-        build: rio_amr_pa
-        secret: dockerhub
-        manifest_path: /tmp/rio_gazebo.json
-      register: testout
+      register: rio_db_package_id
     - name: rio_gbc package
-      async: 1250
+      async: 12000
       poll: 0
       abhinavg97.rr_io.packages:
-        name: rio_gbc
+        name: "{{ prefix_name }}_rio_gbc"
         present: "{{ present }}"
         type: docker
-        version: auto
-        docker_image: "{{ rio_gbc_image }}"
-        build: rio_amr_pa
-        secret: dockerhub
+        docker_image: "{{ rio_amr_pa_image }}"
+        secret: "docker"
         manifest_path: /tmp/rio_gbc.json
-      register: testout
+      register: rio_gbc_package_id
     - name: rio_gwm package
-      async: 1000
+      async: 12000
       poll: 0
       abhinavg97.rr_io.packages:
-        name: rio_gwm
+        name: "{{ prefix_name }}_rio_gwm"
         present: "{{ present }}"
         type: docker
-        version: auto
         docker_image: "{{ rio_gwm_image }}"
-        build: rio_gwm
-        secret: dockerhub
+        secret: "docker"
         manifest_path: /tmp/rio_gwm.json
-      register: testout
-    - name: dump test output
-      debug:
-        msg: '{{ testout }}'
+      register: rio_gwm_package_id
 - name: DB, GWM, GBC, AMR UI Deployments
   hosts: localhost
   strategy: free
   connection: local
   tasks:
     - name: DB Deployment
-      async: 100
+      async: 12000
       poll: 0
       abhinavg97.rr_io.deployments:
-        name: postgres
+        name: "{{ prefix_name }}_postgres"
         component_name: postgres
         present: "{{ present }}"
-        package_name: rio_db
+        package_name: "{{ prefix_name }}_rio_db"
         component_params:
           POSTGRES_DB: gwm_core
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
-      register: testout
+      register: db_deploy_id
     - name: GWM deployment
-      async: 2000
+      async: 12000
       poll: 0
       abhinavg97.rr_io.deployments:
-        name: rr_gwm
+        name: "{{ prefix_name }}_rr_gwm"
         component_name: core
         present: "{{ present }}"
-        package_name: rio_gwm
+        package_name: "{{ prefix_name }}_rio_gwm"
         depends:
           deployments:
-            - postgres
+            - "{{ prefix_name }}_postgres"
         networks:
           static_routes:
-            - name: "{{ rr_gwm_static_route }}"
+            - name: "{{ prefix_name }}-gwm"
               endpoint_name: GWM_CORE_URL
         component_params:
           AUTOBOOTSTRAP: true
           DEBUG: true
           DJANGO_LOG_LEVEL: WARNING
-      register: testout
+      register: rr_gwm_deploy_id
     - name: GBC deployment
-      async: 2200
+      async: 12000
       poll: 0
       abhinavg97.rr_io.deployments:
-        name: rr_gbc
+        name: "{{ prefix_name }}_rr_gbc"
         component_name: gbc
         present: "{{ present }}"
-        package_name: rio_gbc
+        package_name: "{{ prefix_name }}_rio_gbc"
         depends:
           deployments:
-            - postgres
-            - rr_gwm
+            - "{{ prefix_name }}_postgres"
+            - "{{ prefix_name }}_rr_gwm"
         networks:
           static_routes:
-            - name: "{{ rr_gbc_static_route }}"
+            - name: "{{ prefix_name }}-gbc"
               endpoint_name: GWM_INTERFACE_ENDPOINT
           native_networks:
-            - name: native_network
+            - name: "{{ prefix_name }}_native_network"
         component_params:
           GWM_INTERFACE_SITE: tatsumi
           AUTOBOOTSTRAP: true
@@ -264,22 +184,22 @@
           GWM_AUTH_TOKEN: autobootstrap
           IO_AMR_GWM_INTERFACE_NODE_NAME: rr_gwm_interface
           ROSCONSOLE_FORMAT: "[$${severity}] [$${time}] [$${node} $${logger} $${function} $${line}]: $${message}"
-      register: testout
+      register: rr_gbc_deploy_id
     - name: AMR UI  deployment
-      async: 2600
+      async: 12000
       poll: 0
       abhinavg97.rr_io.deployments:
-        name: amr_ui
+        name: "{{ prefix_name }}_amr_ui"
         component_name: gwm-ui
         present: "{{ present }}"
-        package_name: rio_gwm_ui
+        package_name: "{{ prefix_name }}_rio_gwm_ui"
         depends:
           deployments:
-            - rr_gwm
-            - rr_gbc
+            - "{{ prefix_name }}_rr_gwm"
+            - "{{ prefix_name }}_rr_gbc"
         networks:
           static_routes:
-            - name: "{{ amr_ui_static_route }}"
+            - name: "{{ prefix_name }}-amr-ui"
               endpoint_name: GWM_UI
         component_params:
           SKIP_PREFLIGHT_CHECK: true
@@ -287,51 +207,26 @@
           DEFAULT_GWM_INTERFACE_HOST: gbc
           DEFAULT_GWM_INTERFACE_PORT: 8080
           DEFAULT_GWM_INTERFACE_PROTOCOL: ws
-      register: testout
-    - name: dump test output
-      debug:
-        msg: '{{ testout }}'
+      register: amr_ui_deploy_id
 - name: Gazebo and AMR deployments
   hosts: localhost
   strategy: free
   connection: local
   tasks:
-    - name: Gazebo Deployment
-      async: 2000
+    - name: AMR Deployment
+      async: 12000
       poll: 0
       abhinavg97.rr_io.deployments:
-        name: gazebo
-        component_name: gazebo
-        component_alias: gazebo
-        present: "{{ present }}"
-        package_name: rio_gazebo
-        networks:
-          static_routes:
-            - name: "{{ gazebo_ui_static_route }}"
-              endpoint_name: VNC_EP
-          native_networks:
-            - name: native_network
-        component_params:
-          VNC_PASSWORD: rapyuta
-          VNC_RESOLUTION: 1920x1080
-          DEBUG: true
-          RACK: true
-          WORLD: tatsumi
-          ITEM_SPAWN_FROM: AUTO
-          GWM_AUTH_TOKEN: autobootstrap
-
-    - name: AMR1 Deployment
-      async: 2000
-      poll: 0
-      abhinavg97.rr_io.deployments:
-        name: amr1
+        name: "sbm_2"
+        type: "device"
+        device_name: "sbm_2"
         component_name: amr
-        component_alias: amr1
+        component_alias: "sbm_2"
         present: "{{ present }}"
-        package_name: rio_amr_pa
+        package_name: "{{ prefix_name }}_rio_amr_pa_hw"
         networks:
           native_networks:
-            - name: native_network
+            - name: "{{ prefix_name }}_native_network"
         component_params:
           ROBOT_MODEL: rr_pa_amr
           ROBOT_NAV_MODEL: rr_pa_amr
@@ -343,78 +238,49 @@
           WORLD2MAP_Z: 0
           WORLD2MAP_YAW: 0
           IDLE_TIMEOUT: 1000000
-          AGENT_ID: 1
-          X_POS: 6.2
-          Y_POS: 12
+          AGENT_ID: "{{ item.id }}"
+          X_POS: "{{ item.x }}"
+          Y_POS: "{{ item.y }}"
           Z_POS: 0.0
           YAW: 1.57
-
-    - name: AMR2 Deployment
-      async: 2000
-      poll: 0
-      abhinavg97.rr_io.deployments:
-        name: amr2
-        component_name: amr
-        component_alias: amr2
-        present: "{{ present }}"
-        package_name: rio_amr_pa
-        networks:
-          native_networks:
-            - name: native_network
-        component_params:
-          ROBOT_MODEL: rr_pa_amr
-          ROBOT_NAV_MODEL: rr_pa_amr
-          NAV_STRATEGY: graph_guided
-          MAP: tatsumi
-          MAP_ID: 1
-          WORLD2MAP_X: 0
-          WORLD2MAP_Y: 0
-          WORLD2MAP_Z: 0
-          WORLD2MAP_YAW: 0
-          IDLE_TIMEOUT: 1000000
-          AGENT_ID: 2
-          X_POS: 11
-          Y_POS: 12
-          Z_POS: 0.0
-          YAW: 1.57
-
-    - name: AMR3 Deployment
-      async: 2000
-      poll: 0
-      abhinavg97.rr_io.deployments:
-        name: amr3
-        component_name: amr
-        component_alias: amr3
-        present: "{{ present }}"
-        package_name: rio_amr_pa
-        networks:
-          native_networks:
-            - name: native_network
-        component_params:
-          ROBOT_MODEL: rr_pa_amr
-          ROBOT_NAV_MODEL: rr_pa_amr
-          NAV_STRATEGY: graph_guided
-          MAP: tatsumi
-          MAP_ID: 1
-          WORLD2MAP_X: 0
-          WORLD2MAP_Y: 0
-          WORLD2MAP_Z: 0
-          WORLD2MAP_YAW: 0
-          IDLE_TIMEOUT: 1000000
-          AGENT_ID: 3
-          X_POS: 13.6
-          Y_POS: 1.3
-          Z_POS: 0.0
-          YAW: 1.57
-      register: amr3_id
-    
-    - name: "AMR3 - check on async status"
+      loop:
+        - { id: '1', x: '6.2', y: '12'}
+      register: amr_id
+    - name: "AMR - check on async status"
       async_status:
-        jid: "{{ amr3_id.ansible_job_id}}"
-      register: amr3_log
-      until: amr3_log.finished
-      retries: 3000000
-
-    - name: dump test output
+        jid: "{{ item.ansible_job_id}}"
+      register: amr_log
+      until: amr_log.finished
+      retries: 600
+      delay: 20
+      when: "{{ present }}"
+      with_items: "{{ amr_id.results }}"
+    - name: dump amr async output
       debug:
-        msg: '{{ amr3_id }}'
+        msg: '{{ item }}'
+      with_items: "{{ amr_id.results }}"
+    - name: "rr_gwm deployment - check on async status"
+      async_status:
+        jid: "{{ rr_gwm_deploy_id.ansible_job_id }}"
+      register: amr_log
+      until: amr_log.finished
+      retries: 600
+      delay: 20
+    - name: "wait for UI to come up"
+      uri:
+        url: "https://{{ prefix_name }}-gwm-kqdbp.ep-r.io/v1/site/1"
+        method: GET
+        headers:
+          accept: "application/json"
+          X-RRAMR-Org: "1"
+          Authorization: "token autobootstrap"
+        status_code: 200
+      when: "{{ present }}"
+      register: result
+      until: result.status == 200
+      retries: 600
+      delay: 20
+    - name: "Pause to wait for UI to finish building"
+      wait_for:
+        timeout: 60
+      when: "{{ present }}"
