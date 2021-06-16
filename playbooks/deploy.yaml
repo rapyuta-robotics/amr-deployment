@@ -28,7 +28,7 @@
       async: 100
       poll: 0
       abhinavg97.rr_io.secrets:
-        name: forkliftreporead
+        name: forkliftread
         present: true
         registry_url: docker-registry-default.apps.rapyuta.io/hitachi
         type: docker
@@ -48,8 +48,8 @@
         email: rss2.admin@rapyuta-robotics.com
       register: dockerhubread_secret_id
     - name: Network Deployment
-#      async: 100
-#      poll: 0
+      async: 100
+      poll: 0
       abhinavg97.rr_io.networks:
         name: "{{ prefix_name }}_routed_network"
         present: "{{ present }}"
@@ -99,7 +99,7 @@
         type: docker
         build: rio_amr_pa
         docker_image: "{{ rio_amr_pa_image }}"
-        secret: forkliftreporead
+        secret: forkliftread
         manifest_path: /tmp/rio_amr_pa.json
       register: rio_amr_pa_package_id
     - name: rio_gwm_ui package
@@ -112,7 +112,7 @@
         type: docker
         docker_image: "{{ rio_gwm_ui_image }}"
         build: rio_gwm_ui
-        secret: forkliftreporead
+        secret: forkliftread
         manifest_path: /tmp/rio_amr_ui.json
       register: rio_gwm_ui_package_id
     - name: rio_db package
@@ -137,7 +137,7 @@
         type: docker
         docker_image: "{{ rio_amr_pa_image }}"
         build: rio_amr_pa
-        secret: forkliftreporead
+        secret: forkliftread
         manifest_path: /tmp/rio_gazebo.json
       register: rio_gazebo_package_id
     - name: rio_gbc package
@@ -150,7 +150,7 @@
         type: docker
         docker_image: "{{ rio_amr_pa_image }}"
         build: rio_amr_pa
-        secret: forkliftreporead
+        secret: forkliftread
         manifest_path: /tmp/rio_gbc.json
       register: rio_gbc_package_id
     - name: rio_gbc package
@@ -163,7 +163,7 @@
         type: docker
         docker_image: "{{ rio_amr_pa_image }}"
         build: rio_amr_pa
-        secret: forkliftreporead
+        secret: forkliftread
         manifest_path: rio_gbc_no_bootstrap.json
       register: rio_gbc_package_id
     - name: rio_gwm package
@@ -176,7 +176,7 @@
         type: docker
         docker_image: "{{ rio_gwm_image }}"
         build: rio_gwm
-        secret: forkliftreporead
+        secret: forkliftread
         manifest_path: /tmp/rio_gwm.json
       register: rio_gwm_package_id
 - name: DB, GWM, GBC, AMR UI Deployments
