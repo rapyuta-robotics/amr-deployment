@@ -21,7 +21,17 @@
     - copy:
         src: rio_gwm.json
         dest: /tmp/rio_gwm.json
-    - name: Network Deployment
+    - name: Native Network Deployment
+      async: 12000
+      poll: 0
+      abhinavg97.rr_io.networks:
+        name: "{{ prefix_name }}_native_network"
+        present: "{{ present }}"
+        type: native_network
+        ros_distro: melodic
+        resource_type: small
+      register: native_network_id
+    - name: Routed Network Deployment
       async: 12000
       poll: 0
       abhinavg97.rr_io.networks:
@@ -29,8 +39,10 @@
         present: "{{ present }}"
         type: routed_network
         ros_distro: melodic
-        resource_type: small
-      register: routed_network_id
+        runtime: device
+        device_name: sbm_2
+        network_interface:
+      register: native_network_id
     - name: GWM Static Route
       async: 12000
       poll: 0
@@ -55,17 +67,17 @@
         present: "{{ present }}"
         type: static_route
       register: amr_ui_static_route_id
-    - name: rio_amr_pa package
-      async: 12000
-      poll: 0
-      abhinavg97.rr_io.packages:
-        name: "{{ prefix_name }}_rio_amr_pa"
-        present: "{{ present }}"
-        type: docker
-        docker_image: "{{ rio_amr_pa_image }}"
-        secret: "docker"
-        manifest_path: /tmp/rio_amr_pa.json
-      register: rio_amr_pa_package_id
+#    - name: rio_amr_pa package
+#      async: 12000
+#      poll: 0
+#      abhinavg97.rr_io.packages:
+#        name: "{{ prefix_name }}_rio_amr_pa"
+#        present: "{{ present }}"
+#        type: docker
+#        docker_image: "{{ rio_amr_pa_image }}"
+#        secret: "docker"
+#        manifest_path: /tmp/rio_amr_pa.json
+#      register: rio_amr_pa_package_id
     - name: rio_amr_pa_hw package
       async: 12000
       poll: 0
@@ -73,8 +85,6 @@
         name: "{{ prefix_name }}_rio_amr_pa_hw"
         present: "{{ present }}"
         type: docker
-        runtime: device
-        architecture: amd64
         docker_image: "{{ rio_amr_pa_hw_image }}"
         secret: "docker"
         manifest_path: /tmp/rio_amr_pa.json
@@ -177,8 +187,8 @@
           static_routes:
             - name: "{{ prefix_name }}-gbc"
               endpoint_name: GWM_INTERFACE_ENDPOINT
-          routed_networks:
-            - name: "{{ prefix_name }}_routed_network"
+          native_networks:
+            - name: "{{ prefix_name }}_native_network"
         component_params:
           GWM_INTERFACE_SITE: tatsumi
           AUTOBOOTSTRAP: true
@@ -220,7 +230,7 @@
       poll: 0
       abhinavg97.rr_io.deployments:
         name: "sbm_2"
-        type: "device"
+        runtime: "device"
         device_name: "sbm_2"
         component_name: amr
         component_alias: "sbm_2"

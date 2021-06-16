@@ -213,18 +213,18 @@
             "isROS": true,
             "ros_distro": "melodic"
           },
-          "requiredRuntime": "cloud",
+          "requiredRuntime": "device",
           "architecture": "amd64",
           "executables": [
             {
               "name": "amr",
               "simulationOptions": {
-                "simulation": true
+                "simulation": false
               },
               "cmd": [
                 "/bin/bash",
                 "-c",
-                "source ~/catkin_ws/install/setup.bash && ROS_NAMESPACE=$RIO_ROS_ENV_ALIAS stdbuf -oL /home/rr/headless/install/vnc_startup.sh 'roslaunch bringup agent.launch simulation:=true' || sleep infinity"
+                "source ~/catkin_ws/install/setup.bash && ROS_NAMESPACE=$RIO_ROS_ENV_ALIAS stdbuf -oL /home/rr/headless/install/vnc_startup.sh 'roslaunch bringup agent.launch simulation:=false' || sleep infinity"
               ],
               "limits": {
                 "cpu": 2,

@@ -1,4 +1,4 @@
-present: "true"
+present: "false"
 rio_amr_pa_image: "rrdockerhub/io_amr_pa:2021_06_01-10amr-region-fix"
 rio_amr_pa_hw_image: "rrdockerhub/io_amr_pa:iogen-build-waztcgmniimfuvagukkyrcmf-2"
 rio_gwm_ui_image: "docker.io/rrdockerhub/rr_amr_ui:2021_06_01"
