@@ -313,7 +313,7 @@
               "description": ""
             },
             {
-              "default": "true",
+              "default": "false",
               "name": "ENABLE_SAFETY_ZONES",
               "description": ""
             }

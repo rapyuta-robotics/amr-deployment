@@ -322,6 +322,7 @@
           Y_POS: "{{ item.y }}"
           Z_POS: 0.0
           YAW: "{{ item.yaw }}"
+          ENABLE_SAFETY_ZONES: false
       loop: "{{  agent_list  }}"
       register: amr_id
     - name: "AMR - check on async status"

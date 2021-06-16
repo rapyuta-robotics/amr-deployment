@@ -5,8 +5,7 @@ rio_amr_pa_image: ""
 rio_gwm_ui_image: ""
 rio_db_image: "rrdockerhub/rr_amr_postgres:nightly"
 rio_gwm_image: ""
-prefix_name: forklifttest
-
+prefix_name: forklift-multirobot-test
 site_name: toyama
 agent_list:
   - { id: '1001', x: '43.65', y: '24.74', yaw: '3.14', map_name: toyama_1F}
