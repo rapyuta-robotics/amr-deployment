@@ -25,12 +25,12 @@
       async: 12000
       poll: 0
       abhinavg97.rr_io.networks:
-        name: "{{ prefix_name }}_native_network"
+        name: "{{ prefix_name }}_routed_network"
         present: "{{ present }}"
-        type: native_network
+        type: routed_network
         ros_distro: melodic
         resource_type: small
-      register: native_network_id
+      register: routed_network_id
     - name: GWM Static Route
       async: 12000
       poll: 0
@@ -73,6 +73,8 @@
         name: "{{ prefix_name }}_rio_amr_pa_hw"
         present: "{{ present }}"
         type: docker
+        runtime: device
+        architecture: amd64
         docker_image: "{{ rio_amr_pa_hw_image }}"
         secret: "docker"
         manifest_path: /tmp/rio_amr_pa.json
@@ -175,8 +177,8 @@
           static_routes:
             - name: "{{ prefix_name }}-gbc"
               endpoint_name: GWM_INTERFACE_ENDPOINT
-          native_networks:
-            - name: "{{ prefix_name }}_native_network"
+          routed_networks:
+            - name: "{{ prefix_name }}_routed_network"
         component_params:
           GWM_INTERFACE_SITE: tatsumi
           AUTOBOOTSTRAP: true
@@ -225,8 +227,8 @@
         present: "{{ present }}"
         package_name: "{{ prefix_name }}_rio_amr_pa_hw"
         networks:
-          native_networks:
-            - name: "{{ prefix_name }}_native_network"
+          routed_networks:
+            - name: "{{ prefix_name }}_routed_network"
         component_params:
           ROBOT_MODEL: rr_pa_amr
           ROBOT_NAV_MODEL: rr_pa_amr
