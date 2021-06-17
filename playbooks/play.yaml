@@ -21,9 +21,12 @@
     - copy:
         src: rio_gwm.json
         dest: /tmp/rio_gwm.json
+    - copy:
+        src: rio_gazebo.json
+        dest: /tmp/rio_gazebo.json
     - name: Native Network Deployment
-      async: 12000
-      poll: 0
+#      async: 12000
+#      poll: 0
       abhinavg97.rr_io.networks:
         name: "{{ prefix_name }}_native_network"
         present: "{{ present }}"
@@ -32,8 +35,8 @@
         resource_type: small
       register: native_network_id
     - name: Routed Network Deployment
-      async: 12000
-      poll: 0
+#      async: 12000
+#      poll: 0
       abhinavg97.rr_io.networks:
         name: "{{ prefix_name }}_routed_network"
         present: "{{ present }}"
@@ -44,32 +47,40 @@
         network_interface: wlp1s0
       register: native_network_id
     - name: GWM Static Route
-      async: 12000
-      poll: 0
+#      async: 12000
+#      poll: 0
       abhinavg97.rr_io.networks:
         name: "{{ prefix_name }}-gwm"
         present: "{{ present }}"
         type: static_route
       register: gwm_static_route_id
     - name: GBC Static Route
-      async: 12000
-      poll: 0
+#      async: 12000
+#      poll: 0
       abhinavg97.rr_io.networks:
         name: "{{ prefix_name }}-gbc"
         present: "{{ present }}"
         type: static_route
       register: gbc_static_route_id
+    - name: Gazebo Static Route
+#      async: 12000
+#      poll: 0
+      abhinavg97.rr_io.networks:
+        name: "{{ prefix_name }}-gazebo-ui"
+        present: "{{ present }}"
+        type: static_route
+      register: gazebo_static_route_id
     - name: AMR UI Static Route
-      async: 12000
-      poll: 0
+#      async: 12000
+#      poll: 0
       abhinavg97.rr_io.networks:
         name: "{{ prefix_name }}-amr-ui"
         present: "{{ present }}"
         type: static_route
       register: amr_ui_static_route_id
 #    - name: rio_amr_pa package
-#      async: 12000
-#      poll: 0
+##      async: 12000
+##      poll: 0
 #      abhinavg97.rr_io.packages:
 #        name: "{{ prefix_name }}_rio_amr_pa"
 #        present: "{{ present }}"
@@ -79,8 +90,8 @@
 #        manifest_path: /tmp/rio_amr_pa.json
 #      register: rio_amr_pa_package_id
     - name: rio_amr_pa_hw package
-      async: 12000
-      poll: 0
+#      async: 12000
+#      poll: 0
       abhinavg97.rr_io.packages:
         name: "{{ prefix_name }}_rio_amr_pa_hw"
         present: "{{ present }}"
@@ -90,8 +101,8 @@
         manifest_path: /tmp/rio_amr_pa.json
       register: rio_amr_pa_hw_package_id
     - name: rio_gwm_ui package
-      async: 12000
-      poll: 0
+#      async: 12000
+#      poll: 0
       abhinavg97.rr_io.packages:
         name: "{{ prefix_name }}_rio_gwm_ui"
         present: "{{ present }}"
@@ -101,8 +112,8 @@
         manifest_path: /tmp/rio_amr_ui.json
       register: rio_gwm_ui_package_id
     - name: rio_db package
-      async: 12000
-      poll: 0
+#      async: 12000
+#      poll: 0
       abhinavg97.rr_io.packages:
         name: "{{ prefix_name }}_rio_db"
         present: "{{ present }}"
@@ -112,8 +123,8 @@
         manifest_path: /tmp/rio_db.json
       register: rio_db_package_id
     - name: rio_gbc package
-      async: 12000
-      poll: 0
+#      async: 12000
+#      poll: 0
       abhinavg97.rr_io.packages:
         name: "{{ prefix_name }}_rio_gbc"
         present: "{{ present }}"
@@ -123,8 +134,8 @@
         manifest_path: /tmp/rio_gbc.json
       register: rio_gbc_package_id
     - name: rio_gwm package
-      async: 12000
-      poll: 0
+#      async: 12000
+#      poll: 0
       abhinavg97.rr_io.packages:
         name: "{{ prefix_name }}_rio_gwm"
         present: "{{ present }}"
@@ -133,14 +144,24 @@
         secret: "docker"
         manifest_path: /tmp/rio_gwm.json
       register: rio_gwm_package_id
+    - name: rio_gazebo package
+#      async: 12000
+#      poll: 0
+      abhinavg97.rr_io.packages:
+        name: "{{ prefix_name }}_rio_gazebo"
+        present: "{{ present }}"
+        type: docker
+        docker_image: "{{ rio_amr_pa_image }}"
+        secret: docker
+        manifest_path: /tmp/rio_gazebo.json
 - name: DB, GWM, GBC, AMR UI Deployments
   hosts: localhost
   strategy: free
   connection: local
   tasks:
     - name: DB Deployment
-      async: 12000
-      poll: 0
+#      async: 12000
+#      poll: 0
       abhinavg97.rr_io.deployments:
         name: "{{ prefix_name }}_postgres"
         component_name: postgres
@@ -152,8 +173,8 @@
           POSTGRES_PASSWORD: postgres
       register: db_deploy_id
     - name: GWM deployment
-      async: 12000
-      poll: 0
+#      async: 12000
+#      poll: 0
       abhinavg97.rr_io.deployments:
         name: "{{ prefix_name }}_rr_gwm"
         component_name: core
@@ -172,8 +193,8 @@
           DJANGO_LOG_LEVEL: WARNING
       register: rr_gwm_deploy_id
     - name: GBC deployment
-      async: 12000
-      poll: 0
+#      async: 12000
+#      poll: 0
       abhinavg97.rr_io.deployments:
         name: "{{ prefix_name }}_rr_gbc"
         component_name: gbc
@@ -198,8 +219,8 @@
           ROSCONSOLE_FORMAT: "[$${severity}] [$${time}] [$${node} $${logger} $${function} $${line}]: $${message}"
       register: rr_gbc_deploy_id
     - name: AMR UI  deployment
-      async: 12000
-      poll: 0
+#      async: 12000
+#      poll: 0
       abhinavg97.rr_io.deployments:
         name: "{{ prefix_name }}_amr_ui"
         component_name: gwm-ui
@@ -225,9 +246,32 @@
   strategy: free
   connection: local
   tasks:
+    - name: Gazebo Deployment
+#      async: 12000
+#      poll: 0
+      abhinavg97.rr_io.deployments:
+        name: "{{ prefix_name }}_gazebo"
+        component_name: gazebo
+        component_alias: gazebo
+        present: "{{ present }}"
+        package_name: "{{ prefix_name }}_rio_gazebo"
+        networks:
+          static_routes:
+            - name: "{{ prefix_name }}-gazebo-ui"
+              endpoint_name: VNC_EP
+          native_networks:
+            - name: "{{ prefix_name }}_native_network"
+        component_params:
+          VNC_PASSWORD: rapyuta
+          VNC_RESOLUTION: 1920x1080
+          DEBUG: true
+          RACK: true
+          WORLD: tatsumi
+          ITEM_SPAWN_FROM: AUTO
+          GWM_AUTH_TOKEN: autobootstrap
     - name: AMR Deployment
-      async: 12000
-      poll: 0
+#      async: 12000
+#      poll: 0
       abhinavg97.rr_io.deployments:
         name: "sbm_2"
         runtime: "device"
@@ -245,9 +289,9 @@
           NAV_STRATEGY: graph_guided
           MAP: tatsumi
           MAP_ID: 1
-          WORLD2MAP_X: 0
-          WORLD2MAP_Y: 0
-          WORLD2MAP_Z: 0
+          WORLD2MAP_X: "0"
+          WORLD2MAP_Y: "0"
+          WORLD2MAP_Z: "0"
           WORLD2MAP_YAW: 0
           IDLE_TIMEOUT: 1000000
           AGENT_ID: "{{ item.id }}"

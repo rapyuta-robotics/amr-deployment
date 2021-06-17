@@ -1,31 +1,19 @@
 {
-  "name": "rio_amr_pa",
-  "packageVersion": "v1.0.0",
+  "bindable": true,
   "description": "",
-  "bindable": false,
+  "name": "rio_amr_pa_hw",
+  "packageVersion": "v1.0.0",
   "plans": [
     {
       "name": "default",
       "metadata": {
-        
+
       },
       "singleton": false,
       "components": [
         {
           "name": "amr",
           "description": "",
-          "cloudInfra": {
-            "replicas": 1,
-            "endpoints": [
-              {
-                "name": "VNC_EP",
-                "exposeExternally": true,
-                "port": 443,
-                "targetPort": 6901,
-                "proto": "HTTPS"
-              }
-            ]
-          },
           "ros": {
             "topics": [
               {
@@ -71,7 +59,7 @@
                 "targeted": false
               },
               {
-                "name": "/gwm_interface/mapping/get_regions_request",
+                "name": "/gwm_interface/mapping/get_rules_request",
                 "qos": "low",
                 "compression": "",
                 "scoped": false,
@@ -205,10 +193,10 @@
               }
             ],
             "services": [
-              
+
             ],
             "actions": [
-              
+
             ],
             "isROS": true,
             "ros_distro": "melodic"
@@ -217,22 +205,41 @@
           "architecture": "amd64",
           "executables": [
             {
-              "name": "amr",
+              "name": "agent",
               "simulationOptions": {
                 "simulation": false
               },
               "cmd": [
-                "/bin/bash",
-                "-c",
-                "source ~/catkin_ws/install/setup.bash && ROS_NAMESPACE=$RIO_ROS_ENV_ALIAS stdbuf -oL /home/rr/headless/install/vnc_startup.sh 'roslaunch bringup agent.launch simulation:=false' || sleep infinity"
+                "/bin/bash -c \"cp /opt/rapyuta/configs/map/* /home/rr/catkin_ws/install/share/rr_nav_bringup/map/ && source ~/catkin_ws/install/setup.bash && stdbuf -oL roslaunch bringup agent.launch simulation:=false\""
+              ]
+            },
+            {
+              "name": "base_controller",
+              "simulationOptions": {
+                "simulation": false
+              },
+              "cmd": [
+
               ],
-              "limits": {
-                "cpu": 2,
-                "memory": 8192
-              }
+              "docker": "rrdockerhub/gen2-base-controller:v0.1"
             }
           ],
           "parameters": [
+            {
+              "default": "true",
+              "name": "AMCL_OPTION",
+              "description": ""
+            },
+            {
+              "default": "false",
+              "name": "GMAPPING",
+              "description": ""
+            },
+            {
+              "default": "true",
+              "name": "DUMMY_PICK_DROP",
+              "description": ""
+            },
             {
               "default": "graph_guided",
               "name": "NAV_STRATEGY",
@@ -241,11 +248,6 @@
             {
               "default": "rr_pa_amr",
               "name": "ROBOT_NAV_MODEL",
-              "description": ""
-            },
-            {
-              "default": "[${time}] [${severity}] [${node} ${logger} ${function} ${line}]: ${message}",
-              "name": "ROSCONSOLE_FORMAT",
               "description": ""
             },
             {
@@ -261,11 +263,6 @@
             {
               "default": "0",
               "name": "WORLD2MAP_Y",
-              "description": ""
-            },
-            {
-              "default": "0", 
-              "name": "NAV_SAFETY_DISTANCE", 
               "description": ""
             },
             {
@@ -299,7 +296,7 @@
               "description": ""
             },
             {
-              "default": "tatsumi",
+              "default": "kiba_2F",
               "name": "MAP",
               "description": ""
             },
@@ -317,21 +314,12 @@
               "default": "1",
               "name": "AGENT_ID",
               "description": ""
-            },
-            {
-              "default": "1280x720",
-              "name": "VNC_RESOLUTION",
-              "description": ""
-            },
-            {
-              "default": "rapyuta",
-              "name": "VNC_PASSWORD",
-              "description": ""
             }
           ],
           "rosBagJobDefs": [
-            
-          ]
+
+          ],
+          "restart_policy": "always"
         }
       ],
       "includePackages": [
