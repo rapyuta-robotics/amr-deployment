@@ -9,7 +9,7 @@ prefix_name: forklift-multirobot-test
 site_name: toyama
 
 # AMR common parameters
-amr_idle_timeout: 30 # s
+amr_idle_timeout: 15 # s
 amr_charge_time: 7200.0 # s
 
 agent_list:
