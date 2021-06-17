@@ -7,6 +7,11 @@ rio_db_image: "rrdockerhub/rr_amr_postgres:nightly"
 rio_gwm_image: ""
 prefix_name: forklift-multirobot-test
 site_name: toyama
+
+# AMR common parameters
+amr_idle_timeout: 30 # s
+amr_charge_time: 7200.0 # s
+
 agent_list:
   - { id: '1001', x: '43.65', y: '24.74', yaw: '3.14', map_name: toyama_1F}
   - { id: '1002', x: '28.5', y: '38.7', yaw: '-1.57', map_name: toyama_1F }
