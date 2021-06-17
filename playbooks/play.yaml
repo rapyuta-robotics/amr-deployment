@@ -41,7 +41,7 @@
         ros_distro: melodic
         runtime: device
         device_name: sbm_2
-        network_interface:
+        network_interface: wlp1s0
       register: native_network_id
     - name: GWM Static Route
       async: 12000
@@ -271,9 +271,6 @@
       debug:
         msg: '{{ item }}'
       with_items: "{{ amr_id.results }}"
-    - name: "rr_gwm deployment - check on async status"
-      async_status:
-        jid: "{{ rr_gwm_deploy_id.ansible_job_id }}"
       register: amr_log
       until: amr_log.finished
       retries: 600
