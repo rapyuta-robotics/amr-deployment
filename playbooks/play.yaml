@@ -267,14 +267,6 @@
       delay: 20
       when: "{{ present }}"
       with_items: "{{ amr_id.results }}"
-    - name: dump amr async output
-      debug:
-        msg: '{{ item }}'
-      with_items: "{{ amr_id.results }}"
-      register: amr_log
-      until: amr_log.finished
-      retries: 600
-      delay: 20
     - name: "wait for UI to come up"
       uri:
         url: "https://{{ prefix_name }}-gwm-kqdbp.ep-r.io/v1/site/1"
