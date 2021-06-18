@@ -21,62 +21,6 @@
     - copy:
         src: rio_gwm.json
         dest: /tmp/rio_gwm.json
-    - name: amr_pa_build
-      async: 12000
-      poll: 0
-      abhinavg97.rr_io.builds:
-        name: "{{ prefix_name }}_rio_amr_pa"
-        strategy_type: docker
-        present: "{{ present }}"
-        repository: git@github.com:rapyuta-robotics/io_amr.git
-        branch: "{{ GIT_BRANCH }}"
-        docker_file_path: docker/amrrobot/Dockerfile
-        source_secret: "github"
-        docker_pull_secret: "dockerhub"
-        docker_push_secret: "dockerhub"
-        docker_image_repository: docker.io/rrdockerhub/io_amr_pa
-        trigger: false
-        trigger_name: "{{ prefix_name }}"
-        tag_name: "{{ prefix_name }}"
-      register: amr_pa_build_id
-    - name: rio_gwm_ui_build
-      async: 12000
-      poll: 0
-      abhinavg97.rr_io.builds:
-        name: "{{ prefix_name }}_rio_gwm_ui"
-        strategy_type: docker
-        present: "{{ present }}"
-        repository: git@github.com:rapyuta-robotics/io_amr.git
-        context_directory: rr_amr_ui
-        branch: "{{ GIT_BRANCH }}"
-        docker_file_path: Dockerfile
-        source_secret: "github"
-        docker_pull_secret: "dockerhub"
-        docker_push_secret: "dockerhub"
-        docker_image_repository: docker.io/rrdockerhub/io_amr_ui
-        trigger: false
-        trigger_name: "{{ prefix_name }}"
-        tag_name: "{{ prefix_name }}"
-      register: rio_gwm_ui_build_id
-    - name: rio_gwm_build
-      async: 12000
-      poll: 0
-      abhinavg97.rr_io.builds:
-        name: "{{ prefix_name }}_rio_gwm"
-        strategy_type: docker
-        present: "{{ present }}"
-        repository: git@github.com:rapyuta-robotics/io_amr.git
-        context_directory: rr_amr_gwm/gwm_core
-        branch: "{{ GIT_BRANCH }}"
-        docker_file_path: Dockerfile.full
-        source_secret: "github"
-        docker_pull_secret: "dockerhub"
-        docker_push_secret: "dockerhub"
-        docker_image_repository: docker.io/rrdockerhub/io_amr_gwm
-        trigger: false
-        trigger_name: "{{ prefix_name }}"
-        tag_name: "{{ prefix_name }}"
-      register: rio_gwm_build_id
     - name: Network Deployment
       async: 12000
       poll: 0
@@ -334,18 +278,30 @@
         - { id: '2', x: '11', y: '12'}
         - { id: '3', x: '13.6', y: '1.3'}
       register: amr_id
-    - name: "Build - check on async status"
+    - name: "Check on async status"
       async_status:
         jid: "{{ item.ansible_job_id}}"
-      register: build_log
-      until: build_log.finished
+      register: artifacts_log
+      until: artifacts_log.finished
       retries: 600
       delay: 20
-      when: "{{ present }}"
       loop:
-        - "{{ amr_pa_build_id }}"
-        - "{{ rio_gwm_ui_build_id }}"
-        - "{{ rio_gwm_build_id }}"
+        - "{{ native_network_id }}"
+        - "{{ gwm_static_route_id }}"
+        - "{{ gbc_static_route_id }}"
+        - "{{ amr_ui_static_route_id }}"
+        - "{{ gazebo_ui_static_route_id }}"
+        - "{{ rio_amr_pa_package_id }}"
+        - "{{ rio_gwm_ui_package_id }}"
+        - "{{ rio_db_package_id }}"
+        - "{{ rio_gazebo_package_id }}"
+        - "{{ rio_gbc_package_id }}"
+        - "{{ rio_gwm_package_id }}"
+        - "{{ db_deploy_id }}"
+        - "{{ rr_gwm_deploy_id }}"
+        - "{{ rr_gbc_deploy_id }}"
+        - "{{ amr_ui_deploy_id }}"
+        - "{{ gazebo_deploy_id }}"
     - name: "AMR - check on async status"
       async_status:
         jid: "{{ item.ansible_job_id}}"
@@ -359,20 +315,6 @@
       debug:
         msg: '{{ item }}'
       with_items: "{{ amr_id.results }}"
-    - name: "rr_gwm deployment - check on async status"
-      async_status:
-        jid: "{{ rr_gwm_deploy_id.ansible_job_id }}"
-      register: amr_log
-      until: amr_log.finished
-      retries: 600
-      delay: 20
-    - name: "gazebo deployment - check on async status"
-      async_status:
-        jid: "{{ gazebo_deploy_id.ansible_job_id }}"
-      register: gazebo_log
-      until: gazebo_log.finished
-      retries: 600
-      delay: 20
     - name: "wait for UI to come up"
       uri:
         url: "https://{{ prefix_name }}-gwm-kqdbp.ep-r.io/v1/site/1"
