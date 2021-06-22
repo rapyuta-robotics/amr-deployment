@@ -5,6 +5,7 @@ import json
 import argparse
 import requests
 import re
+import os
 from jinja2 import Template
 from deepdiff import diff
 import time
@@ -133,11 +134,11 @@ def get_deployment_by_name(
     return deployment
 
 
-def load_config(config_file, deployment_prefix):
-    with open("config/default.yaml", 'r') as stream:
+def load_config(config_file, deployment_prefix, config_defaults_dir='config'):
+    with open(os.path.join(config_defaults_dir, "default.yaml"), 'r') as stream:
         config = yaml.safe_load(stream)
 
-    with open("config/basic_user_config.yaml", 'r') as stream:
+    with open(os.path.join(config_defaults_dir, "basic_user_config.yaml"), 'r') as stream:
         config.update(yaml.safe_load(stream))
 
     if config_file is not None:
@@ -161,8 +162,9 @@ def update_package_version(
         config,
         package_name,
         secret_id,
-        ci_deployment):
-    file_path = 'packages/' + package_name + '.json.j2'
+        ci_deployment,
+        manifest_dir='packages'):
+    file_path = os.path.join(manifest_dir, package_name + '.json.j2')
     with open(file_path) as json_file:
         file_data = json_file.read()
 
