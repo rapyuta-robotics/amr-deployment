@@ -5,6 +5,7 @@ import json
 import argparse
 import requests
 import re
+import os
 from jinja2 import Template
 from deepdiff import diff
 import time
@@ -133,11 +134,11 @@ def get_deployment_by_name(
     return deployment
 
 
-def load_config(config_file, deployment_prefix):
-    with open("config/default.yaml", 'r') as stream:
+def load_config(config_file, deployment_prefix, config_defaults_dir='config'):
+    with open(os.path.join(config_defaults_dir, "default.yaml"), 'r') as stream:
         config = yaml.safe_load(stream)
 
-    with open("config/basic_user_config.yaml", 'r') as stream:
+    with open(os.path.join(config_defaults_dir, "basic_user_config.yaml"), 'r') as stream:
         config.update(yaml.safe_load(stream))
 
     if config_file is not None:
@@ -161,8 +162,9 @@ def update_package_version(
         config,
         package_name,
         secret_id,
-        ci_deployment):
-    file_path = 'packages/' + package_name + '.json.j2'
+        ci_deployment,
+        manifest_dir):
+    file_path = os.path.join(manifest_dir, package_name + '.json.j2')
     with open(file_path) as json_file:
         file_data = json_file.read()
 
@@ -266,7 +268,7 @@ def update_package_version(
                 latest_package['packageId'])
 
 
-def update_packages(client, config, ci_deployment=False):
+def update_packages(client, config, ci_deployment=False, manifest_dir='packages'):
     print("Updating package version")
 
     secret_id = get_secret_id_by_name(client, config['SECRET'])
@@ -281,7 +283,8 @@ def update_packages(client, config, ci_deployment=False):
             config,
             i,
             secret_id,
-            ci_deployment)
+            ci_deployment,
+            manifest_dir)
 
 
 def deploy(client, config):
@@ -423,9 +426,10 @@ def deploy_intelligence(client, config):
     rio_gbc_deployment = rio_gbc_package.provision(
         deployment_name=config['deployment_prefix'] + '_gbc',
         provision_configuration=rio_gbc_configuration)
-    rio_gbc_deployment.poll_deployment_till_ready(
+    result = rio_gbc_deployment.poll_deployment_till_ready(
         retry_count=150, sleep_interval=6)
-    print(" GBC deployed successfully")
+    print(" GBC deployed successfully: " +
+        result['componentInfo'][0]['networkEndpoints']['GWM_INTERFACE_ENDPOINT'])
 
     # AMR UI deployment
     print("AMR UI is deploying...")
@@ -560,7 +564,7 @@ def deprovision(client, config):
                 break
 
 
-def create_secret(client):
+def create_secret(client, config):
     if get_secret_id_by_name(client=client, name=config['SECRET']) == '':
         secret_config = SecretConfigDocker(username=config['DOCKER_USERNAME'], password=config['DOCKER_PASSWORD'],
                                            email=config['DOCKER_EMAIL'])
@@ -594,7 +598,7 @@ if __name__ == '__main__':
         valid_prefix = None
     config = load_config(args.config, valid_prefix)
     client = Client(config['AUTH_TOKEN'], config['PROJECT_ID'])
-    create_secret(client=client)
+    create_secret(client=client, config=config)
 
     if args.deprovision:
         deprovision(client, config)
