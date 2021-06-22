@@ -37,7 +37,7 @@
     - name: Forklift Repo Docker Secret
       async: 100
       poll: 0
-      abhinavg97.rr_io.secrets:
+      rapyutarobotics.rr_io.secrets:
         name: forkliftread
         present: true
         registry_url: docker-registry-default.apps.rapyuta.io/hitachi
@@ -49,7 +49,7 @@
     - name: Dockerhub Read Secret
       async: 100
       poll: 0
-      abhinavg97.rr_io.secrets:
+      rapyutarobotics.rr_io.secrets:
         name: dockerhubread
         present: true
         type: docker
@@ -60,7 +60,7 @@
     - name: Network Deployment
       async: 100
       poll: 0
-      abhinavg97.rr_io.networks:
+      rapyutarobotics.rr_io.networks:
         name: "{{ prefix_name }}_routed_network"
         present: "{{ present }}"
         type: routed_network
@@ -70,7 +70,7 @@
     - name: GWM Static Route
       async: 100
       poll: 0
-      abhinavg97.rr_io.networks:
+      rapyutarobotics.rr_io.networks:
         name: "{{ prefix_name }}-gwm"
         present: "{{ present }}"
         type: static_route
@@ -78,7 +78,7 @@
     - name: GBC Static Route
       async: 100
       poll: 0
-      abhinavg97.rr_io.networks:
+      rapyutarobotics.rr_io.networks:
         name: "{{ prefix_name }}-gbc"
         present: "{{ present }}"
         type: static_route
@@ -86,7 +86,7 @@
     - name: AMR UI Static Route
       async: 100
       poll: 0
-      abhinavg97.rr_io.networks:
+      rapyutarobotics.rr_io.networks:
         name: "{{ prefix_name }}-amr-ui"
         present: "{{ present }}"
         type: static_route
@@ -94,7 +94,7 @@
     - name: Gazebo UI Static Route
       async: 100
       poll: 0
-      abhinavg97.rr_io.networks:
+      rapyutarobotics.rr_io.networks:
         name: "{{ prefix_name }}-gazebo-ui"
         present: "{{ present }}"
         type: static_route
@@ -102,9 +102,9 @@
     - name: rio_amr_pa package
       async: 1250
       poll: 0
-      abhinavg97.rr_io.packages:
+      rapyutarobotics.rr_io.packages:
         version: auto
-        name: rio_amr_pa
+        name: "{{ prefix_name }}_rio_amr_pa"
         present: "{{ present }}"
         type: docker
         build: rio_amr_pa
@@ -115,9 +115,9 @@
     - name: rio_gwm_ui package
       async: 1000
       poll: 0
-      abhinavg97.rr_io.packages:
+      rapyutarobotics.rr_io.packages:
         version: auto
-        name: rio_gwm_ui
+        name: "{{ prefix_name }}_rio_gwm_ui"
         present: "{{ present }}"
         type: docker
         docker_image: "{{ rio_gwm_ui_image }}"
@@ -128,9 +128,9 @@
     - name: rio_db package
       async: 1000
       poll: 0
-      abhinavg97.rr_io.packages:
+      rapyutarobotics.rr_io.packages:
         version: auto
-        name: rio_db
+        name: "{{ prefix_name }}_rio_db"
         present: "{{ present }}"
         type: docker
         docker_image: "{{ rio_db_image }}"
@@ -140,9 +140,9 @@
     - name: rio_gazebo package
       async: 1250
       poll: 0
-      abhinavg97.rr_io.packages:
+      rapyutarobotics.rr_io.packages:
         version: auto
-        name: rio_gazebo
+        name: "{{ prefix_name }}_rio_gazebo"
         present: "{{ present }}"
         type: docker
         docker_image: "{{ rio_amr_pa_image }}"
@@ -153,9 +153,9 @@
     - name: rio_gbc package
       async: 1250
       poll: 0
-      abhinavg97.rr_io.packages:
+      rapyutarobotics.rr_io.packages:
         version: auto
-        name: rio_gbc
+        name: "{{ prefix_name }}_rio_gbc"
         present: "{{ present }}"
         type: docker
         docker_image: "{{ rio_amr_pa_image }}"
@@ -166,9 +166,9 @@
     - name: rio_gbc package
       async: 1250
       poll: 0
-      abhinavg97.rr_io.packages:
+      rapyutarobotics.rr_io.packages:
         version: auto
-        name: rio_gbc_no_bootstrap
+        name: "{{ prefix_name }}_rio_gbc_no_bootstrap"
         present: "{{ present }}"
         type: docker
         docker_image: "{{ rio_amr_pa_image }}"
@@ -179,9 +179,9 @@
     - name: rio_gwm package
       async: 1000
       poll: 0
-      abhinavg97.rr_io.packages:
+      rapyutarobotics.rr_io.packages:
         version: auto
-        name: rio_gwm
+        name: "{{ prefix_name }}_rio_gwm"
         present: "{{ present }}"
         type: docker
         docker_image: "{{ rio_gwm_image }}"
@@ -197,11 +197,11 @@
     - name: DB Deployment
       async: 100
       poll: 0
-      abhinavg97.rr_io.deployments:
+      rapyutarobotics.rr_io.deployments:
         name: "{{ prefix_name }}_postgres"
         component_name: postgres
         present: "{{ present }}"
-        package_name: rio_db
+        package_name: "{{ prefix_name }}_rio_db"
         component_params:
           POSTGRES_DB: gwm_core
           POSTGRES_USER: postgres
@@ -210,11 +210,11 @@
     - name: GWM deployment
       async: 2000
       poll: 0
-      abhinavg97.rr_io.deployments:
+      rapyutarobotics.rr_io.deployments:
         name: "{{ prefix_name }}_rr_gwm"
         component_name: core
         present: "{{ present }}"
-        package_name: rio_gwm
+        package_name: "{{ prefix_name }}_rio_gwm"
         depends:
           deployments:
             - "{{ prefix_name }}_postgres"
@@ -230,11 +230,11 @@
     - name: GBC deployment
       async: 2200
       poll: 0
-      abhinavg97.rr_io.deployments:
+      rapyutarobotics.rr_io.deployments:
         name: "{{ prefix_name }}_rr_gbc"
         component_name: gbc
         present: "{{ present }}"
-        package_name: rio_gbc
+        package_name: "{{ prefix_name }}_rio_gbc"
         depends:
           deployments:
             - "{{ prefix_name }}_postgres"
@@ -256,11 +256,11 @@
     - name: AMR UI  deployment
       async: 2600
       poll: 0
-      abhinavg97.rr_io.deployments:
+      rapyutarobotics.rr_io.deployments:
         name: "{{ prefix_name }}_amr_ui"
         component_name: gwm-ui
         present: "{{ present }}"
-        package_name: rio_gwm_ui
+        package_name: "{{ prefix_name }}_rio_gwm_ui"
         depends:
           deployments:
             - "{{ prefix_name }}_rr_gwm"
@@ -284,12 +284,12 @@
     - name: Gazebo Deployment
       async: 2000
       poll: 0
-      abhinavg97.rr_io.deployments:
+      rapyutarobotics.rr_io.deployments:
         name: "{{ prefix_name }}_gazebo"
         component_name: gazebo
         component_alias: gazebo
         present: "{{ present }}"
-        package_name: rio_gazebo
+        package_name: "{{ prefix_name }}_rio_gazebo"
         networks:
           static_routes:
             - name: "{{ prefix_name }}-gazebo-ui"
@@ -308,12 +308,12 @@
     - name: AMR Deployment
       async: 2000
       poll: 0
-      abhinavg97.rr_io.deployments:
+      rapyutarobotics.rr_io.deployments:
         name: "{{ prefix_name }}_amr{{ item.id }}"
         component_name: amr
         component_alias: "amr{{ item.id }}"
         present: "{{ present }}"
-        package_name: rio_amr_pa
+        package_name: "{{ prefix_name }}_rio_amr_pa"
         networks:
           routed_networks:
             - name: "{{ prefix_name }}_routed_network"
