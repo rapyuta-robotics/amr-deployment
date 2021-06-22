@@ -163,7 +163,7 @@ def update_package_version(
         package_name,
         secret_id,
         ci_deployment,
-        manifest_dir='packages'):
+        manifest_dir):
     file_path = os.path.join(manifest_dir, package_name + '.json.j2')
     with open(file_path) as json_file:
         file_data = json_file.read()
@@ -268,7 +268,7 @@ def update_package_version(
                 latest_package['packageId'])
 
 
-def update_packages(client, config, ci_deployment=False):
+def update_packages(client, config, ci_deployment=False, manifest_dir='packages'):
     print("Updating package version")
 
     secret_id = get_secret_id_by_name(client, config['SECRET'])
@@ -283,7 +283,8 @@ def update_packages(client, config, ci_deployment=False):
             config,
             i,
             secret_id,
-            ci_deployment)
+            ci_deployment,
+            manifest_dir)
 
 
 def deploy(client, config):
