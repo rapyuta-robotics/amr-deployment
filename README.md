@@ -80,9 +80,9 @@ name of the site.\
 ```amr_idle_timeout```\
 Timeout until the amrs go idle.\
 ```amr_charge_time```\
-Charge time for the amrs.
+Charge time for the amrs.\
 ```tracing```\
-Set to True to enable tracing to be setup on the GBC and AMRs for debugging.
+Set to True to enable tracing to be setup on the GBC and AMRs for debugging.\
 ```agent_list```\
 List of agents to deploy, removing or adding an agent to this list will deploy less or more agents, please provide initial x,y and yaw, as well as map location.
 
