@@ -16,7 +16,7 @@ git clone https://github.com/rapyuta-robotics/amr-deployment.git
 cd amr-deployment
 sudo apt-get install python3.6
 sudo apt install python3-pip
-pip install https://storage.googleapis.com/rio-sdk-python/rapyuta_io-0.26.0-py2.py3-none-any.whl
+pip3 install https://storage.googleapis.com/rio-sdk-python/rapyuta_io-0.26.0-py2.py3-none-any.whl
 ansible-galaxy collection install abhinavg97.rr_io
 ```
 
@@ -59,7 +59,9 @@ If an error arises please run the `fix` files by doing
 
 ```present```\
 Whether the deployment artifacts should be present in your project.\
-```docker_password```\
+```forklift_docker_read_password```\
+The password of a read only account to reach the Forklift image repo. This is needed to pull the IO AMR images for the simulation\
+```dockerhub_read_password```\
 The password of ioamrreadonly dockerhub account. This is needed to pull the IO AMR images for the simulation\
 ```rio_amr_pa_image```\
 amr_pa docker image to be used for the simulation.\
@@ -71,14 +73,18 @@ db docker image to be used for the simulation.\
 gazebo docker image to be used for the simulation.\
 ```rio_gbc_image```\
 gbc docker image to be used for the simulation.\
-```rr_gwm_static_route```\
-gwm static route used by the gwm deployment.\
-```rr_gbc_static_route```\
-gbc static route used by the gbc deployment.\
-```amr_ui_static_route```\
-amr_ui static route used by the amr_ui deployment.\
-```gazebo_ui_static_route```\
-gazebo static route used by the gazebo deployment.
+```prefix_name```\
+name to prefix all deployments by.\
+```site_name```\
+name of the site.\
+```amr_idle_timeout```\
+Timeout until the amrs go idle.\
+```amr_charge_time```\
+Charge time for the amrs.
+```tracing```\
+Set to True to enable tracing to be setup on the GBC and AMRs for debugging.
+```agent_list```\
+List of agents to deploy, removing or adding an agent to this list will deploy less or more agents, please provide initial x,y and yaw, as well as map location.
 
 # FAQ
 - authorization failed: update AUTH_TOKEN in config/basic_user_config.yaml. [ref](https://userdocs.rapyuta.io/3_how-tos/35_tooling_and_debugging/rapyuta-io-python-sdk/#auth-token)
