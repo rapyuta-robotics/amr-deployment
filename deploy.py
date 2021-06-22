@@ -426,9 +426,10 @@ def deploy_intelligence(client, config):
     rio_gbc_deployment = rio_gbc_package.provision(
         deployment_name=config['deployment_prefix'] + '_gbc',
         provision_configuration=rio_gbc_configuration)
-    rio_gbc_deployment.poll_deployment_till_ready(
+    result = rio_gbc_deployment.poll_deployment_till_ready(
         retry_count=150, sleep_interval=6)
-    print(" GBC deployed successfully")
+    print(" GBC deployed successfully: " +
+        result['componentInfo'][0]['networkEndpoints']['GWM_INTERFACE_ENDPOINT'])
 
     # AMR UI deployment
     print("AMR UI is deploying...")
