@@ -560,7 +560,7 @@ def deprovision(client, config):
                 break
 
 
-def create_secret(client):
+def create_secret(client, config):
     if get_secret_id_by_name(client=client, name=config['SECRET']) == '':
         secret_config = SecretConfigDocker(username=config['DOCKER_USERNAME'], password=config['DOCKER_PASSWORD'],
                                            email=config['DOCKER_EMAIL'])
@@ -594,7 +594,7 @@ if __name__ == '__main__':
         valid_prefix = None
     config = load_config(args.config, valid_prefix)
     client = Client(config['AUTH_TOKEN'], config['PROJECT_ID'])
-    create_secret(client=client)
+    create_secret(client=client, config=config)
 
     if args.deprovision:
         deprovision(client, config)
