@@ -196,6 +196,13 @@
                 "compression": "",
                 "scoped": true,
                 "targeted": false
+              },
+              {
+                "name": "/gbc/reserve_spot_request",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
               }
             ],
             "services": [
