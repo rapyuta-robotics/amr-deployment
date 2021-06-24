@@ -6,7 +6,7 @@
     - name: amr_pa_build
       async: 12000
       poll: 0
-      abhinavg97.rr_io.builds:
+      rapyutarobotics.rr_io.builds:
         name: "{{ prefix_name }}_rio_amr_pa"
         strategy_type: docker
         present: "{{ present }}"
@@ -24,7 +24,7 @@
     - name: rio_gwm_ui_build
       async: 12000
       poll: 0
-      abhinavg97.rr_io.builds:
+      rapyutarobotics.rr_io.builds:
         name: "{{ prefix_name }}_rio_gwm_ui"
         strategy_type: docker
         present: "{{ present }}"
@@ -43,7 +43,7 @@
     - name: rio_gwm_build
       async: 12000
       poll: 0
-      abhinavg97.rr_io.builds:
+      rapyutarobotics.rr_io.builds:
         name: "{{ prefix_name }}_rio_gwm"
         strategy_type: docker
         present: "{{ present }}"
@@ -60,74 +60,6 @@
         tag_name: "{{ prefix_name }}"
       register: rio_gwm_build_id
     - name: "Build - check on async status"
-      async_status:
-        jid: "{{ item.ansible_job_id}}"
-      register: build_log
-      until: build_log.finished
-      retries: 600
-      delay: 20
-      when: "{{ present }}"
-      loop:
-        - "{{ amr_pa_build_id }}"
-        - "{{ rio_gwm_ui_build_id }}"
-        - "{{ rio_gwm_build_id }}"
-    - name: amr_pa_build Trigger
-      async: 12000
-      poll: 0
-      abhinavg97.rr_io.builds:
-        name: "{{ prefix_name }}_rio_amr_pa"
-        strategy_type: docker
-        present: "{{ present }}"
-        repository: git@github.com:rapyuta-robotics/io_amr.git
-        branch: "{{ GIT_BRANCH }}"
-        docker_file_path: docker/amrrobot/Dockerfile
-        source_secret: "github"
-        docker_pull_secret: "dockerhub"
-        docker_push_secret: "dockerhub"
-        docker_image_repository: docker.io/rrdockerhub/io_amr_pa
-        trigger: true
-        trigger_name: "{{ prefix_name }}"
-        tag_name: "{{ prefix_name }}"
-      register: amr_pa_build_id
-    - name: rio_gwm_ui_build Trigger
-      async: 12000
-      poll: 0
-      abhinavg97.rr_io.builds:
-        name: "{{ prefix_name }}_rio_gwm_ui"
-        strategy_type: docker
-        present: "{{ present }}"
-        repository: git@github.com:rapyuta-robotics/io_amr.git
-        context_directory: rr_amr_ui
-        branch: "{{ GIT_BRANCH }}"
-        docker_file_path: Dockerfile
-        source_secret: "github"
-        docker_pull_secret: "dockerhub"
-        docker_push_secret: "dockerhub"
-        docker_image_repository: docker.io/rrdockerhub/io_amr_ui
-        trigger: true
-        trigger_name: "{{ prefix_name }}"
-        tag_name: "{{ prefix_name }}"
-      register: rio_gwm_ui_build_id
-    - name: rio_gwm_build Trigger
-      async: 12000
-      poll: 0
-      abhinavg97.rr_io.builds:
-        name: "{{ prefix_name }}_rio_gwm"
-        strategy_type: docker
-        present: "{{ present }}"
-        repository: git@github.com:rapyuta-robotics/io_amr.git
-        context_directory: rr_amr_gwm/gwm_core
-        branch: "{{ GIT_BRANCH }}"
-        docker_file_path: Dockerfile.full
-        source_secret: "github"
-        docker_pull_secret: "dockerhub"
-        docker_push_secret: "dockerhub"
-        docker_image_repository: docker.io/rrdockerhub/io_amr_gwm
-        trigger: true
-        trigger_name: "{{ prefix_name }}"
-        tag_name: "{{ prefix_name }}"
-      register: rio_gwm_build_id
-    - name: "Build Triggers - check on async status"
       async_status:
         jid: "{{ item.ansible_job_id}}"
       register: build_log
