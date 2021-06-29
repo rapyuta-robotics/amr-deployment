@@ -177,30 +177,37 @@
               },
               {
                 "name": "/gwm/destination_request",
-                "qos": "max",
+                "qos": "low",
                 "compression": "",
                 "scoped": false,
                 "targeted": false
               },
               {
                 "name": "/mrrp/route_request",
-                "qos": "max",
+                "qos": "low",
                 "compression": "",
                 "scoped": false,
                 "targeted": false
               },
               {
                 "name": "/agent_status",
-                "qos": "max",
+                "qos": "low",
                 "compression": "",
                 "scoped": false,
                 "targeted": false
               },
               {
                 "name": "/cmd_vel",
-                "qos": "max",
+                "qos": "low",
                 "compression": "",
                 "scoped": true,
+                "targeted": false
+              },
+              {
+                "name": "/gbc/reserve_spot_request",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
                 "targeted": false
               }
             ],

@@ -115,12 +115,26 @@
               {
                 "name": "/mrrp/route_response",
                 "qos": "low",
-                "compression": "",
+                "compression": "snappy",
                 "scoped": false,
                 "targeted": false
               },
               {
                 "name": "/gbc/task",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/gbc/spots_reservation_status",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/gbc/reserve_spot_response",
                 "qos": "low",
                 "compression": "",
                 "scoped": false,
