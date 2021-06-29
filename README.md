@@ -17,7 +17,7 @@ cd amr-deployment
 sudo apt-get install python3.6
 sudo apt install python3-pip
 pip install https://storage.googleapis.com/rio-sdk-python/rapyuta_io-0.26.0-py2.py3-none-any.whl
-ansible-galaxy collection install abhinavg97.rr_io
+ansible-galaxy collection install rapyutarobotics.rr_io
 ```
 
 ## MAC instructions
@@ -28,7 +28,7 @@ cd amr-deployment
 brew install python3.6
 brew install python3-pip
 pip install https://storage.googleapis.com/rio-sdk-python/rapyuta_io-0.26.0-py2.py3-none-any.whl
-ansible-galaxy collection install abhinavg97.rr_io
+ansible-galaxy collection install rapyutarobotics.rr_io
 ```
 
 ## Windows instructions
@@ -62,7 +62,7 @@ Then we can install rapyuta libs
 ```
 apt-cyg install python3 python3-pip
 pip3 install https://storage.googleapis.com/rio-sdk-python/rapyuta_io-0.26.0-py2.py3-none-any.whl
-ansible-galaxy collection install abhinavg97.rr_io
+ansible-galaxy collection install rapyutarobotics.rr_io
 ```
 
 # Steps to follow *before* deploying
@@ -80,7 +80,7 @@ export RIO_AUTH_TOKEN=AUTH_TOKEN
 
 *Navigate to the root of the repository.*
 ```
-ansible-playbook playbooks/deploy_10_amr.yaml -vvv --extra-vars "@deploy_configs.yaml"
+ansible-playbook playbooks/play.yaml -vvv --extra-vars "@deploy_configs.yaml"
 ```
 
 Once all robots are up in the UI, please verify that you can properly send an adhoc move to robot 10.
