@@ -16,8 +16,8 @@ git clone https://github.com/rapyuta-robotics/amr-deployment.git
 cd amr-deployment
 sudo apt-get install python3.6
 sudo apt install python3-pip
-pip install https://storage.googleapis.com/rio-sdk-python/rapyuta_io-0.26.0-py2.py3-none-any.whl
-ansible-galaxy collection install rapyutarobotics.rr_io
+pip install rapyuta-io --upgrade
+ansible-galaxy collection install rapyutarobotics.rr_io -f
 ```
 
 ## MAC instructions
@@ -27,8 +27,8 @@ git clone https://github.com/rapyuta-robotics/amr-deployment.git
 cd amr-deployment
 brew install python3.6
 brew install python3-pip
-pip install https://storage.googleapis.com/rio-sdk-python/rapyuta_io-0.26.0-py2.py3-none-any.whl
-ansible-galaxy collection install rapyutarobotics.rr_io
+pip install rapyuta-io --upgrade
+ansible-galaxy collection install rapyutarobotics.rr_io -f
 ```
 
 ## Windows instructions
