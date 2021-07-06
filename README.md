@@ -11,9 +11,6 @@ sudo apt update
 sudo apt install software-properties-common
 sudo add-apt-repository --yes --update ppa:ansible/ansible
 sudo apt install ansible
-sudo apt install git
-git clone https://github.com/rapyuta-robotics/amr-deployment.git
-cd amr-deployment
 sudo apt-get install python3.6
 sudo apt install python3-pip
 pip install rapyuta-io --upgrade
@@ -61,7 +58,7 @@ python2.7 setup.py install
 Then we can install rapyuta libs
 ```
 apt-cyg install python3 python3-pip
-pip3 install https://storage.googleapis.com/rio-sdk-python/rapyuta_io-0.26.0-py2.py3-none-any.whl
+pip3 install rapyuta-io
 ansible-galaxy collection install rapyutarobotics.rr_io
 ```
 
@@ -79,8 +76,13 @@ export RIO_AUTH_TOKEN=AUTH_TOKEN
 # Deploy simulation on rapyuta.io
 
 *Navigate to the root of the repository.*
+To deploy:
 ```
-ansible-playbook playbooks/play.yaml -vvv --extra-vars "@deploy_configs.yaml"
+ansible-playbook playbooks/deploy.yaml -vvv --extra-vars "@deploy_configs.yaml" --extra-vars "present=true"
+```
+To deprovision:
+```
+ansible-playbook playbooks/deploy.yaml -vvv --extra-vars "@deploy_configs.yaml" --extra-vars "present=false"
 ```
 
 Once all robots are up in the UI, please verify that you can properly send an adhoc move to robot 10.
