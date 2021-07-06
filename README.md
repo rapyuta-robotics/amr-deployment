@@ -13,8 +13,8 @@ sudo add-apt-repository --yes --update ppa:ansible/ansible
 sudo apt install ansible
 sudo apt-get install python3.6
 sudo apt install python3-pip
-pip install rapyuta-io
-ansible-galaxy collection install rapyutarobotics.rr_io
+pip install rapyuta-io --upgrade
+ansible-galaxy collection install rapyutarobotics.rr_io -f
 ```
 
 ## MAC instructions
@@ -24,8 +24,8 @@ git clone https://github.com/rapyuta-robotics/amr-deployment.git
 cd amr-deployment
 brew install python3.6
 brew install python3-pip
-pip install rapyuta-io
-ansible-galaxy collection install rapyutarobotics.rr_io
+pip install rapyuta-io --upgrade
+ansible-galaxy collection install rapyutarobotics.rr_io -f
 ```
 
 ## Windows instructions
