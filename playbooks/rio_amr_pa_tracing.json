@@ -1,6 +1,6 @@
 {
   "name": "rio_amr_pa",
-  "packageVersion": "v1.0.30",
+  "packageVersion": "v1.0.0",
   "description": "",
   "bindable": false,
   "plans": [
@@ -17,7 +17,13 @@
           "cloudInfra": {
             "replicas": 1,
             "endpoints": [
-              
+              {
+                "name": "VNC_EP",
+                "exposeExternally": true,
+                "port": 443,
+                "targetPort": 6901,
+                "proto": "HTTPS"
+              }
             ]
           },
           "ros": {
@@ -215,17 +221,26 @@
               "simulationOptions": {
                 "simulation": true
               },
-              {%- for key in source %}
-                 "{{key}}": "{{ source[key] }}",
-              {%- endfor %}
               "cmd": [
                 "/bin/bash",
                 "-c",
-                "source ~/catkin_ws/install/setup.bash && ROS_NAMESPACE=$RIO_ROS_ENV_ALIAS stdbuf -oL roslaunch bringup agent.launch simulation:=true || sleep infinity"
+                "source ~/catkin_ws/install/setup.bash && ROS_NAMESPACE=$RIO_ROS_ENV_ALIAS stdbuf -oL /home/rr/headless/install/vnc_startup.sh 'roslaunch bringup agent.launch simulation:=true' || sleep infinity"
               ],
               "limits": {
                 "cpu": 2,
                 "memory": 8192
+              }
+            },
+            {
+              "name": "tracing_agent",
+              "simulationOptions": {
+                "simulation": false
+              },
+              "cmd": ["--reporter.grpc.host-port=trace-collector-kqdbp.ep-r.io:443", "--reporter.grpc.retry.max=1000", "--reporter.grpc.tls.enabled"],
+              "docker": "jaegertracing/jaeger-agent",
+              "limits": {
+                "cpu": 0.5,
+                "memory": 2048
               }
             }
           ],
@@ -313,6 +328,16 @@
             {
               "default": "1",
               "name": "AGENT_ID",
+              "description": ""
+            },
+            {
+              "default": "1280x720",
+              "name": "VNC_RESOLUTION",
+              "description": ""
+            },
+            {
+              "default": "rapyuta",
+              "name": "VNC_PASSWORD",
               "description": ""
             }
           ],
