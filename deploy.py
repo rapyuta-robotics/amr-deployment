@@ -33,7 +33,7 @@ PACKAGES = {
 
 
 def validate_name(name):
-    return re.sub(r'[^.a-zA-Z0-9-]', "", name)
+    return re.sub(r'[^.a-zA-Z0-9-]', "", name).lower()
 
 
 # TEMPORARY FUNCTIONS BEFORE THE SDK CREATE A PROPER DELETE PACKAGE AND
