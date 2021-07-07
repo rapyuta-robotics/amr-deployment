@@ -302,9 +302,9 @@
           IDLE_POS_X: "{{ item.idle_x }}"
           IDLE_POS_Y: "{{ item.idle_y }}"
           IDLE_POS_YAW: 1.57
-          SIM_INITIAL_BATTERY_PERCENTAGE: "{{ item.sim_initial_battery_percentage }}"
-          SIM_BATTERY_CHARGE_RATE: "{{ item.sim_battery_charge_rate }}"
-          SIM_BATTERY_DISCHARGE_RATE: "{{ item.sim_battery_discharge_rate }}"
+          SIM_INITIAL_BATTERY_PERCENTAGE: "{{ item.init_battery_value }}"
+          SIM_BATTERY_CHARGE_RATE: "{{ item.charge_rate }}"
+          SIM_BATTERY_DISCHARGE_RATE: "{{ item.discharge_rate }}"
           ENABLE_SAFETY_ZONES: true
       loop: "{{  agent_list  }}"
       register: amr_id
