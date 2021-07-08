@@ -6,6 +6,9 @@ rio_db_image: "mdillon/postgis:latest"
 rio_gwm_image: "rrdockerhub/rr_amr_gwm:2021_06_01"
 prefix_name: "prefix"
 
+# Tracing for Debugging
+tracing: "true"
+
 # AMR common parameters
 amr_idle_timeout: 30 # s
 amr_charge_time: 7200.0 # s

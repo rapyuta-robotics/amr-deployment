@@ -4,8 +4,13 @@
   connection: local
   tasks:
     - copy:
+        src: rio_amr_pa.json
+        dest: /tmp/rio_amr_pa.json
+      when: tracing|bool == false
+    - copy:
         src: rio_amr_pa_tracing.json
         dest: /tmp/rio_amr_pa.json
+      when: tracing|bool == true
     - copy:
         src: rio_amr_ui.json
         dest: /tmp/rio_amr_ui.json
@@ -16,8 +21,13 @@
         src: rio_gazebo.json
         dest: /tmp/rio_gazebo.json
     - copy:
+        src: rio_gbc.json
+        dest: /tmp/rio_gbc.json
+      when: tracing|bool == false
+    - copy:
         src: rio_gbc_tracing.json
         dest: /tmp/rio_gbc.json
+      when: tracing|bool == true
     - copy:
         src: rio_gwm.json
         dest: /tmp/rio_gwm.json
