@@ -92,8 +92,7 @@
         name: "{{ prefix_name }}_rio_db"
         present: "{{ present }}"
         type: docker
-        docker_image: "rrdockerhub/rr_amr_postgres:nightly"
-        secret: "dockerhub"
+        docker_image: "mdillon/postgis:latest"
         manifest_path: /tmp/rio_db.json
       register: rio_db_package_id
     - name: rio_gazebo package
