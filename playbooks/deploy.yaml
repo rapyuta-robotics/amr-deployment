@@ -290,7 +290,6 @@
           WORLD2MAP_Z: 0
           WORLD2MAP_YAW: 0
           IDLE_TIMEOUT: "{{ amr_idle_timeout }}"
-          CHARGE_TIME: "{{ amr_charge_time }}"
           AGENT_ID: "{{ item.id }}"
           X_POS: "{{ item.x }}"
           Y_POS: "{{ item.y }}"
@@ -302,9 +301,15 @@
           IDLE_POS_X: "{{ item.idle_x }}"
           IDLE_POS_Y: "{{ item.idle_y }}"
           IDLE_POS_YAW: 1.57
-          SIM_INITIAL_BATTERY_PERCENTAGE: "{{ item.init_battery_value }}"
-          SIM_BATTERY_CHARGE_RATE: "{{ item.charge_rate }}"
-          SIM_BATTERY_DISCHARGE_RATE: "{{ item.discharge_rate }}"
+          SIM_INITIAL_BATTERY_PERCENTAGE: "{{ amr_initual_battery_percentage }}"
+          SIM_BATTERY_CHARGE_RATE: "{{ amr_charge_rate }}"
+          SIM_BATTERY_DISCHARGE_RATE: "{{ amr_discharge_rate }}"
+          CRITICAL_BATTERY_TIMEOUT: "{{ amr_critical_battery_timeout }}"
+          CRITICAL_BATTERY_PCT: "{{ amr_critical_battery_pct }}"
+          OPERATIONAL_BATTERY_PCT: "{{ amr_operational_battery_pct }}"
+          MAX_BATTERY_PCT: "{{ amr_max_battery_pct }}"
+          CHARGE_TIME_BASED: "{{ amr_charge_time_based }}"
+          CHARGE_TIME: "{{ amr_charge_time }}"
           ENABLE_SAFETY_ZONES: true
       loop: "{{  agent_list  }}"
       register: amr_id
