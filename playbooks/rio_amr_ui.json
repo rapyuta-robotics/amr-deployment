@@ -1,6 +1,6 @@
 {
   "name": "rio_amr_ui",
-  "packageVersion": "v3.0.14",
+  "packageVersion": "v3.0.20",
   "description": "",
   "bindable": true,
   "plans": [
@@ -64,6 +64,21 @@
             {
               "default": "v1",
               "name": "GWM_API_VERSION",
+              "description": ""
+            },
+            {
+              "default": "gbc",
+              "name": "DEFAULT_GWM_INTERFACE_HOST",
+              "description": ""
+            },
+            {
+              "default": "8080",
+              "name": "DEFAULT_GWM_INTERFACE_PORT",
+              "description": ""
+            },
+            {
+              "default": "ws",
+              "name": "DEFAULT_GWM_INTERFACE_PROTOCOL",
               "description": ""
             }
           ]

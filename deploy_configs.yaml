@@ -1,11 +1,13 @@
 present: "true"
+forklift_docker_read_user: ""
 forklift_docker_read_password: ""
+dockerhub_read_user: ""
 dockerhub_read_password: ""
 rio_amr_pa_image: ""
 rio_gwm_ui_image: ""
-rio_db_image: "rrdockerhub/rr_amr_postgres:nightly"
+rio_db_image: "mdillon/postgis:latest"
 rio_gwm_image: ""
-prefix_name: forklift
+prefix_name: forklift-test
 site_name: toyama
 
 # AMR common parameters

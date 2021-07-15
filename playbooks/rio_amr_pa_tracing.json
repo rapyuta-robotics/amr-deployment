@@ -1,6 +1,6 @@
 {
   "name": "rio_amr_pa",
-  "packageVersion": "v3.0.13",
+  "packageVersion": "v3.0.32",
   "description": "",
   "bindable": true,
   "plans": [
@@ -22,6 +22,13 @@
           },
           "ros": {
             "topics": [
+              {
+                "name": "/lbc/set_mode_response",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
               {
                 "name": "/gbc/ext_device_lock_request",
                 "qos": "low",
@@ -171,28 +178,28 @@
               },
               {
                 "name": "/gwm/destination_request",
-                "qos": "max",
+                "qos": "low",
                 "compression": "",
                 "scoped": false,
                 "targeted": false
               },
               {
                 "name": "/mrrp/route_request",
-                "qos": "max",
+                "qos": "low",
                 "compression": "",
                 "scoped": false,
                 "targeted": false
               },
               {
                 "name": "/agent_status",
-                "qos": "max",
+                "qos": "low",
                 "compression": "",
                 "scoped": false,
                 "targeted": false
               },
               {
                 "name": "/cmd_vel",
-                "qos": "max",
+                "qos": "low",
                 "compression": "",
                 "scoped": true,
                 "targeted": false
@@ -225,7 +232,7 @@
               "cmd": [
                 "/bin/bash",
                 "-c",
-                "source ~/catkin_ws/install/setup.bash && sleep 20 && roslaunch hitachi_bringup agent.launch simulation:=true & rosrun topic_tools relay /gazebo/clock /clock || sleep infinity"
+                "source ~/catkin_ws/install/setup.bash && sleep 20 && ROS_NAMESPACE=$RIO_ROS_ENV_ALIAS roslaunch hitachi_bringup agent.launch simulation:=true & rosrun topic_tools relay /gazebo/clock /clock || sleep infinity"
               ],
               "docker": "docker-registry-default.apps.rapyuta.io/",
               "limits": {
@@ -333,13 +340,8 @@
               "description": ""
             },
             {
-              "default": "false",
+              "default": "true",
               "name": "ENABLE_SAFETY_ZONES",
-              "description": ""
-            },
-            {
-              "default": "debug",
-              "name": "LOG_LEVEL",
               "description": ""
             }
           ],

@@ -1,6 +1,6 @@
 {
   "name": "rio_gbc",
-  "packageVersion": "v3.0.16",
+  "packageVersion": "v3.0.42",
   "description": "",
   "bindable": true,
   "plans": [
@@ -29,8 +29,8 @@
           "ros": {
             "topics": [
               {
-                "name": "/mode_command",
-                "qos": "hi",
+                "name": "/lbc/set_mode_request",
+                "qos": "low",
                 "compression": "",
                 "scoped": false,
                 "targeted": false
@@ -122,7 +122,7 @@
               {
                 "name": "/mrrp/route_response",
                 "qos": "low",
-                "compression": "",
+                "compression": "snappy",
                 "scoped": false,
                 "targeted": false
               },
@@ -168,7 +168,7 @@
               "cmd": [
                 "/bin/bash",
                 "-c",
-                "source ~/catkin_ws/install/setup.bash && rosrun gwm_interface sitectl.py -f --site toyama --package hitachi_bringup && sleep 10 && roslaunch hitachi_bringup global.launch sim:=true site:=toyama & rosrun topic_tools relay /gazebo/clock /clock || sleep infinity"
+                "source ~/catkin_ws/install/setup.bash && if [ \"$AUTOBOOTSTRAP\" == \"true\" ]; then rosrun gwm_interface sitectl.py -f --site toyama --package hitachi_bringup; fi && sleep 10 && roslaunch hitachi_bringup global.launch sim:=true site:=toyama & rosrun topic_tools relay /gazebo/clock /clock || sleep infinity"
               ],
               "docker": "docker-registry-default.apps.rapyuta.io/",
               "limits": {
@@ -206,11 +206,6 @@
               "description": ""
             },
             {
-              "default": "rr_gwm_interface",
-              "name": "IO_AMR_GWM_INTERFACE_NODE_NAME",
-              "description": ""
-            },
-            {
               "default": "autobootstrap",
               "name": "GWM_AUTH_TOKEN",
               "description": ""
@@ -228,11 +223,6 @@
             {
               "default": "1",
               "name": "GWM_INTERFACE_ORG_ID",
-              "description": ""
-            },
-            {
-              "default": "debug",
-              "name": "LOG_LEVEL",
               "description": ""
             }
           ],

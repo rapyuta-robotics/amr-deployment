@@ -1,6 +1,6 @@
 {
   "name": "rio_gbc_no_bootstrap",
-  "packageVersion": "v3.0.17",
+  "packageVersion": "v3.0.33",
   "description": "",
   "bindable": true,
   "plans": [
@@ -29,8 +29,8 @@
           "ros": {
             "topics": [
               {
-                "name": "/mode_command",
-                "qos": "hi",
+                "name": "/lbc/set_mode_request",
+                "qos": "low",
                 "compression": "",
                 "scoped": false,
                 "targeted": false
@@ -128,6 +128,20 @@
               },
               {
                 "name": "/gbc/task",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/gbc/spots_reservation_status",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/gbc/reserve_spot_response",
                 "qos": "low",
                 "compression": "",
                 "scoped": false,

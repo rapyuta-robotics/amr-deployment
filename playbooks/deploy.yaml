@@ -42,9 +42,9 @@
         present: true
         registry_url: docker-registry-default.apps.rapyuta.io/hitachi
         type: docker
-        username: unused
+        username: "{{ forklift_docker_read_user }}"
         password: "{{ forklift_docker_read_password }}"
-        email: rss2.admin@rapyuta-robotics.com
+        email: "{{ forklift_docker_read_user }}@rapyuta-robotics.com"
       register: docker_registry_secret_id
     - name: Dockerhub Read Secret
       async: 100
@@ -53,20 +53,20 @@
         name: dockerhubread
         present: true
         type: docker
-        username: ioamrreadonly
+        username: "{{ dockerhub_read_user }}"
         password: "{{ dockerhub_read_password }}"
-        email: rss2.admin@rapyuta-robotics.com
+        email: "{{ dockerhub_read_user }}@rapyuta-robotics.com"
       register: dockerhubread_secret_id
     - name: Network Deployment
       async: 100
       poll: 0
       rapyutarobotics.rr_io.networks:
-        name: "{{ prefix_name }}_routed_network"
+        name: "{{ prefix_name }}_native_network"
         present: "{{ present }}"
-        type: routed_network
+        type: native_network
         ros_distro: melodic
         resource_type: large
-      register: routed_network_id
+      register: native_network_id
     - name: GWM Static Route
       async: 100
       poll: 0
@@ -243,8 +243,8 @@
           static_routes:
             - name: "{{ prefix_name }}-gbc"
               endpoint_name: GWM_INTERFACE_ENDPOINT
-          routed_networks:
-            - name: "{{ prefix_name }}_routed_network"
+          native_networks:
+            - name: "{{ prefix_name }}_native_network"
         component_params:
           GWM_INTERFACE_SITE: "{{ site_name }}"
           AUTOBOOTSTRAP: true
@@ -294,8 +294,8 @@
           static_routes:
             - name: "{{ prefix_name }}-gazebo-ui"
               endpoint_name: VNC_EP
-          routed_networks:
-            - name: "{{ prefix_name }}_routed_network"
+          native_networks:
+            - name: "{{ prefix_name }}_native_network"
         component_params:
           VNC_PASSWORD: rapyuta
           VNC_RESOLUTION: 1920x1080
@@ -315,8 +315,8 @@
         present: "{{ present }}"
         package_name: "{{ prefix_name }}_rio_amr_pa"
         networks:
-          routed_networks:
-            - name: "{{ prefix_name }}_routed_network"
+          native_networks:
+            - name: "{{ prefix_name }}_native_network"
         component_params:
           ROBOT_MODEL: mln
           NAV_STRATEGY: graph_bounded

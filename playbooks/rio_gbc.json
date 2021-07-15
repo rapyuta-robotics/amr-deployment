@@ -122,7 +122,7 @@
               {
                 "name": "/mrrp/route_response",
                 "qos": "low",
-                "compression": "",
+                "compression": "snappy",
                 "scoped": false,
                 "targeted": false
               },
@@ -168,7 +168,7 @@
               "cmd": [
                 "/bin/bash",
                 "-c",
-                "source ~/catkin_ws/install/setup.bash && rosrun gwm_interface sitectl.py -f --site toyama --package hitachi_bringup && sleep 10 && roslaunch hitachi_bringup global.launch sim:=true site:=toyama & rosrun topic_tools relay /gazebo/clock /clock || sleep infinity"
+                "source ~/catkin_ws/install/setup.bash && if [ \"$AUTOBOOTSTRAP\" == \"true\" ]; then rosrun gwm_interface sitectl.py -f --site toyama --package hitachi_bringup; fi && sleep 10 && roslaunch hitachi_bringup global.launch sim:=true site:=toyama & rosrun topic_tools relay /gazebo/clock /clock || sleep infinity"
               ],
               "limits": {
                 "cpu":4,

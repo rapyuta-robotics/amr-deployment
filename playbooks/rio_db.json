@@ -1,13 +1,13 @@
 {
   "name": "rio_db",
-  "packageVersion": "v1.0.0",
+  "packageVersion": "v3.0.14",
   "description": "",
   "bindable": true,
   "plans": [
     {
       "name": "default",
       "metadata": {
-
+        
       },
       "singleton": false,
       "components": [
@@ -28,13 +28,13 @@
           },
           "ros": {
             "topics": [
-
+              
             ],
             "services": [
-
+              
             ],
             "actions": [
-
+              
             ],
             "isROS": false
           },
@@ -47,9 +47,10 @@
                 "simulation": false
               },
               "cmd": [
-
+                
               ],
               "docker": "rrdockerhub/rr_amr_postgres:nightly",
+              "secret":"secret-gdioaxhocdkjmmitvmriyjlj",
               "limits": {
                 "cpu": 0.5,
                 "memory": 2048
@@ -76,10 +77,10 @@
         }
       ],
       "includePackages": [
-
+        
       ],
       "dependentDeployments": [
-
+        
       ],
       "inboundROSInterfaces": {
         "anyIncomingScopedOrTargetedRosConfig": false
@@ -104,4 +105,3 @@
     }
   ]
 }
-

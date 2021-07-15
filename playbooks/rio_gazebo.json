@@ -1,6 +1,6 @@
 {
   "name": "rio_gazebo",
-  "packageVersion": "v3.0.13",
+  "packageVersion": "v3.0.29",
   "description": "",
   "bindable": true,
   "plans": [
@@ -87,7 +87,7 @@
                 "targeted": false
               },
               {
-                "name": "/plc/lock_vertical_conveyor",
+                "name": "/lock_vertical_conveyor",
                 "timeout": 60,
                 "compression": "",
                 "scoped": false,
@@ -262,7 +262,7 @@
               "description": ""
             },
             {
-              "default": "false",
+              "default": "NONE",
               "name": "ITEM_SPAWN_FROM",
               "description": ""
             },
@@ -279,6 +279,11 @@
             {
               "default": "toyama",
               "name": "WORLD",
+              "description": ""
+            },
+            {
+              "default": "true",
+              "name": "DEBUG",
               "description": ""
             }
           ],

@@ -13,7 +13,7 @@ sudo add-apt-repository --yes --update ppa:ansible/ansible
 sudo apt install ansible
 sudo apt-get install python3.6
 sudo apt install python3-pip
-pip install https://storage.googleapis.com/rio-sdk-python/rapyuta_io-0.26.0-py2.py3-none-any.whl
+pip install rapyuta-io
 ansible-galaxy collection install rapyutarobotics.rr_io
 ```
 
@@ -24,7 +24,7 @@ git clone https://github.com/rapyuta-robotics/amr-deployment.git
 cd amr-deployment
 brew install python3.6
 brew install python3-pip
-pip install https://storage.googleapis.com/rio-sdk-python/rapyuta_io-0.26.0-py2.py3-none-any.whl
+pip install rapyuta-io
 ansible-galaxy collection install rapyutarobotics.rr_io
 ```
 
@@ -55,10 +55,14 @@ ansible-playbook playbooks/deploy.yaml -vvv --extra-vars "@deploy_configs.yaml" 
 
 ```present```\
 Whether the deployment artifacts should be present in your project.\
+```forklift_docker_read_user```\
+The username of a read access account to reach the Forklift image repo. This is needed to pull the IO AMR images for the simulation\
 ```forklift_docker_read_password```\
-The password of a read only account to reach the Forklift image repo. This is needed to pull the IO AMR images for the simulation\
+The password of a read access account to reach the Forklift image repo. This is needed to pull the IO AMR images for the simulation\
+```dockerhub_read_user```\
+The password of a read access dockerhub account. This is needed to pull the IO AMR images for the simulation\
 ```dockerhub_read_password```\
-The password of ioamrreadonly dockerhub account. This is needed to pull the IO AMR images for the simulation\
+The password of a read access dockerhub account. This is needed to pull the IO AMR images for the simulation\
 ```rio_amr_pa_image```\
 amr_pa docker image to be used for the simulation.\
 ```rio_gwm_ui_image```\
