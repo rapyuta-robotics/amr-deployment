@@ -41,7 +41,8 @@ export RIO_AUTH_TOKEN=AUTH_TOKEN
 
 # Deploy simulation on rapyuta.io
 
-*Navigate to the root of the repository.*\
+## Default Deployment with autobootstrap (fresh deployment)
+*Navigate to the root of the repository.*
 To deploy:
 ```
 ansible-playbook playbooks/deploy.yaml -vvv --extra-vars "@deploy_configs.yaml" --extra-vars "present=true"
@@ -50,7 +51,20 @@ To deprovision:
 ```
 ansible-playbook playbooks/deploy.yaml -vvv --extra-vars "@deploy_configs.yaml" --extra-vars "present=false"
 ```
+## Deployment without autobootstrap (Keep previous Database)
+1) Ensure the prefix is the same as the deployment you wish to keep the database of
+2) set autobootstrap variable in deploy-configs.yaml to false
+3) Deprovision with the following to keep the database but remove the other components:
+```   
+ansible-playbook playbooks/deploy.yaml -vvv --extra-vars "@deploy_configs.yaml" --extra-vars "present=false"
+```
+4) Ensure autobootstrap variable is still false in deploy-configs.yaml and redeploy using:
+```
+ansible-playbook playbooks/deploy.yaml -vvv --extra-vars "@deploy_configs.yaml" --extra-vars "present=true"
+```
+5) To Deprovision the whole thing including the database, use the deprovision command but make sure that autobootstrap is set to true
 
+*note you can add  --extra-vars "autobootstrap=false" to deployment commands instead of changing deploy-configs.yaml*
 # deploy_configs Parameters:
 
 ```present```\
@@ -77,10 +91,14 @@ gbc docker image to be used for the simulation.\
 name to prefix all deployments by.\
 ```site_name```\
 name of the site.\
+```autobootstrap```\
+bootstrap the site and database if true.\
 ```amr_idle_timeout```\
 Timeout until the amrs go idle.\
 ```amr_charge_time```\
 Charge time for the amrs.\
+```amr_nav_time```\
+Navigation timeout for the amrs.\
 ```tracing```\
 Set to True to enable tracing to be setup on the GBC and AMRs for debugging.\
 ```agent_list```\
