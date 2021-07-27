@@ -9,10 +9,12 @@ rio_db_image: "mdillon/postgis:latest"
 rio_gwm_image: ""
 prefix_name: forklift-test
 site_name: toyama
+autobootstrap: "true"
 
 # AMR common parameters
 amr_idle_timeout: 300 # s
 amr_charge_time: 7200.0 # s
+amr_nav_time: 900 # s
 enable_safety_zones: "false"
 
 # Tracing for Debugging

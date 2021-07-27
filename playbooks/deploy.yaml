@@ -197,6 +197,7 @@
     - name: DB Deployment
       async: 100
       poll: 0
+      when: "{{ autobootstrap }}"
       rapyutarobotics.rr_io.deployments:
         name: "{{ prefix_name }}_postgres"
         component_name: postgres
@@ -223,7 +224,7 @@
             - name: "{{ prefix_name }}-gwm"
               endpoint_name: GWM_CORE_URL
         component_params:
-          AUTOBOOTSTRAP: true
+          AUTOBOOTSTRAP: "{{ autobootstrap }}"
           DEBUG: true
           DJANGO_LOG_LEVEL: WARNING
       register: rr_gwm_deploy_id
@@ -247,7 +248,7 @@
             - name: "{{ prefix_name }}_native_network"
         component_params:
           GWM_INTERFACE_SITE: "{{ site_name }}"
-          AUTOBOOTSTRAP: true
+          AUTOBOOTSTRAP: "{{ autobootstrap }}"
           GWM_INTERFACE_ORG_ID: 1
           GWM_AUTH_TOKEN: autobootstrap
           IO_AMR_GWM_INTERFACE_NODE_NAME: rr_gwm_interface
@@ -274,7 +275,7 @@
           GWM_API_VERSION: v1
           DEFAULT_GWM_INTERFACE_HOST: gbc
           DEFAULT_GWM_INTERFACE_PORT: 8080
-          DEFAULT_GWM_INTERFACE_PROTOCOL: ws
+          DEFAULT_GWM_INTERFACE_PROTOCOL: wss
       register: amr_ui_deploy_id
 - name: Gazebo and AMR deployments
   hosts: localhost
@@ -318,20 +319,13 @@
           native_networks:
             - name: "{{ prefix_name }}_native_network"
         component_params:
-          ROBOT_MODEL: mln
-          NAV_STRATEGY: graph_bounded
           MAP: "{{ item.map_name }}"
-          MAP_ID: 1
-          WORLD2MAP_X: 0
-          WORLD2MAP_Y: 0
-          WORLD2MAP_Z: 0
-          WORLD2MAP_YAW: 0
           IDLE_TIMEOUT: "{{ amr_idle_timeout }}"
           CHARGE_TIME: "{{ amr_charge_time }}"
+          NAV_TIMEOUT: "{{ amr_nav_time }}"
           AGENT_ID: "{{ item.id }}"
           X_POS: "{{ item.x }}"
           Y_POS: "{{ item.y }}"
-          Z_POS: 0.0
           YAW: "{{ item.yaw }}"
           IDLE_POS_X: "{{ item.idle_x }}"
           IDLE_POS_Y: "{{ item.idle_y }}"

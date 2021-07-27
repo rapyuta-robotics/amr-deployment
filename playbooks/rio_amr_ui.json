@@ -77,7 +77,7 @@
               "description": ""
             },
             {
-              "default": "ws",
+              "default": "wss",
               "name": "DEFAULT_GWM_INTERFACE_PROTOCOL",
               "description": ""
             }
