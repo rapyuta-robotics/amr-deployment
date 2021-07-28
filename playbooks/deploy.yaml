@@ -163,19 +163,6 @@
         secret: forkliftread
         manifest_path: /tmp/rio_gbc.json
       register: rio_gbc_package_id
-    - name: rio_gbc package
-      async: 1250
-      poll: 0
-      rapyutarobotics.rr_io.packages:
-        version: auto
-        name: "{{ prefix_name }}_rio_gbc_no_bootstrap"
-        present: "{{ present }}"
-        type: docker
-        docker_image: "{{ rio_amr_pa_image }}"
-        build: rio_amr_pa
-        secret: forkliftread
-        manifest_path: rio_gbc_no_bootstrap.json
-      register: rio_gbc_package_id
     - name: rio_gwm package
       async: 1000
       poll: 0
