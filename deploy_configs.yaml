@@ -1,9 +1,9 @@
 present: "true"
 docker_password: "insert password"
-rio_amr_pa_image: "rrdockerhub/io_amr_pa:2021_06_01-10amr-region-fix"
-rio_gwm_ui_image: "docker.io/rrdockerhub/rr_amr_ui:2021_06_01"
+rio_amr_pa_image: "rrdockerhub/io_amr_pa:ci_latest"
+rio_gwm_ui_image: "docker.io/rrdockerhub/io_amr_ui:ci_latest"
 rio_db_image: "mdillon/postgis:latest"
-rio_gwm_image: "rrdockerhub/rr_amr_gwm:2021_06_01"
+rio_gwm_image: "rrdockerhub/io_amr_gwm:ci_latest"
 prefix_name: "prefix"
 
 # Tracing for Debugging
@@ -20,6 +20,9 @@ amr_critical_battery_pct: -10.0 # %
 amr_operational_battery_pct: 50.0 # %
 amr_max_battery_pct: 90.0 # %
 amr_charge_time_based: true
+
+# Simulation parameters
+item_spawn_from: AUTO
 
 agent_list:
   - { id: '1', x: '6.2', y: '12', charge_x: '6.2', charge_y: '14.02', idle_x: '6.2', idle_y: '12.0' }

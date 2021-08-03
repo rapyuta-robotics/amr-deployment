@@ -274,7 +274,7 @@
           DEBUG: true
           RACK: true
           WORLD: tatsumi
-          ITEM_SPAWN_FROM: AUTO
+          ITEM_SPAWN_FROM: "{{ item_spawn_from }}"
           GWM_AUTH_TOKEN: autobootstrap
       register: gazebo_deploy_id
     - name: AMR Deployment
