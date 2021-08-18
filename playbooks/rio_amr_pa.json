@@ -334,6 +334,16 @@
               "default": "rapyuta",
               "name": "VNC_PASSWORD",
               "description": ""
+            },
+            {
+              "default": "-1",
+              "name": "CRITICAL_BATTERY_PCT",
+              "description": ""
+            },
+            {
+              "default": "5",
+              "name": "CRITICAL_BATTERY_TIMEOUT",
+              "description": ""
             }
           ],
           "rosBagJobDefs": [
