@@ -1,0 +1,173 @@
+# Configurable Parameters
+deployment_prefix: test77
+deprovision_routed_network: true
+deprovision_db: false
+deprovision_gwm: true
+
+# Global Parameters
+PROJECT_ID: project-phpudlwqafslnlowmjijpiky
+AUTH_TOKEN: INSERT AUTH TOKEN
+
+#io-build, Docker from io-builder or other docker repo
+SECRET: secret-tnamuaeeostlvfjmmideujst
+BUILD:
+    PA:
+      DOCKER_IMAGE: IMAGE
+    AMR_UI:
+      DOCKER_IMAGE: IMAGE
+    GWM:
+      DOCKER_IMAGE: IMAGE
+    DB:
+      DOCKER_IMAGE: mdillon/postgis:latest
+
+
+# DB
+DB_PARAMS:
+  POSTGRES_DB: gwm_core
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: postgres
+
+# GWM
+GWM_PARAMS:
+  AUTOBOOTSTRAP: true
+  DEBUG: true
+  AUTO_ORG_NAME: hitachi
+  AUTO_ROOT_USER: autobootstrap
+  DJANGO_LOG_LEVEL: WARNING
+
+# GWM_UI
+AMR_UI_PARAMS:
+  SKIP_PREFLIGHT_CHECK: "true"
+  GWM_API_VERSION: v1
+  DEFAULT_GWM_INTERFACE_HOST: gbc
+  DEFAULT_GWM_INTERFACE_PORT: 8080
+  DEFAULT_GWM_INTERFACE_PROTOCOL: wss
+
+# GBC
+GBC_PARAMS:
+  GWM_INTERFACE_SITE: toyama
+  AUTOBOOTSTRAP: "true"
+  GWM_INTERFACE_ORG_ID: 1
+  GWM_INTERFACE_SITE_ID: 1
+  GWM_INTERFACE_TOKEN: autobootstrap
+  IO_AMR_GWM_INTERFACE_NODE_NAME: rr_gwm_interface
+  ROSCONSOLE_FORMAT: "[$${severity}] [$${time}] [$${node} $${logger} $${function} $${line}]: $${message}"
+
+# Simulator parameters
+GAZEBO_PARAMS:
+  VNC_PASSWORD: rapyuta
+  VNC_RESOLUTION: 1920x1080
+  DEBUG: true
+  SPAWN_PALLETS: true
+  VERTICAL_CONVEYOR: true
+  HITACHI: true
+  RACK: true
+  MOBILE_RACK: true
+  WORLD: toyama
+  ITEM_SPAWN_FROM: false
+
+AMR_PARAMS:
+  - NAME: amr1004
+    AGENT_ID: 1004
+    ROBOT_MODEL: mln
+    MODEL_CONFIG: no_wheel
+    NAV_STRATEGY: graph_bounded
+    AMCL_OPTION: false
+    NAV_CONTROLLER: PathFollowerROS
+    SIMPLIFIED: true
+    WORLD: toyama
+    MAP: toyama_1F
+    MAP_ID: 1
+    WORLD2MAP_X: 0
+    WORLD2MAP_Y: 0
+    WORLD2MAP_Z: 0
+    WORLD2MAP_YAW: 0
+    X_POS: 28.5
+    Y_POS: 38.7
+    Z_POS: 0.0
+    YAW: -1.57
+    IDLE_POS_X: 39.63
+    IDLE_POS_Y: 24.652
+    IDLE_POS_YAW: 3.14159 #radians
+    IDLE_TIMEOUT: 300
+    CHARGE_TIME: 300000
+    NAV_TIMEOUT: 900
+  - NAME: amr1005
+    AGENT_ID: 1005
+    ROBOT_MODEL: mln
+    MODEL_CONFIG: no_wheel
+    NAV_STRATEGY: graph_bounded
+    AMCL_OPTION: false
+    NAV_CONTROLLER: PathFollowerROS
+    SIMPLIFIED: true
+    WORLD: toyama
+    MAP: toyama_1F
+    MAP_ID: 1
+    WORLD2MAP_X: 0
+    WORLD2MAP_Y: 0
+    WORLD2MAP_Z: 0
+    WORLD2MAP_YAW: 0
+    X_POS: 43.65
+    Y_POS: 24.74
+    Z_POS: 0.0
+    YAW: 3.14
+    ENABLE_SAFETY_ZONES: true
+    IDLE_POS_X: 46.13
+    IDLE_POS_Y: 24.65
+    IDLE_POS_YAW: 3.14159 #radians
+    IDLE_TIMEOUT: 300
+    CHARGE_TIME: 300000
+    NAV_TIMEOUT: 900
+  - NAME: amr1006
+    AGENT_ID: 1006
+    ROBOT_MODEL: mln
+    MODEL_CONFIG: no_wheel
+    NAV_STRATEGY: graph_bounded
+    AMCL_OPTION: false
+    NAV_CONTROLLER: PathFollowerROS
+    SIMPLIFIED: true
+    WORLD: toyama
+    MAP: toyama_1F
+    MAP_ID: 1
+    WORLD2MAP_X: 0
+    WORLD2MAP_Y: 0
+    WORLD2MAP_Z: 0
+    WORLD2MAP_YAW: 0
+    X_POS: 53.465
+    Y_POS: 2.76
+    Z_POS: 0.0
+    YAW: 1.5708
+    IDLE_POS_X: 61.5
+    IDLE_POS_Y: 29.5
+    IDLE_POS_YAW: -1.57079633 #radians
+    IDLE_TIMEOUT: 300
+    CHARGE_TIME: 300000
+    NAV_TIMEOUT: 900
+
+
+#2F Icarry
+  - NAME: amr1003
+    AGENT_ID: 1003
+    ROBOT_MODEL: icarry
+    MODEL_CONFIG: no_wheel
+    NAV_STRATEGY: graph_bounded
+    AMCL_OPTION: false
+    NAV_CONTROLLER: PathFollowerROS
+    SIMPLIFIED: true
+    WORLD: toyama
+    MAP: toyama_2F
+    MAP_ID: 2
+    WORLD2MAP_X: 0
+    WORLD2MAP_Y: 0
+    WORLD2MAP_Z: 0
+    WORLD2MAP_YAW: 0
+    X_POS: 17.5
+    Y_POS: 30.75
+    Z_POS: 0.0
+    YAW: 0
+    IDLE_POS_X: 17.5
+    IDLE_POS_Y: 30.75
+    IDLE_POS_YAW: 0 #radians
+    IDLE_TIMEOUT: 300
+    CHARGE_TIME: 300000
+    NAV_TIMEOUT: 900

@@ -17,92 +17,25 @@ pip install rapyuta-io
 ansible-galaxy collection install rapyutarobotics.rr_io
 ```
 
-## MAC instructions
-```
-brew install git
-git clone https://github.com/rapyuta-robotics/amr-deployment.git
-cd amr-deployment
-brew install python3.6
-brew install python3-pip
-pip install rapyuta-io
-ansible-galaxy collection install rapyutarobotics.rr_io
-```
 
 # Steps to follow *before* deploying
 1. Find Project ID from the drop down in top left corner of [here](https://console.rapyuta.io)
 2. Find the Authentication token from [here](https://auth.rapyuta.io/authToken/)
-3. Find the ioamrreadonly dockerhub account password sent to your email address and edit deploy_configs.json to enter Dockerhub account password.
-4. Run the below code in your terminal.
-
-```
-export RIO_PROJECT_ID=PROJECT_ID
-export RIO_AUTH_TOKEN=AUTH_TOKEN
-```
+3. Edit config/default.yaml to set the deployment prefix
+4. Set packageVersion in the packages if there are package version errors
 
 # Deploy simulation on rapyuta.io
 
-## Default Deployment with autobootstrap (fresh deployment)
+##  Deployment of Python script via Ansible (autobootstrap)
 *Navigate to the root of the repository.*
 To deploy:
 ```
-ansible-playbook playbooks/deploy.yaml -vvv --extra-vars "@deploy_configs.yaml" --extra-vars "present=true"
+ansible-playbook deploy_python.yaml -vvv --extra-vars "@config/default.yaml"
 ```
 To deprovision:
 ```
-ansible-playbook playbooks/deploy.yaml -vvv --extra-vars "@deploy_configs.yaml" --extra-vars "present=false"
+none at the moment
 ```
-## Deployment without autobootstrap (Keep previous Database)
-1) Ensure the prefix is the same as the deployment you wish to keep the database of
-2) set autobootstrap variable in deploy-configs.yaml to false
-3) Deprovision with the following to keep the database but remove the other components:
-```   
-ansible-playbook playbooks/deploy.yaml -vvv --extra-vars "@deploy_configs.yaml" --extra-vars "present=false"
-```
-4) Ensure autobootstrap variable is still false in deploy-configs.yaml and redeploy using:
-```
-ansible-playbook playbooks/deploy.yaml -vvv --extra-vars "@deploy_configs.yaml" --extra-vars "present=true"
-```
-5) To Deprovision the whole thing including the database, use the deprovision command but make sure that autobootstrap is set to true
-
-*note you can add  --extra-vars "autobootstrap=false" to deployment commands instead of changing deploy-configs.yaml*
-# deploy_configs Parameters:
-
-```present```\
-Whether the deployment artifacts should be present in your project.\
-```forklift_docker_read_user```\
-The username of a read access account to reach the Forklift image repo. This is needed to pull the IO AMR images for the simulation\
-```forklift_docker_read_password```\
-The password of a read access account to reach the Forklift image repo. This is needed to pull the IO AMR images for the simulation\
-```dockerhub_read_user```\
-The password of a read access dockerhub account. This is needed to pull the IO AMR images for the simulation\
-```dockerhub_read_password```\
-The password of a read access dockerhub account. This is needed to pull the IO AMR images for the simulation\
-```rio_amr_pa_image```\
-amr_pa docker image to be used for the simulation.\
-```rio_gwm_ui_image```\
-gwm_ui docker image to be used for the simulation.\
-```rio_db_image```\
-db docker image to be used for the simulation.\
-```rio_gazebo_image```\
-gazebo docker image to be used for the simulation.\
-```rio_gbc_image```\
-gbc docker image to be used for the simulation.\
-```prefix_name```\
-name to prefix all deployments by.\
-```site_name```\
-name of the site.\
-```autobootstrap```\
-bootstrap the site and database if true.\
-```amr_idle_timeout```\
-Timeout until the amrs go idle.\
-```amr_charge_time```\
-Charge time for the amrs.\
-```amr_nav_time```\
-Navigation timeout for the amrs.\
-```tracing```\
-Set to True to enable tracing to be setup on the GBC and AMRs for debugging.\
-```agent_list```\
-List of agents to deploy, removing or adding an agent to this list will deploy less or more agents, please provide initial x,y and yaw, as well as map location.
 
 # FAQ
 - authorization failed: update AUTH_TOKEN in config/basic_user_config.yaml. [ref](https://userdocs.rapyuta.io/3_how-tos/35_tooling_and_debugging/rapyuta-io-python-sdk/#auth-token)

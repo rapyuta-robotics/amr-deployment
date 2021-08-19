@@ -1,0 +1,25 @@
+- name: DB, GWM, GBC, AMR UI Deployments
+  hosts: localhost
+  strategy: free
+  connection: local
+  tasks:
+    - copy:
+        src: toyama/
+        dest: /tmp/toyama/
+    - name: Deploy site
+      ansible.builtin.script: deploy.py
+      args:
+        executable: python3
+      ignore_errors: yes
+    - name: run sitectl_simulation.py to bootstrap db
+      ansible.builtin.script: sitectl_simulation.py --site toyama --path /tmp/ -f
+      args:
+        executable: python3
+      environment:
+        GWM_CORE_URL: "https://{{  deployment_prefix  }}-gwm-kqdbp.ep-r.io:443"
+        GWM_INTERFACE_ENDPOINT_HOST: "{{  deployment_prefix  }}-gbc-kqdbp.ep-r.io"
+    - name: Redeploy site except for DB
+      ansible.builtin.script: deploy.py
+      args:
+        executable: python3
+      ignore_errors: yes
