@@ -85,18 +85,16 @@ To deprovision:
 ansible-playbook playbooks/deploy.yaml -vvv --extra-vars "@deploy_configs.yaml" --extra-vars "present=false"
 ```
 
-Once all robots are up in the UI, please verify that you can properly send an adhoc move to robot 10.
-If an error arises or gbc crashed. Update deployment of GBC and run the `fix` files by doing
-```
-./scripts/fix <prefix_name> <number_of_deployed_robot> <gwm_auth_token>
-```
+If routed_networks: true is used in the configuration file, please remember to enter the project in rapyuta.io and deleted the routed network after deprovisioning
 
 # deploy_configs Parameters:
 
 ```present```\
 Whether the deployment artifacts should be present in your project.\
+```docker_user```\
+The username of a dockerhub account with access to the images. This is needed to pull the IO AMR images for the simulation\
 ```docker_password```\
-The password of ioamrreadonly dockerhub account. This is needed to pull the IO AMR images for the simulation\
+The password of a dockerhub account with access to the images. This is needed to pull the IO AMR images for the simulation\
 ```rio_amr_pa_image```\
 amr_pa docker image to be used for the simulation.\
 ```rio_gwm_ui_image```\

@@ -38,11 +38,11 @@
         name: dockerhub
         present: "{{ present }}"
         type: docker
-        username: ioamrreadonly
+        username: "{{ docker_user }}"
         password: "{{ docker_password }}"
         email: rss2.admin@rapyuta-robotics.com
       register: docker_secret_id
-    - name: Network Deployment
+    - name: Native Network Deployment
       async: 100
       poll: 0
       rapyutarobotics.rr_io.networks:
@@ -51,7 +51,19 @@
         type: native_network
         ros_distro: melodic
         resource_type: small
+      when: routed_network|bool == false
       register: native_network_id
+    - name: Routed Network Deployment
+      async: 100
+      poll: 0
+      rapyutarobotics.rr_io.networks:
+        name: "{{ prefix_name }}_routed_network"
+        present: "{{ present }}"
+        type: routed_network
+        ros_distro: melodic
+        resource_type: small
+      when: routed_network|bool == true
+      register: routed_network_id
     - name: GWM Static Route
       async: 100
       poll: 0
@@ -199,7 +211,7 @@
           DEBUG: true
           DJANGO_LOG_LEVEL: WARNING
       register: rr_gwm_deploy_id
-    - name: GBC deployment
+    - name: GBC deployment (Native Network)
       async: 2200
       poll: 0
       rapyutarobotics.rr_io.deployments:
@@ -218,12 +230,40 @@
           native_networks:
             - name: "{{ prefix_name }}_native_network"
         component_params:
-          GWM_INTERFACE_SITE: tatsumi
+          GWM_INTERFACE_SITE: "{{ site_name }}"
           AUTOBOOTSTRAP: true
           GWM_INTERFACE_ORG_ID: 1
           GWM_AUTH_TOKEN: autobootstrap
           IO_AMR_GWM_INTERFACE_NODE_NAME: rr_gwm_interface
           ROSCONSOLE_FORMAT: "[$${severity}] [$${time}] [$${node} $${logger} $${function} $${line}]: $${message}"
+      when: routed_network|bool == false
+      register: rr_gbc_deploy_id
+    - name: GBC deployment (Routed Network)
+      async: 2200
+      poll: 0
+      rapyutarobotics.rr_io.deployments:
+        name: "{{ prefix_name }}_rr_gbc"
+        component_name: gbc
+        present: "{{ present }}"
+        package_name: rio_gbc
+        depends:
+          deployments:
+            - "{{ prefix_name }}_postgres"
+            - "{{ prefix_name }}_rr_gwm"
+        networks:
+          static_routes:
+            - name: "{{ prefix_name }}-gbc"
+              endpoint_name: GWM_INTERFACE_ENDPOINT
+          routed_networks:
+            - name: "{{ prefix_name }}_routed_network"
+        component_params:
+          GWM_INTERFACE_SITE: "{{ site_name }}"
+          AUTOBOOTSTRAP: true
+          GWM_INTERFACE_ORG_ID: 1
+          GWM_AUTH_TOKEN: autobootstrap
+          IO_AMR_GWM_INTERFACE_NODE_NAME: rr_gwm_interface
+          ROSCONSOLE_FORMAT: "[$${severity}] [$${time}] [$${node} $${logger} $${function} $${line}]: $${message}"
+      when: routed_network|bool == true
       register: rr_gbc_deploy_id
     - name: AMR UI  deployment
       async: 2600
@@ -253,7 +293,7 @@
   strategy: free
   connection: local
   tasks:
-    - name: Gazebo Deployment
+    - name: Gazebo Deployment (Native Network)
       async: 2000
       poll: 0
       rapyutarobotics.rr_io.deployments:
@@ -273,11 +313,37 @@
           VNC_RESOLUTION: 1920x1080
           DEBUG: true
           RACK: true
-          WORLD: tatsumi
+          WORLD: "{{ site_name }}"
           ITEM_SPAWN_FROM: "{{ item_spawn_from }}"
           GWM_AUTH_TOKEN: autobootstrap
+      when: routed_network|bool == false
       register: gazebo_deploy_id
-    - name: AMR Deployment
+    - name: Gazebo Deployment (Routed Network)
+      async: 2000
+      poll: 0
+      rapyutarobotics.rr_io.deployments:
+        name: "{{ prefix_name }}_gazebo"
+        component_name: gazebo
+        component_alias: gazebo
+        present: "{{ present }}"
+        package_name: rio_gazebo
+        networks:
+          static_routes:
+            - name: "{{ prefix_name }}-gazebo-ui"
+              endpoint_name: VNC_EP
+          routed_networks:
+            - name: "{{ prefix_name }}_routed_network"
+        component_params:
+          VNC_PASSWORD: rapyuta
+          VNC_RESOLUTION: 1920x1080
+          DEBUG: true
+          RACK: true
+          WORLD: "{{ site_name }}"
+          ITEM_SPAWN_FROM: "{{ item_spawn_from }}"
+          GWM_AUTH_TOKEN: autobootstrap
+      when: routed_network|bool == true
+      register: gazebo_deploy_id
+    - name: AMR Deployment (Native Network)
       async: 2000
       poll: 0
       rapyutarobotics.rr_io.deployments:
@@ -290,27 +356,14 @@
           native_networks:
             - name: "{{ prefix_name }}_native_network"
         component_params:
-          ROBOT_MODEL: rr_pa_amr
-          ROBOT_NAV_MODEL: rr_pa_amr
-          NAV_STRATEGY: graph_guided
-          MAP: tatsumi
-          MAP_ID: 1
-          WORLD2MAP_X: 0
-          WORLD2MAP_Y: 0
-          WORLD2MAP_Z: 0
-          WORLD2MAP_YAW: 0
           IDLE_TIMEOUT: "{{ amr_idle_timeout }}"
           AGENT_ID: "{{ item.id }}"
           X_POS: "{{ item.x }}"
           Y_POS: "{{ item.y }}"
-          Z_POS: 0.0
-          YAW: 1.57
           CHARGE_POS_X: "{{ item.charge_x }}"
           CHARGE_POS_Y: "{{ item.charge_y }}"
-          CHARGE_POS_YAW: 0.0
           IDLE_POS_X: "{{ item.idle_x }}"
           IDLE_POS_Y: "{{ item.idle_y }}"
-          IDLE_POS_YAW: 1.57
           SIM_INITIAL_BATTERY_PERCENTAGE: "{{ amr_initual_battery_percentage }}"
           SIM_BATTERY_CHARGE_RATE: "{{ amr_charge_rate }}"
           SIM_BATTERY_DISCHARGE_RATE: "{{ amr_discharge_rate }}"
@@ -320,7 +373,42 @@
           MAX_BATTERY_PCT: "{{ amr_max_battery_pct }}"
           CHARGE_TIME_BASED: "{{ amr_charge_time_based }}"
           CHARGE_TIME: "{{ amr_charge_time }}"
-          ENABLE_SAFETY_ZONES: true
+          ENABLE_SAFETY_ZONES: "{{ enable_safety_zones }}"
+      when: routed_network|bool == false
+      loop: "{{  agent_list  }}"
+      register: amr_id
+    - name: AMR Deployment (Routed Network)
+      async: 2000
+      poll: 0
+      rapyutarobotics.rr_io.deployments:
+        name: "{{ prefix_name }}_amr{{ item.id }}"
+        component_name: amr
+        component_alias: "amr{{ item.id }}"
+        present: "{{ present }}"
+        package_name: rio_amr_pa
+        networks:
+          routed_networks:
+            - name: "{{ prefix_name }}_routed_network"
+        component_params:
+          IDLE_TIMEOUT: "{{ amr_idle_timeout }}"
+          AGENT_ID: "{{ item.id }}"
+          X_POS: "{{ item.x }}"
+          Y_POS: "{{ item.y }}"
+          CHARGE_POS_X: "{{ item.charge_x }}"
+          CHARGE_POS_Y: "{{ item.charge_y }}"
+          IDLE_POS_X: "{{ item.idle_x }}"
+          IDLE_POS_Y: "{{ item.idle_y }}"
+          SIM_INITIAL_BATTERY_PERCENTAGE: "{{ amr_initual_battery_percentage }}"
+          SIM_BATTERY_CHARGE_RATE: "{{ amr_charge_rate }}"
+          SIM_BATTERY_DISCHARGE_RATE: "{{ amr_discharge_rate }}"
+          CRITICAL_BATTERY_TIMEOUT: "{{ amr_critical_battery_timeout }}"
+          CRITICAL_BATTERY_PCT: "{{ amr_critical_battery_pct }}"
+          OPERATIONAL_BATTERY_PCT: "{{ amr_operational_battery_pct }}"
+          MAX_BATTERY_PCT: "{{ amr_max_battery_pct }}"
+          CHARGE_TIME_BASED: "{{ amr_charge_time_based }}"
+          CHARGE_TIME: "{{ amr_charge_time }}"
+          ENABLE_SAFETY_ZONES: "{{ enable_safety_zones }}"
+      when: routed_network|bool == true
       loop: "{{  agent_list  }}"
       register: amr_id
     - name: "AMR - check on async status"
@@ -338,7 +426,7 @@
       with_items: "{{ amr_id.results }}"
     - name: "wait for UI to come up"
       uri:
-        url: "https://{{ prefix_name }}-gwm-kqdbp.ep-r.io/v1/site/1"
+        url: "https://{{ prefix_name }}-gwm-kqdbp.ep-r.io/v1/site/{{ site_name }}"
         method: GET
         headers:
           accept: "application/json"
@@ -354,22 +442,22 @@
       wait_for:
         timeout: 60
       when: "{{ present }}"
-    - name: "Adding Agents to db"
-      uri:
-        url: "https://{{ prefix_name }}-gwm-kqdbp.ep-r.io/v1/agent"
-        method: POST
-        headers:
-          accept: "application/json"
-          X-RRAMR-Org: "1"
-          X-RRAMR-Site: "1"
-          Authorization: "token autobootstrap"
-        body: '{"id": {{ item }}, "name": "agent{{ item }}", "robot_id": {{ item }}, "robot_descriptor_id": {{ item }}, "map": 1}'
-        body_format: json
-        status_code:
-          - "200"
-          - "201"
-          - "409"
-      when: "{{ present }}"
-      with_sequence: start=1 end={{ agent_list|length }}
+#    - name: "Adding Agents to db"
+#      uri:
+#        url: "https://{{ prefix_name }}-gwm-kqdbp.ep-r.io/v1/agent"
+#        method: POST
+#        headers:
+#          accept: "application/json"
+#          X-RRAMR-Org: "1"
+#          X-RRAMR-Site: "1"
+#          Authorization: "token autobootstrap"
+#        body: '{"id": {{ item }}, "name": "agent{{ item }}", "robot_id": {{ item }}, "robot_descriptor_id": {{ item }}, "map": 1}'
+#        body_format: json
+#        status_code:
+#          - "200"
+#          - "201"
+#          - "409"
+#      when: "{{ present }}"
+#      with_sequence: start=1 end={{ agent_list|length }}
 
 
