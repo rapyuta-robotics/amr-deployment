@@ -317,7 +317,7 @@
           ITEM_SPAWN_FROM: "{{ item_spawn_from }}"
           GWM_AUTH_TOKEN: autobootstrap
       when: routed_network|bool == false
-      register: gazebo_deploy_id
+      register: gazebo_deploy_native_id
     - name: Gazebo Deployment (Routed Network)
       async: 2000
       poll: 0
@@ -342,7 +342,7 @@
           ITEM_SPAWN_FROM: "{{ item_spawn_from }}"
           GWM_AUTH_TOKEN: autobootstrap
       when: routed_network|bool == true
-      register: gazebo_deploy_id
+      register: gazebo_deploy_routed_id
     - name: AMR Deployment (Native Network)
       async: 2000
       poll: 0
@@ -376,7 +376,7 @@
           ENABLE_SAFETY_ZONES: "{{ enable_safety_zones }}"
       when: routed_network|bool == false
       loop: "{{  agent_list  }}"
-      register: amr_id
+      register: amr_native_id
     - name: AMR Deployment (Routed Network)
       async: 2000
       poll: 0
@@ -410,7 +410,7 @@
           ENABLE_SAFETY_ZONES: "{{ enable_safety_zones }}"
       when: routed_network|bool == true
       loop: "{{  agent_list  }}"
-      register: amr_id
+      register: amr_routed_id
     - name: "AMR - check on async status"
       async_status:
         jid: "{{ item.ansible_job_id}}"
@@ -418,12 +418,31 @@
       until: amr_log.finished
       retries: 60
       delay: 20
-      when: "{{ present }}"
-      with_items: "{{ amr_id.results }}"
+      when:
+        - "{{ present }}"
+        - routed_network|bool == false
+      with_items: "{{ amr_native_id.results }}"
+    - name: "AMR - check on async status"
+      async_status:
+        jid: "{{ item.ansible_job_id}}"
+      register: amr_log
+      until: amr_log.finished
+      retries: 60
+      delay: 20
+      when:
+        - "{{ present }}"
+        - routed_network|bool == true
+      with_items: "{{ amr_routed_id.results }}"
     - name: dump test output
       debug:
         msg: '{{ item }}'
-      with_items: "{{ amr_id.results }}"
+      when: routed_network|bool == false
+      with_items: "{{ amr_native_id.results }}"
+    - name: dump test output
+      debug:
+        msg: '{{ item }}'
+      when: routed_network|bool == true
+      with_items: "{{ amr_routed_id.results }}"
     - name: "wait for UI to come up"
       uri:
         url: "https://{{ prefix_name }}-gwm-kqdbp.ep-r.io/v1/site/{{ site_name }}"

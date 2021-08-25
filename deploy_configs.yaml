@@ -1,10 +1,10 @@
 present: "true"
-docker_user: "INSERT USERNAME"
-docker_password: "INSERT PASSWORD"
-rio_amr_pa_image: "rrdockerhub/io_amr_pa:latest"
-rio_gwm_ui_image: "rrdockerhub/io_amr_ui:latest"
+docker_user: "ioamrreadonly"
+docker_password: "#3=L#L_UVSDT{enY"
+rio_amr_pa_image: "rrdockerhub/io_amr_pa:21.07.9"
+rio_gwm_ui_image: "rrdockerhub/io_amr_ui:2.3.0"
 rio_db_image: "mdillon/postgis:latest"
-rio_gwm_image: "rrdockerhub/io_amr_gwm:latest"
+rio_gwm_image: "rrdockerhub/io_amr_gwm:0.2.6"
 prefix_name: "prefix"
 site_name: tatsumi
 routed_network: false
