@@ -1,6 +1,6 @@
 present: "true"
 docker_user: "ioamrreadonly"
-docker_password: "#3=L#L_UVSDT{enY"
+docker_password: "insert pass"
 rio_amr_pa_image: "rrdockerhub/io_amr_pa:21.07.9"
 rio_gwm_ui_image: "rrdockerhub/io_amr_ui:2.3.0"
 rio_db_image: "mdillon/postgis:latest"

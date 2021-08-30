@@ -219,7 +219,11 @@
             }
           ],
           "rosBagJobDefs": [
-            
+            {
+              "name":"gbc_rosbag",
+              "recordOptions":
+                {"allTopics":true}
+            }
           ]
         }
       ],
