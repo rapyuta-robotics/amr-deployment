@@ -188,6 +188,18 @@
                 "cpu":4,
                 "memory":16384
               }
+            },
+            {
+              "name": "tracing_agent",
+              "simulationOptions": {
+                "simulation": false
+              },
+              "cmd": ["--reporter.grpc.host-port=trace-collector-kqdbp.ep-r.io:443", "--reporter.grpc.retry.max=1000", "--reporter.grpc.tls.enabled"],
+              "docker": "jaegertracing/jaeger-agent",
+              "limits": {
+                "cpu": 0.5,
+                "memory": 2048
+              }
             }
           ],
           "parameters": [

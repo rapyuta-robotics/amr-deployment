@@ -10,7 +10,6 @@
       ansible.builtin.script: deploy.py
       args:
         executable: python3
-      ignore_errors: yes
     - name: run sitectl_simulation.py to bootstrap db
       ansible.builtin.script: sitectl_simulation.py --site toyama --path /tmp/ -f
       args:
