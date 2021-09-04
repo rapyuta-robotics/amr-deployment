@@ -3,415 +3,265 @@
   strategy: free
   connection: local
   tasks:
-    - copy:
-        src: rio_amr_pa.json
-        dest: /tmp/rio_amr_pa.json
-      when: tracing|bool == false
-    - copy:
-        src: rio_amr_pa_tracing.json
-        dest: /tmp/rio_amr_pa.json
-      when: tracing|bool == true
-    - copy:
-        src: rio_amr_ui.json
-        dest: /tmp/rio_amr_ui.json
-    - copy:
-        src: rio_db.json
-        dest: /tmp/rio_db.json
-    - copy:
-        src: rio_gazebo.json
-        dest: /tmp/rio_gazebo.json
-    - copy:
-        src: rio_gbc.json
-        dest: /tmp/rio_gbc.json
-      when: tracing|bool == false
-    - copy:
-        src: rio_gbc_tracing.json
-        dest: /tmp/rio_gbc.json
-      when: tracing|bool == true
-    - copy:
-        src: rio_gwm.json
-        dest: /tmp/rio_gwm.json
-    - name: Docker Secret
+    ### Copy package manifest files
+    - name: Copy package manifest files
+      tags: [ "always" ]
+      copy:
+        src: "{{item.src}}.json"
+        dest: "/tmp/{{item.dest}}.json"
+      when: "{{item.do_copy}}"
+      with_items:
+        - { src: rio_amr_pa,         dest: rio_amr_pa, do_copy: tracing|bool == false }
+        - { src: rio_amr_pa_tracing, dest: rio_amr_pa, do_copy: tracing|bool == true }
+        - { src: rio_amr_ui,         dest: rio_amr_ui, do_copy: true }
+        - { src: rio_db,             dest: rio_db,     do_copy: true }
+        - { src: rio_gazebo,         dest: rio_gazebo, do_copy: true }
+        - { src: rio_gbc,            dest: rio_gbc,    do_copy: tracing|bool == false }
+        - { src: rio_gbc_tracing,    dest: rio_gbc,    do_copy: tracing|bool == true }
+        - { src: rio_gwm,            dest: rio_gwm,    do_copy: true }
+ 
+    ### Regsiter DockerHub secret key
+    - name: DockerHub Secret
+      tags: [ "always" ]
       async: 100
       poll: 0
       rapyutarobotics.rr_io.secrets:
         name: dockerhub
         present: "{{ present }}"
         type: docker
-        username: "{{ docker_user }}"
-        password: "{{ docker_password }}"
+        username: "{{ dockerhub_read_user }}"
+        password: "{{ dockerhub_read_password }}"
         email: rss2.admin@rapyuta-robotics.com
-      register: docker_secret_id
-    - name: Native Network Deployment
+
+    ### Add native or routed network
+    - name: Network Deployment
+      tags: [ "always" ]
       async: 100
       poll: 0
       rapyutarobotics.rr_io.networks:
-        name: "{{ prefix_name }}_native_network"
+        name: "{{ deployment_prefix }}_{{item.type}}"
+        type: "{{item.type}}"
         present: "{{ present }}"
-        type: native_network
         ros_distro: melodic
         resource_type: small
-      when: routed_network|bool == false
-      register: native_network_id
-    - name: Routed Network Deployment
+      when: "{{item.is_routed}}"
+      with_items:
+        - { type: native_network, is_routed: routed_network|bool == false }
+        - { type: routed_network, is_routed: routed_network|bool == true }
+
+    ### Add static routes
+    - name: Add Static Routes
+      tags: [ "always" ]
       async: 100
       poll: 0
       rapyutarobotics.rr_io.networks:
-        name: "{{ prefix_name }}_routed_network"
-        present: "{{ present }}"
-        type: routed_network
-        ros_distro: melodic
-        resource_type: small
-      when: routed_network|bool == true
-      register: routed_network_id
-    - name: GWM Static Route
-      async: 100
-      poll: 0
-      rapyutarobotics.rr_io.networks:
-        name: "{{ prefix_name }}-gwm"
+        name: "{{ item }}"
         present: "{{ present }}"
         type: static_route
-      register: gwm_static_route_id
-    - name: GBC Static Route
-      async: 100
-      poll: 0
-      rapyutarobotics.rr_io.networks:
-        name: "{{ prefix_name }}-gbc"
-        present: "{{ present }}"
-        type: static_route
-      register: gbc_static_route_id
-    - name: AMR UI Static Route
-      async: 100
-      poll: 0
-      rapyutarobotics.rr_io.networks:
-        name: "{{ prefix_name }}-amr-ui"
-        present: "{{ present }}"
-        type: static_route
-      register: amr_ui_static_route_id
-    - name: Gazebo UI Static Route
-      async: 100
-      poll: 0
-      rapyutarobotics.rr_io.networks:
-        name: "{{ prefix_name }}-gazebo-ui"
-        present: "{{ present }}"
-        type: static_route
-      register: gazebo_ui_static_route_id
-    - name: rio_amr_pa package
+      with_items:
+        - "{{ deployment_prefix }}-gwm"
+        - "{{ deployment_prefix }}-gbc"
+        - "{{ deployment_prefix }}-amr-ui"
+        - "{{ deployment_prefix }}-gazebo-ui"
+
+    ### Build packages
+    - name: Build Packages
+      tags: [ "always" ]
       async: 1250
       poll: 0
       rapyutarobotics.rr_io.packages:
         version: auto
-        name: rio_amr_pa
+        name: "{{ item.name }}"
         present: "{{ present }}"
         type: docker
-        build: rio_amr_pa
-        docker_image: "{{ rio_amr_pa_image }}"
+        build: "{{ item.build }}"
+        docker_image: "{{ item.docker_image }}"
         secret: dockerhub
-        manifest_path: /tmp/rio_amr_pa.json
-      register: rio_amr_pa_package_id
-    - name: rio_gwm_ui package
-      async: 1000
-      poll: 0
-      rapyutarobotics.rr_io.packages:
-        version: auto
-        name: rio_gwm_ui
-        present: "{{ present }}"
-        type: docker
-        docker_image: "{{ rio_gwm_ui_image }}"
-        build: rio_gwm_ui
-        secret: dockerhub
-        manifest_path: /tmp/rio_amr_ui.json
-      register: rio_gwm_ui_package_id
-    - name: rio_db package
-      async: 1000
-      poll: 0
-      rapyutarobotics.rr_io.packages:
-        version: auto
-        name: rio_db
-        present: "{{ present }}"
-        type: docker
-        docker_image: "{{ rio_db_image }}"
-        secret: dockerhub
-        manifest_path: /tmp/rio_db.json
-      register: rio_db_package_id
-    - name: rio_gazebo package
-      async: 1250
-      poll: 0
-      rapyutarobotics.rr_io.packages:
-        version: auto
-        name: rio_gazebo
-        present: "{{ present }}"
-        type: docker
-        docker_image: "{{ rio_amr_pa_image }}"
-        build: rio_amr_pa
-        secret: dockerhub
-        manifest_path: /tmp/rio_gazebo.json
-      register: rio_gazebo_package_id
-    - name: rio_gbc package
-      async: 1250
-      poll: 0
-      rapyutarobotics.rr_io.packages:
-        version: auto
-        name: rio_gbc
-        present: "{{ present }}"
-        type: docker
-        docker_image: "{{ rio_amr_pa_image }}"
-        build: rio_amr_pa
-        secret: dockerhub
-        manifest_path: /tmp/rio_gbc.json
-      register: rio_gbc_package_id
-    - name: rio_gwm package
-      async: 1000
-      poll: 0
-      rapyutarobotics.rr_io.packages:
-        version: auto
-        name: rio_gwm
-        present: "{{ present }}"
-        type: docker
-        docker_image: "{{ rio_gwm_image }}"
-        build: rio_gwm
-        secret: dockerhub
-        manifest_path: /tmp/rio_gwm.json
-      register: rio_gwm_package_id
+        manifest_path: "/tmp/{{ item.manifest }}.json"
+      with_items:
+        - { name: rio_amr_pa, build: rio_amr_pa, manifest: rio_amr_pa, docker_image: "{{ BUILD.PA.DOCKER_IMAGE }}" }
+        - { name: rio_gwm_ui, build: rio_gwm_ui, manifest: rio_amr_ui, docker_image: "{{ BUILD.AMR_UI.DOCKER_IMAGE }}" }
+        - { name: rio_db,     build: rio_db,     manifest: rio_db,     docker_image: "{{ BUILD.DB.DOCKER_IMAGE }}" }
+        - { name: rio_gazebo, build: rio_amr_pa, manifest: rio_gazebo, docker_image: "{{ BUILD.PA.DOCKER_IMAGE }}" }
+        - { name: rio_gbc,    build: rio_amr_pa, manifest: rio_gbc,    docker_image: "{{ BUILD.PA.DOCKER_IMAGE }}" }
+        - { name: rio_gwm,    build: rio_gwm,    manifest: rio_gwm,    docker_image: "{{ BUILD.GWM.DOCKER_IMAGE }}" }
+
 - name: DB, GWM, GBC, AMR UI Deployments
   hosts: localhost
   strategy: free
   connection: local
   tasks:
+    ### DB Deployment
     - name: DB Deployment
+      tags: [ "always" ]
       async: 100
       poll: 0
       rapyutarobotics.rr_io.deployments:
-        name: "{{ prefix_name }}_postgres"
+        name: "{{ deployment_prefix }}_postgres"
         component_name: postgres
         present: "{{ present }}"
         package_name: rio_db
-        component_params:
-          POSTGRES_DB: gwm_core
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
+        component_params: "{{ DB_PARAMS }}"
       register: db_deploy_id
+
+    ### GWM Deployment
     - name: GWM deployment
+      tags: [ "always" ]
       async: 2000
       poll: 0
       rapyutarobotics.rr_io.deployments:
-        name: "{{ prefix_name }}_rr_gwm"
+        name: "{{ deployment_prefix }}_rr_gwm"
         component_name: core
         present: "{{ present }}"
         package_name: rio_gwm
         depends:
           deployments:
-            - "{{ prefix_name }}_postgres"
+            - "{{ deployment_prefix }}_postgres"
         networks:
           static_routes:
-            - name: "{{ prefix_name }}-gwm"
+            - name: "{{ deployment_prefix }}-gwm"
               endpoint_name: GWM_CORE_URL
-        component_params:
-          AUTOBOOTSTRAP: true
-          DEBUG: true
-          DJANGO_LOG_LEVEL: WARNING
+        component_params: "{{GWM_PARAMS}}"
       register: rr_gwm_deploy_id
+
+    ### GBC Deployment
     - name: GBC deployment (Native Network)
+      tags: [ "always" ]
       async: 2200
       poll: 0
-      rapyutarobotics.rr_io.deployments:
-        name: "{{ prefix_name }}_rr_gbc"
+      rapyutarobotics.rr_io.deployments: &gbc_deployment
+        name: "{{ deployment_prefix }}_rr_gbc"
         component_name: gbc
         present: "{{ present }}"
         package_name: rio_gbc
         depends:
           deployments:
-            - "{{ prefix_name }}_postgres"
-            - "{{ prefix_name }}_rr_gwm"
+            - "{{ deployment_prefix }}_postgres"
+            - "{{ deployment_prefix }}_rr_gwm"
         networks:
           static_routes:
-            - name: "{{ prefix_name }}-gbc"
+            - name: "{{ deployment_prefix }}-gbc"
               endpoint_name: GWM_INTERFACE_ENDPOINT
           native_networks:
-            - name: "{{ prefix_name }}_native_network"
-        component_params:
-          GWM_INTERFACE_SITE: "{{ site_name }}"
-          AUTOBOOTSTRAP: true
-          GWM_INTERFACE_ORG_ID: 1
-          GWM_AUTH_TOKEN: autobootstrap
-          IO_AMR_GWM_INTERFACE_NODE_NAME: rr_gwm_interface
-          ROSCONSOLE_FORMAT: "[$${severity}] [$${time}] [$${node} $${logger} $${function} $${line}]: $${message}"
+            - name: "{{ deployment_prefix }}_native_network"
+        component_params: "{{GBC_PARAMS}}"
       when: routed_network|bool == false
       register: rr_gbc_deploy_id
     - name: GBC deployment (Routed Network)
+      tags: [ "always" ]
       async: 2200
       poll: 0
       rapyutarobotics.rr_io.deployments:
-        name: "{{ prefix_name }}_rr_gbc"
-        component_name: gbc
-        present: "{{ present }}"
-        package_name: rio_gbc
-        depends:
-          deployments:
-            - "{{ prefix_name }}_postgres"
-            - "{{ prefix_name }}_rr_gwm"
+        <<: *gbc_deployment
         networks:
           static_routes:
-            - name: "{{ prefix_name }}-gbc"
+            - name: "{{ deployment_prefix }}-gbc"
               endpoint_name: GWM_INTERFACE_ENDPOINT
           routed_networks:
-            - name: "{{ prefix_name }}_routed_network"
-        component_params:
-          GWM_INTERFACE_SITE: "{{ site_name }}"
-          AUTOBOOTSTRAP: true
-          GWM_INTERFACE_ORG_ID: 1
-          GWM_AUTH_TOKEN: autobootstrap
-          IO_AMR_GWM_INTERFACE_NODE_NAME: rr_gwm_interface
-          ROSCONSOLE_FORMAT: "[$${severity}] [$${time}] [$${node} $${logger} $${function} $${line}]: $${message}"
+            - name: "{{ deployment_prefix }}_routed_network"
       when: routed_network|bool == true
       register: rr_gbc_deploy_id
-    - name: AMR UI  deployment
+
+    ### AMR UI Deployment
+    - name: AMR UI deployment
+      tags: [ "always" ]
       async: 2600
       poll: 0
       rapyutarobotics.rr_io.deployments:
-        name: "{{ prefix_name }}_amr_ui"
+        name: "{{ deployment_prefix }}_amr_ui"
         component_name: gwm-ui
         present: "{{ present }}"
         package_name: rio_gwm_ui
         depends:
           deployments:
-            - "{{ prefix_name }}_rr_gwm"
-            - "{{ prefix_name }}_rr_gbc"
+            - "{{ deployment_prefix }}_rr_gwm"
+            - "{{ deployment_prefix }}_rr_gbc"
         networks:
           static_routes:
-            - name: "{{ prefix_name }}-amr-ui"
+            - name: "{{ deployment_prefix }}-amr-ui"
               endpoint_name: GWM_UI
-        component_params:
-          SKIP_PREFLIGHT_CHECK: true
-          GWM_API_VERSION: v1
-          DEFAULT_GWM_INTERFACE_HOST: gbc
-          DEFAULT_GWM_INTERFACE_PORT: 8080
-          DEFAULT_GWM_INTERFACE_PROTOCOL: ws
+        component_params: "{{AMR_UI_PARAMS}}"
       register: amr_ui_deploy_id
+
 - name: Gazebo and AMR deployments
   hosts: localhost
   strategy: free
   connection: local
   tasks:
+    ### Gazebo Deployment
     - name: Gazebo Deployment (Native Network)
+      tags: [ "always" ]
       async: 2000
       poll: 0
-      rapyutarobotics.rr_io.deployments:
-        name: "{{ prefix_name }}_gazebo"
+      rapyutarobotics.rr_io.deployments: &gazebo_deployment
+        name: "{{ deployment_prefix }}_gazebo"
         component_name: gazebo
         component_alias: gazebo
         present: "{{ present }}"
         package_name: rio_gazebo
         networks:
           static_routes:
-            - name: "{{ prefix_name }}-gazebo-ui"
+            - name: "{{ deployment_prefix }}-gazebo-ui"
               endpoint_name: VNC_EP
           native_networks:
-            - name: "{{ prefix_name }}_native_network"
-        component_params:
-          VNC_PASSWORD: rapyuta
-          VNC_RESOLUTION: 1920x1080
-          DEBUG: true
-          RACK: true
-          WORLD: "{{ site_name }}"
-          ITEM_SPAWN_FROM: "{{ item_spawn_from }}"
-          GWM_AUTH_TOKEN: autobootstrap
+            - name: "{{ deployment_prefix }}_native_network"
+        component_params: "{{GAZEBO_PARAMS}}"
       when: routed_network|bool == false
-      register: gazebo_deploy_native_id
+      register: gazebo_native_deploy_id
     - name: Gazebo Deployment (Routed Network)
+      tags: [ "always" ]
       async: 2000
       poll: 0
       rapyutarobotics.rr_io.deployments:
-        name: "{{ prefix_name }}_gazebo"
-        component_name: gazebo
-        component_alias: gazebo
-        present: "{{ present }}"
-        package_name: rio_gazebo
+        <<: *gazebo_deployment
         networks:
           static_routes:
-            - name: "{{ prefix_name }}-gazebo-ui"
+            - name: "{{ deployment_prefix }}-gazebo-ui"
               endpoint_name: VNC_EP
           routed_networks:
-            - name: "{{ prefix_name }}_routed_network"
-        component_params:
-          VNC_PASSWORD: rapyuta
-          VNC_RESOLUTION: 1920x1080
-          DEBUG: true
-          RACK: true
-          WORLD: "{{ site_name }}"
-          ITEM_SPAWN_FROM: "{{ item_spawn_from }}"
-          GWM_AUTH_TOKEN: autobootstrap
+            - name: "{{ deployment_prefix }}_routed_network"
       when: routed_network|bool == true
-      register: gazebo_deploy_routed_id
+      register: gazebo_routed_deploy_id
+
+    ### AMR Deployment
     - name: AMR Deployment (Native Network)
+      tags: [ "always" ]
       async: 2000
       poll: 0
-      rapyutarobotics.rr_io.deployments:
-        name: "{{ prefix_name }}_amr{{ item.id }}"
+      rapyutarobotics.rr_io.deployments: &amr_deployment
+        name: "{{ deployment_prefix }}_amr{{ item.AGENT_ID }}"
         component_name: amr
-        component_alias: "amr{{ item.id }}"
+        component_alias: "amr{{ item.AGENT_ID }}"
         present: "{{ present }}"
         package_name: rio_amr_pa
         networks:
           native_networks:
-            - name: "{{ prefix_name }}_native_network"
-        component_params:
-          IDLE_TIMEOUT: "{{ amr_idle_timeout }}"
-          AGENT_ID: "{{ item.id }}"
-          X_POS: "{{ item.x }}"
-          Y_POS: "{{ item.y }}"
-          CHARGE_POS_X: "{{ item.charge_x }}"
-          CHARGE_POS_Y: "{{ item.charge_y }}"
-          IDLE_POS_X: "{{ item.idle_x }}"
-          IDLE_POS_Y: "{{ item.idle_y }}"
-          SIM_INITIAL_BATTERY_PERCENTAGE: "{{ amr_initual_battery_percentage }}"
-          SIM_BATTERY_CHARGE_RATE: "{{ amr_charge_rate }}"
-          SIM_BATTERY_DISCHARGE_RATE: "{{ amr_discharge_rate }}"
-          CRITICAL_BATTERY_TIMEOUT: "{{ amr_critical_battery_timeout }}"
-          CRITICAL_BATTERY_PCT: "{{ amr_critical_battery_pct }}"
-          OPERATIONAL_BATTERY_PCT: "{{ amr_operational_battery_pct }}"
-          MAX_BATTERY_PCT: "{{ amr_max_battery_pct }}"
-          CHARGE_TIME_BASED: "{{ amr_charge_time_based }}"
-          CHARGE_TIME: "{{ amr_charge_time }}"
-          ENABLE_SAFETY_ZONES: "{{ enable_safety_zones }}"
+            - name: "{{ deployment_prefix }}_native_network"
+        component_params: "{{item}}"
       when: routed_network|bool == false
-      loop: "{{  agent_list  }}"
-      register: amr_native_id
+      loop: "{{  AMR_PARAMS  }}"
+      register: amr_native_deploy_id
     - name: AMR Deployment (Routed Network)
+      tags: [ "always" ]
       async: 2000
       poll: 0
       rapyutarobotics.rr_io.deployments:
-        name: "{{ prefix_name }}_amr{{ item.id }}"
-        component_name: amr
-        component_alias: "amr{{ item.id }}"
-        present: "{{ present }}"
-        package_name: rio_amr_pa
+        <<: *amr_deployment
         networks:
           routed_networks:
-            - name: "{{ prefix_name }}_routed_network"
-        component_params:
-          IDLE_TIMEOUT: "{{ amr_idle_timeout }}"
-          AGENT_ID: "{{ item.id }}"
-          X_POS: "{{ item.x }}"
-          Y_POS: "{{ item.y }}"
-          CHARGE_POS_X: "{{ item.charge_x }}"
-          CHARGE_POS_Y: "{{ item.charge_y }}"
-          IDLE_POS_X: "{{ item.idle_x }}"
-          IDLE_POS_Y: "{{ item.idle_y }}"
-          SIM_INITIAL_BATTERY_PERCENTAGE: "{{ amr_initual_battery_percentage }}"
-          SIM_BATTERY_CHARGE_RATE: "{{ amr_charge_rate }}"
-          SIM_BATTERY_DISCHARGE_RATE: "{{ amr_discharge_rate }}"
-          CRITICAL_BATTERY_TIMEOUT: "{{ amr_critical_battery_timeout }}"
-          CRITICAL_BATTERY_PCT: "{{ amr_critical_battery_pct }}"
-          OPERATIONAL_BATTERY_PCT: "{{ amr_operational_battery_pct }}"
-          MAX_BATTERY_PCT: "{{ amr_max_battery_pct }}"
-          CHARGE_TIME_BASED: "{{ amr_charge_time_based }}"
-          CHARGE_TIME: "{{ amr_charge_time }}"
-          ENABLE_SAFETY_ZONES: "{{ enable_safety_zones }}"
+            - name: "{{ deployment_prefix }}_routed_network"
       when: routed_network|bool == true
-      loop: "{{  agent_list  }}"
-      register: amr_routed_id
-    - name: "AMR - check on async status"
+      loop: "{{  AMR_PARAMS  }}"
+      register: amr_routed_deploy_id
+
+- name: AMR, AMR UI, GAZEBO - Check on async status
+  hosts: localhost
+  strategy: free
+  connection: local
+  tasks:
+    ### Check on async status
+    - name: "Check on async status (Native Network)"
+      tags: [ "always" ]
       async_status:
         jid: "{{ item.ansible_job_id}}"
       register: amr_log
@@ -421,8 +271,12 @@
       when:
         - "{{ present }}"
         - routed_network|bool == false
-      with_items: "{{ amr_native_id.results }}"
-    - name: "AMR - check on async status"
+      with_items:
+        - "{{ amr_native_deploy_id.results }}"
+        - "{{ gazebo_native_deploy_id }}"
+        - "{{ amr_ui_deploy_id }}"
+    - name: "Check on async status (Routed Network)"
+      tags: [ "always" ]
       async_status:
         jid: "{{ item.ansible_job_id}}"
       register: amr_log
@@ -432,51 +286,7 @@
       when:
         - "{{ present }}"
         - routed_network|bool == true
-      with_items: "{{ amr_routed_id.results }}"
-    - name: dump test output
-      debug:
-        msg: '{{ item }}'
-      when: routed_network|bool == false
-      with_items: "{{ amr_native_id.results }}"
-    - name: dump test output
-      debug:
-        msg: '{{ item }}'
-      when: routed_network|bool == true
-      with_items: "{{ amr_routed_id.results }}"
-    - name: "wait for UI to come up"
-      uri:
-        url: "https://{{ prefix_name }}-gwm-kqdbp.ep-r.io/v1/site/{{ site_name }}"
-        method: GET
-        headers:
-          accept: "application/json"
-          X-RRAMR-Org: "1"
-          Authorization: "token autobootstrap"
-        status_code: 200
-      when: "{{ present }}"
-      register: result
-      until: result.status == 200
-      retries: 60
-      delay: 20
-    - name: "Pause to wait for UI to finish building"
-      wait_for:
-        timeout: 60
-      when: "{{ present }}"
-#    - name: "Adding Agents to db"
-#      uri:
-#        url: "https://{{ prefix_name }}-gwm-kqdbp.ep-r.io/v1/agent"
-#        method: POST
-#        headers:
-#          accept: "application/json"
-#          X-RRAMR-Org: "1"
-#          X-RRAMR-Site: "1"
-#          Authorization: "token autobootstrap"
-#        body: '{"id": {{ item }}, "name": "agent{{ item }}", "robot_id": {{ item }}, "robot_descriptor_id": {{ item }}, "map": 1}'
-#        body_format: json
-#        status_code:
-#          - "200"
-#          - "201"
-#          - "409"
-#      when: "{{ present }}"
-#      with_sequence: start=1 end={{ agent_list|length }}
-
-
+      with_items:
+        - "{{ amr_routed_deploy_id.results }}"
+        - "{{ gazebo_routed_deploy_id }}"
+        - "{{ amr_ui_deploy_id }}"

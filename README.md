@@ -89,30 +89,40 @@ If routed_networks: true is used in the configuration file, please remember to e
 
 # deploy_configs Parameters:
 
-```present```\
-Whether the deployment artifacts should be present in your project.\
-```docker_user```\
-The username of a dockerhub account with access to the images. This is needed to pull the IO AMR images for the simulation\
-```docker_password```\
-The password of a dockerhub account with access to the images. This is needed to pull the IO AMR images for the simulation\
-```rio_amr_pa_image```\
+```present```
+
+Whether the deployment artifacts should be present in your project.
+
+```deployment_prefix```\
+The prefix of the deplyment\
+```dockerhub_read_user```\
+The username of a dockerhub account with access to the images. This is needed to pull the IO AMR images for the simulation.\
+```dockerhub_read_password```\
+The password of a dockerhub account with access to the images. This is needed to pull the IO AMR images for the simulation.\
+```site_name```\
+The site name of the deployment\
+```routed_network```\
+True if you use routed network. False if you use native network.\
+```tracing```\
+True if you enable tracing for debugging.\
+```BUILD.PA.DOCKER_IMAGE```\
 amr_pa docker image to be used for the simulation.\
-```rio_gwm_ui_image```\
+```BUILD.AMR_UI.DOCKER_IMAGE```\
 gwm_ui docker image to be used for the simulation.\
-```rio_db_image```\
+```BUILD.GWM.DOCKER_IMAGE```\
+gwm docker image to be used for the simulation.\
+```BUILD.DB.DOCKER_IMAGE```\
 db docker image to be used for the simulation.\
-```rio_gazebo_image```\
-gazebo docker image to be used for the simulation.\
-```rio_gbc_image```\
-gbc docker image to be used for the simulation.\
-```rr_gwm_static_route```\
-gwm static route used by the gwm deployment.\
-```rr_gbc_static_route```\
-gbc static route used by the gbc deployment.\
-```amr_ui_static_route```\
-amr_ui static route used by the amr_ui deployment.\
-```gazebo_ui_static_route```\
-gazebo static route used by the gazebo deployment.
+```GWM_PARAMS```\
+Parameters to be used for deploying GWM\
+```GBC_PARAMS```\
+Parameters to be used for deploying GBC\
+```AMR_UI_PARAMS```\
+Parameters to be used for deploying AMR UI\
+```GAZEBO_PARAMS```\
+Parameters to be used for deploying GAZEBO\
+```AMR_PARAMS```\
+Parameters to be used for deploying AMRs
 
 # FAQ
 - authorization failed: update AUTH_TOKEN in config/basic_user_config.yaml. [ref](https://userdocs.rapyuta.io/3_how-tos/35_tooling_and_debugging/rapyuta-io-python-sdk/#auth-token)
