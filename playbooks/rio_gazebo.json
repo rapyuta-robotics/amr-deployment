@@ -79,23 +79,23 @@
               },
               {
                 "name": "/scan",
-                "qos": "max",
+                "qos": "low",
                 "compression": "",
                 "scoped": false,
                 "targeted": true
               },
               {
                 "name": "/odom",
-                "qos": "max",
+                "qos": "low",
                 "compression": "",
                 "scoped": false,
                 "targeted": true
               },
               {
                 "name": "/clock",
-                "qos": "max",
+                "qos": "low",
                 "compression": "",
-                "scoped": true,
+                "scoped": false,
                 "targeted": false
               }
             ],
