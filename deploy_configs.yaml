@@ -22,7 +22,7 @@ amr_critical_battery_pct: -10.0 # %
 amr_operational_battery_pct: 50.0 # %
 amr_max_battery_pct: 90.0 # %
 amr_charge_time_based: true
-enable_safety_zones: true
+enable_speed_regions: true
 
 # Simulation parameters
 item_spawn_from: AUTO

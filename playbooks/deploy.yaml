@@ -373,7 +373,7 @@
           MAX_BATTERY_PCT: "{{ amr_max_battery_pct }}"
           CHARGE_TIME_BASED: "{{ amr_charge_time_based }}"
           CHARGE_TIME: "{{ amr_charge_time }}"
-          ENABLE_SAFETY_ZONES: "{{ enable_safety_zones }}"
+          ENABLE_SPEED_REGIONS: "{{ enable_speed_regions }}"
       when: routed_network|bool == false
       loop: "{{  agent_list  }}"
       register: amr_native_id
@@ -407,7 +407,7 @@
           MAX_BATTERY_PCT: "{{ amr_max_battery_pct }}"
           CHARGE_TIME_BASED: "{{ amr_charge_time_based }}"
           CHARGE_TIME: "{{ amr_charge_time }}"
-          ENABLE_SAFETY_ZONES: "{{ enable_safety_zones }}"
+          ENABLE_SPEED_REGIONS: "{{ enable_speed_regions }}"
       when: routed_network|bool == true
       loop: "{{  agent_list  }}"
       register: amr_routed_id
