@@ -231,7 +231,7 @@
               "cmd": [
                 "/bin/bash",
                 "-c",
-                "source ~/catkin_ws/install/setup.bash && ROS_NAMESPACE=$RIO_ROS_ENV_ALIAS stdbuf -oL /home/rr/headless/install/vnc_startup.sh 'roslaunch bringup agent.launch simulation:=true' || sleep infinity"
+                "source ~/catkin_ws/install/setup.bash && ROS_NAMESPACE=$RIO_ROS_ENV_ALIAS TF_PREFIX=$RIO_ROS_ENV_ALIAS/ stdbuf -oL /home/rr/headless/install/vnc_startup.sh 'roslaunch bringup agent.launch simulation:=true' || sleep infinity"
               ],
               "limits": {
                 "cpu": 2,

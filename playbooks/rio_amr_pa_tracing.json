@@ -359,11 +359,7 @@
             }
           ],
           "rosBagJobDefs": [
-            {
-              "name":"pa_rosbag",
-              "recordOptions":
-                {"allTopics":true}
-            }
+
           ]
         }
       ],
