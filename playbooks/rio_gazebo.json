@@ -218,7 +218,7 @@
             {
               "name": "gazebo_ui",
               "simulationOptions": {
-                "simulation": false
+                "simulation": true
               },
               "cmd": [
                 "/bin/bash",
