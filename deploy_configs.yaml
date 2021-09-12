@@ -10,14 +10,20 @@ routed_network: false
 # Tracing for Debugging
 tracing: true
 
+# rosBagOptions
+rosBagJobDefs_amr: { "name":"pa_rosbag", "compression":"BZ2", "recordOptions": { "topicIncludeRegex": ["(.*)mrrp/route(.*)","(.*)agent_status(.*)"] } }
+rosBagJobDefs_gbc: { "name":"gbc_rosbag", "compression":"BZ2", "recordOptions": { "topicIncludeRegex": ["(.*)mrrp/route(.*)","(.*)agent_status(.*)"] } }
+#rosBagJobDefs_amr: { "name":"pa_rosbag", "compression":"BZ2", "recordOptions": { "topicIncludeRegex": [ "(.*)move_base_flex(.*)", "(.*)rr_nav_server(.*)", "(.*)spin_turn(.*)", "(.*)cmd_vel(.*)", "/tf", "/tf_static", "(.*)cmd(.*)", "(.*)odom(.*)", "(.*)pose(.*)", "(.*)marker(.*)", "(.*)region(.*)", "(.*)map(.*)", "(.*)rosout(.*)" ] } }
+#rosBagJobDefs_gbc: { "name":"gbc_rosbag", "compression":"BZ2", "recordOptions": { "topicIncludeRegex": [ "(.*)move_base_flex(.*)", "(.*)rr_nav_server(.*)", "(.*)spin_turn(.*)", "(.*)cmd_vel(.*)", "/tf", "/tf_static", "(.*)cmd(.*)", "(.*)odom(.*)", "(.*)pose(.*)", "(.*)marker(.*)", "(.*)region(.*)", "(.*)map(.*)", "(.*)rosout(.*)" ] } }
+
 # PACKAGES
 BUILD:
   PA:
-    DOCKER_IMAGE: rrdockerhub/io_amr_pa:21.07.9
+    DOCKER_IMAGE: INPUT IMAGE TAG
   AMR_UI:
-    DOCKER_IMAGE: rrdockerhub/io_amr_ui:2.3.0
+    DOCKER_IMAGE: INPUT IMAGE TAG
   GWM:
-    DOCKER_IMAGE: rrdockerhub/io_amr_gwm:0.2.6
+    DOCKER_IMAGE: INPUT IMAGE TAG
   DB:
     DOCKER_IMAGE: mdillon/postgis:latest
 

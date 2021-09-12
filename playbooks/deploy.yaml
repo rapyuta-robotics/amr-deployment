@@ -3,22 +3,21 @@
   strategy: free
   connection: local
   tasks:
+    ### Generate package manifest files
+    - name: update package manifest files
+      tags: [ "always" ]
+      template:
+        src: ./{{item}}.json.j2
+        dest: /tmp/{{item}}.json
+      with_items: [ "rio_amr_pa", "rio_gbc" ]
+
     ### Copy package manifest files
     - name: Copy package manifest files
       tags: [ "always" ]
       copy:
-        src: "{{item.src}}.json"
-        dest: "/tmp/{{item.dest}}.json"
-      when: "{{item.do_copy}}"
-      with_items:
-        - { src: rio_amr_pa,         dest: rio_amr_pa, do_copy: tracing|bool == false }
-        - { src: rio_amr_pa_tracing, dest: rio_amr_pa, do_copy: tracing|bool == true }
-        - { src: rio_amr_ui,         dest: rio_amr_ui, do_copy: true }
-        - { src: rio_db,             dest: rio_db,     do_copy: true }
-        - { src: rio_gazebo,         dest: rio_gazebo, do_copy: true }
-        - { src: rio_gbc,            dest: rio_gbc,    do_copy: tracing|bool == false }
-        - { src: rio_gbc_tracing,    dest: rio_gbc,    do_copy: tracing|bool == true }
-        - { src: rio_gwm,            dest: rio_gwm,    do_copy: true }
+        src: "{{item}}.json"
+        dest: "/tmp/{{item}}.json"
+      with_items: [ "rio_amr_ui", "rio_db", "rio_gazebo", "rio_gwm" ]
  
     ### Regsiter DockerHub secret key
     - name: DockerHub Secret

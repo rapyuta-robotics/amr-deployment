@@ -167,6 +167,7 @@
                 "cpu": 1,
                 "memory": 4096
               }
+            {% if tracing == true -%}
             },
             {
               "name": "tracing_agent",
@@ -179,6 +180,7 @@
                 "cpu": 0.5,
                 "memory": 2048
               }
+            {% endif -%}
             }
           ],
           "parameters": [
@@ -219,26 +221,9 @@
             }
           ],
           "rosBagJobDefs": [
-            {
-              "name":"gbc_rosbag",
-              "recordOptions": {
-                "topicIncludeRegex": [
-                  "(.*)move_base_flex(.*)",
-                  "(.*)rr_nav_server(.*)",
-                  "(.*)spin_turn(.*)",
-                  "(.*)cmd_vel(.*)",
-                  "/tf",
-                  "/tf_static",
-                  "(.*)cmd(.*)",
-                  "(.*)odom(.*)",
-                  "(.*)pose(.*)",
-                  "(.*)marker(.*)",
-                  "(.*)region(.*)",
-                  "(.*)map(.*)",
-                  "(.*)rosout(.*)"
-                ]
-              }
-            }
+            {% if tracing == true -%}
+            {{rosBagJobDefs_gbc | to_json }}
+            {% endif -%}
           ]
         }
       ],

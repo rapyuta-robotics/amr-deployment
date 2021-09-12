@@ -237,6 +237,7 @@
                 "cpu": 2,
                 "memory": 8192
               }
+            {% if tracing == true -%}
             },
             {
               "name": "tracing_agent",
@@ -249,6 +250,7 @@
                 "cpu": 0.5,
                 "memory": 2048
               }
+            {% endif -%}
             }
           ],
           "parameters": [
@@ -359,7 +361,9 @@
             }
           ],
           "rosBagJobDefs": [
-
+            {% if tracing == true -%}
+            {{ rosBagJobDefs_amr | to_json }}
+            {% endif -%}
           ]
         }
       ],
