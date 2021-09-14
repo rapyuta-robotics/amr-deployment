@@ -11,8 +11,10 @@ routed_network: false
 tracing: true
 
 # rosBagOptions
-rosBagJobDefs_amr: { "name":"pa_rosbag", "compression":"BZ2", "recordOptions": { "topicIncludeRegex": ["(.*)mrrp/route(.*)","(.*)agent_status(.*)"] } }
-rosBagJobDefs_gbc: { "name":"gbc_rosbag", "compression":"BZ2", "recordOptions": { "topicIncludeRegex": ["(.*)mrrp/route(.*)","(.*)agent_status(.*)"] } }
+rosBagJobDefs_amr: { "name":"pa_rosbag", "compression":"BZ2", "recordOptions": { "topicIncludeRegex": ["dummy_topics"] } }
+rosBagJobDefs_gbc: { "name":"gbc_rosbag", "compression":"BZ2", "recordOptions": { "topicIncludeRegex": ["dummy_topics"] } }
+#rosBagJobDefs_amr: { "name":"pa_rosbag", "compression":"BZ2", "recordOptions": { "topicIncludeRegex": ["(.*)mrrp/route(.*)","(.*)agent_status(.*)"] } }
+#rosBagJobDefs_gbc: { "name":"gbc_rosbag", "compression":"BZ2", "recordOptions": { "topicIncludeRegex": ["(.*)mrrp/route(.*)","(.*)agent_status(.*)"] } }
 #rosBagJobDefs_amr: { "name":"pa_rosbag", "compression":"BZ2", "recordOptions": { "topicIncludeRegex": [ "(.*)move_base_flex(.*)", "(.*)rr_nav_server(.*)", "(.*)spin_turn(.*)", "(.*)cmd_vel(.*)", "/tf", "/tf_static", "(.*)cmd(.*)", "(.*)odom(.*)", "(.*)pose(.*)", "(.*)marker(.*)", "(.*)region(.*)", "(.*)map(.*)", "(.*)rosout(.*)" ] } }
 #rosBagJobDefs_gbc: { "name":"gbc_rosbag", "compression":"BZ2", "recordOptions": { "topicIncludeRegex": [ "(.*)move_base_flex(.*)", "(.*)rr_nav_server(.*)", "(.*)spin_turn(.*)", "(.*)cmd_vel(.*)", "/tf", "/tf_static", "(.*)cmd(.*)", "(.*)odom(.*)", "(.*)pose(.*)", "(.*)marker(.*)", "(.*)region(.*)", "(.*)map(.*)", "(.*)rosout(.*)" ] } }
 
