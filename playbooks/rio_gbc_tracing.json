@@ -139,6 +139,20 @@
                 "compression": "",
                 "scoped": false,
                 "targeted": false
+              },
+              {
+                "name": "/lbc/set_mode_request",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/lbc/set_mode_response",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
               }
             ],
             "services": [
@@ -222,7 +236,7 @@
             {
               "name":"gbc_rosbag",
               "recordOptions":
-                {"allTopics":true}
+                { "topicIncludeRegex": ["dummy_topics"] }
             }
           ]
         }
