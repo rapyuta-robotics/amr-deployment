@@ -139,6 +139,20 @@
                 "compression": "",
                 "scoped": false,
                 "targeted": false
+              },
+              {
+                "name": "/lbc/set_mode_request",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/lbc/set_mode_response",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
               }
             ],
             "services": [

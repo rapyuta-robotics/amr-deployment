@@ -362,7 +362,7 @@
             {
               "name":"pa_rosbag",
               "recordOptions":
-                {"allTopics":true}
+                { "topicIncludeRegex": ["dummy_topics"] }
             }
           ]
         }
