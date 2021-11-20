@@ -1,0 +1,368 @@
+{
+  "name": "rio_amr_pa",
+  "packageVersion": "v1.0.0",
+  "description": "",
+  "bindable": false,
+  "plans": [
+    {
+      "name": "default",
+      "metadata": {
+        
+      },
+      "singleton": false,
+      "components": [
+        {
+          "name": "amr",
+          "description": "",
+          "cloudInfra": {
+            "replicas": 1,
+            "endpoints": [
+              {
+                "name": "VNC_EP",
+                "exposeExternally": true,
+                "port": 443,
+                "targetPort": 6901,
+                "proto": "HTTPS"
+              }
+            ]
+          },
+          "ros": {
+            "topics": [
+              {
+                "name": "/gbc/ext_device_lock_request",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/gbc/update_task_request",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/gwm_interface/work/update_work_request",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/gwm_interface/work/fetch_work_request",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/gwm_interface/site/fetch_external_devices_request",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/gwm_interface/mapping/get_spots_request",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/gwm_interface/mapping/get_regions_request",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/gwm_interface/mapping/get_graph_request",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/fork_load_presence_right_upward",
+                "qos": "low",
+                "compression": "",
+                "scoped": true,
+                "targeted": false
+              },
+              {
+                "name": "/fork_load_presence_right_forward",
+                "qos": "low",
+                "compression": "",
+                "scoped": true,
+                "targeted": false
+              },
+              {
+                "name": "/fork_load_presence_left_upward",
+                "qos": "low",
+                "compression": "",
+                "scoped": true,
+                "targeted": false
+              },
+              {
+                "name": "/fork_load_presence_left_forward",
+                "qos": "low",
+                "compression": "",
+                "scoped": true,
+                "targeted": false
+              },
+              {
+                "name": "/gbc/error_action_request",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/gbc/amr_action_response",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/AlicaEngine/SolverResult",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/AlicaEngine/OwnRole",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/AlicaEngine/AllocationAuthorityInfo",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/AlicaEngine/AgentAnnouncement",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/AlicaEngine/AgentQuery",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/AlicaEngine/PlanTreeInfo",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/AlicaEngine/AlicaEngineInfo",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/gwm/destination_request",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/mrrp/route_request",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/agent_status",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/cmd_vel",
+                "qos": "low",
+                "compression": "",
+                "scoped": true,
+                "targeted": false
+              },
+              {
+                "name": "/gbc/reserve_spot_request",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              }
+            ],
+            "services": [
+              
+            ],
+            "actions": [
+              
+            ],
+            "isROS": true,
+            "ros_distro": "melodic"
+          },
+          "requiredRuntime": "cloud",
+          "architecture": "amd64",
+          "executables": [
+            {
+              "name": "amr",
+              "simulationOptions": {
+                "simulation": true
+              },
+              "cmd": [
+                "/bin/bash",
+                "-c",
+                "source ~/catkin_ws/install/setup.bash && ROS_NAMESPACE=$RIO_ROS_ENV_ALIAS TF_PREFIX=$RIO_ROS_ENV_ALIAS/ stdbuf -oL /home/rr/headless/install/vnc_startup.sh 'roslaunch bringup agent.launch simulation:=true' || sleep infinity"
+              ],
+              "limits": {
+                "cpu": 1,
+                "memory": 8192
+              }
+            }
+          ],
+          "parameters": [
+            {
+              "default": "graph_guided",
+              "name": "NAV_STRATEGY",
+              "description": ""
+            },
+            {
+              "default": "rr_pa_amr",
+              "name": "ROBOT_NAV_MODEL",
+              "description": ""
+            },
+            {
+              "default": "[${time}] [${severity}] [${node} ${logger} ${function} ${line}]: ${message}",
+              "name": "ROSCONSOLE_FORMAT",
+              "description": ""
+            },
+            {
+              "default": "0",
+              "name": "WORLD2MAP_YAW",
+              "description": ""
+            },
+            {
+              "default": "0",
+              "name": "WORLD2MAP_Z",
+              "description": ""
+            },
+            {
+              "default": "0",
+              "name": "WORLD2MAP_Y",
+              "description": ""
+            },
+            {
+              "default": "0", 
+              "name": "NAV_SAFETY_DISTANCE", 
+              "description": ""
+            },
+            {
+              "default": "0",
+              "name": "WORLD2MAP_X",
+              "description": ""
+            },
+            {
+              "default": "0",
+              "name": "Z_POS",
+              "description": ""
+            },
+            {
+              "default": "12",
+              "name": "Y_POS",
+              "description": ""
+            },
+            {
+              "default": "1.5707",
+              "name": "YAW",
+              "description": ""
+            },
+            {
+              "default": "6.2",
+              "name": "X_POS",
+              "description": ""
+            },
+            {
+              "default": "1",
+              "name": "MAP_ID",
+              "description": ""
+            },
+            {
+              "default": "tatsumi",
+              "name": "MAP",
+              "description": ""
+            },
+            {
+              "default": "1000000",
+              "name": "IDLE_TIMEOUT",
+              "description": ""
+            },
+            {
+              "default": "rr_pa_amr",
+              "name": "ROBOT_MODEL",
+              "description": ""
+            },
+            {
+              "default": "1",
+              "name": "AGENT_ID",
+              "description": ""
+            },
+            {
+              "default": "1280x720",
+              "name": "VNC_RESOLUTION",
+              "description": ""
+            },
+            {
+              "default": "rapyuta",
+              "name": "VNC_PASSWORD",
+              "description": ""
+            },
+            {
+              "default": "-1",
+              "name": "CRITICAL_BATTERY_PCT",
+              "description": ""
+            },
+            {
+              "default": "5",
+              "name": "CRITICAL_BATTERY_TIMEOUT",
+              "description": ""
+            }
+          ],
+          "rosBagJobDefs": [
+            
+          ]
+        }
+      ],
+      "includePackages": [
+        
+      ],
+      "dependentDeployments": [
+        
+      ],
+      "inboundROSInterfaces": {
+        "anyIncomingScopedOrTargetedRosConfig": true
+      },
+      "exposedParameters": [
+        
+      ]
+    }
+  ]
+}
