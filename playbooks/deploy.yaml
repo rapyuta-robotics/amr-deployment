@@ -31,6 +31,12 @@
     - copy:
         src: rio_gwm.json
         dest: /tmp/rio_gwm.json
+#   Delete any pre-existing secrets before creating new onw
+    - name: Docker Secret
+      rapyutarobotics.rr_io.secrets:
+        name: dockerhub
+        present: "false"
+        type: docker
     - name: Docker Secret
       async: 100
       poll: 0
