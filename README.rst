@@ -1,7 +1,12 @@
 AMR Deployment
 =====================
 
-These instructions are for launching IO-AMR using the ansible deployment system
+These instructions are for launching IO-AMR using the ansible deployment system.
+Before you start you must make sure you have the following
+
+- A linux/windows computer for running the deployment
+- rapyuta.io account and credentials for deploying instances
+- docker credentials for io_amr (ioamrreadonly)
 
 Installing Prerequisites
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -72,3 +77,7 @@ Open deploy_configs.yaml and enter your docker username and password (once you o
 
     # To Deprovision
     ansible-playbook playbooks/deploy.yaml -vvv --extra-vars "@deploy_configs.yaml" --extra-vars "present=false"
+    
+
+- Once IO-AMR is deployed, you can go to rapyuta.io > Deployments and click the UI deployment, scroll down to NETWORK ENDPOINTS, copy the GMW_UI Value and enter the fleet UI. Initial username and password is autobootstrap
+- You can also go to rapyuta.io > Deployments and click the GWM deployment, croll down to NETWORK ENDPOINTS, copy the GWM_CORE_URL and append /swagger/ to the URL and enter the GWM. On the top you can click ReDOC to enter detailed API description
