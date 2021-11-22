@@ -443,40 +443,5 @@
         msg: '{{ item }}'
       when: routed_network|bool == true
       with_items: "{{ amr_routed_id.results }}"
-    - name: "wait for UI to come up"
-      uri:
-        url: "https://{{ prefix_name }}-gwm-kqdbp.ep-r.io/v1/site/{{ site_name }}"
-        method: GET
-        headers:
-          accept: "application/json"
-          X-RRAMR-Org: "1"
-          Authorization: "token autobootstrap"
-        status_code: 200
-      when: "{{ present }}"
-      register: result
-      until: result.status == 200
-      retries: 60
-      delay: 20
-    - name: "Pause to wait for UI to finish building"
-      wait_for:
-        timeout: 60
-      when: "{{ present }}"
-#    - name: "Adding Agents to db"
-#      uri:
-#        url: "https://{{ prefix_name }}-gwm-kqdbp.ep-r.io/v1/agent"
-#        method: POST
-#        headers:
-#          accept: "application/json"
-#          X-RRAMR-Org: "1"
-#          X-RRAMR-Site: "1"
-#          Authorization: "token autobootstrap"
-#        body: '{"id": {{ item }}, "name": "agent{{ item }}", "robot_id": {{ item }}, "robot_descriptor_id": {{ item }}, "map": 1}'
-#        body_format: json
-#        status_code:
-#          - "200"
-#          - "201"
-#          - "409"
-#      when: "{{ present }}"
-#      with_sequence: start=1 end={{ agent_list|length }}
 
 

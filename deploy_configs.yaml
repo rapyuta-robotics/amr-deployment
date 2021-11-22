@@ -16,7 +16,7 @@ site_name: tatsumi
 
 # routed_networks is set to true, please remember to deleted the routed network after deprovisioning
 routed_network: false
-tracing: "true"
+tracing: "false"
 
 # AMR common parameters
 amr_idle_timeout: 30 # s
