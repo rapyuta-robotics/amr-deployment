@@ -49,7 +49,7 @@
         name: "{{ prefix_name }}_native_network"
         present: "{{ present }}"
         type: native_network
-        ros_distro: melodic
+        ros_distro: noetic
         resource_type: small
       when: routed_network|bool == false
       register: native_network_id
@@ -60,7 +60,7 @@
         name: "{{ prefix_name }}_routed_network"
         present: "{{ present }}"
         type: routed_network
-        ros_distro: melodic
+        ros_distro: noetic
         resource_type: small
       when: routed_network|bool == true
       register: routed_network_id
