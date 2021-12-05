@@ -3,18 +3,18 @@ present: "true"
 
 # The username and password of the dockerhub account with access to the images. This is needed to pull the IO AMR images for the simulation
 docker_user: "ioamrreadonly"
-docker_password: "insert pass"
+docker_password: "#3=L#L_UVSDT{enY"
 
 # The images used for the simulation
-rio_amr_pa_image: "rrdockerhub/io_amr_pa:21.07.9"
-rio_gwm_ui_image: "rrdockerhub/io_amr_ui:2.3.0"
+rio_amr_pa_image: "rrdockerhub/io_amr_pa:sim_stable"
+rio_gwm_ui_image: "rrdockerhub/io_amr_ui:sim_stable"
 rio_db_image: "mdillon/postgis:latest"
-rio_gwm_image: "rrdockerhub/io_amr_gwm:0.2.6"
+rio_gwm_image: "rrdockerhub/io_amr_gwm:sim_stable"
 
 prefix_name: "prefix"
 site_name: tatsumi
 
-# routed_networks is set to true, please remember to deleted the routed network after deprovisioning
+# if routed_networks is set to true, please remember to deleted the routed network after deprovisioning
 routed_network: false
 tracing: "false"
 
