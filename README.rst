@@ -57,7 +57,7 @@ Installing Prerequisites
             # Then we can install rapyuta libs
             apt-cyg install python3 python3-pip
             pip3 install rapyuta-io
-            ansible-galaxy collection install rapyutarobotics.rr_io
+            ansible-galaxy collection install rapyutarobotics.rr_io --upgrade
 
 
 Deployment
