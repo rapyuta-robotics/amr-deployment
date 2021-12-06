@@ -104,7 +104,9 @@ deploy_configs Parameters:
 ``routed_network``
  determines if a routed network is used on rapyuta.io instead of a native network. If this is set to false (default) a native network will be used instead. **Warning** if this is set to true, please remember to go to Networks on rapyuta.io and manually remove the created routed network after you deprovision the deployment
 ``tracing``
- determins if tracing is used for debuging purposes. This is set to false by default
+ determines if tracing is used for debuging purposes. This is set to false by default
+``ansible_async``
+ sets whether async is used by the deployment playbook or not, running asynchronously will allow the deployment to complete faster, if set to true, playbook will attempt to run all the steps together as soon as dependencies allow and will only poll for results after all steps are started. If false, playbook will proceed step by step default is 'true'
 ``amr_idle_timeout``
  idle time for amr, if timeout reached, amr moves to idle position.
 ``amr_charge_time``
@@ -131,3 +133,11 @@ deploy_configs Parameters:
  determines how items are spawned and handled. AUTO means items are spawned when amr pick and despawned on drop. YAML means items are spawned at pick locations based on a yaml file.
 ``agent_list``
  list of agents to spawn, ids must be unique, x and y determine spawn location, charge_x and charge_y determine location amr moves to for charging, and idle_x and idle_y determines location where amr moves to when idle timeout reached. To determine the number of amrs, comment or uncomment the listed amrs until you have the amount you wish to test
+
+Troubleshooting Tips:
+^^^^^^^^^^^
+AMRs don't show
+ - Restart GWM deployment on rapyuta.io
+ - Redeploy the deployment
+ - Redeploy using ansible_async = false
+
