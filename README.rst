@@ -10,54 +10,47 @@ Before you start you must make sure you have the following
 
 Installing Prerequisites
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+###Linux
 
-.. tabs::
+   sudo apt update
+   sudo apt install software-properties-common
+   sudo add-apt-repository --yes --update ppa:ansible/ansible
+   sudo apt install python3.6 python3-pip ansible
+   ansible-galaxy collection install rapyutarobotics.rr_io -f --upgrade
+   git clone https://github.com/rapyuta-robotics/amr-deployment/
 
-   .. tab:: Linux
+###Windows
 
-        .. code-block:: console
+Using WSL2 or a VM is the easiest. If these are not an option, then ansible can be run through cygwin.
 
-            sudo apt update
-            sudo apt install software-properties-common
-            sudo add-apt-repository --yes --update ppa:ansible/ansible
-            sudo apt install python3.6 python3-pip ansible
-            ansible-galaxy collection install rapyutarobotics.rr_io -f
-            git clone https://github.com/rapyuta-robotics/amr-deployment/
+- Download `cygwin <https://cygwin.com/install.html>`_ and run the .exe
 
-   .. tab:: Windows
+Option to select during the installation:
 
-        Using WSL2 or a VM is the easiest. If these are not an option, then ansible can be run through cygwin.
+- Install from internet
+- Specify your folder (ex C:\tools\cygwin64)
+- Specify the local package directory (ex C:\tools)
+- Select Direct connection
+- Select a server (https://ftp.jaist.ac.jp for Japan is fast)
+- At the package selection change View to Full and search for wget. Under the `New` section, choose the latest version
+- Press Next and wait for the installation
 
-        - Download `cygwin <https://cygwin.com/install.html>`_ and run the .exe
+Run C:\\tools\\cygwin64\\Cygwin.bat and run the below commands in the terminal
 
-        Option to select during the installation:
-
-        - Install from internet
-        - Specify your folder (ex C:\tools\cygwin64)
-        - Specify the local package directory (ex C:\tools)
-        - Select Direct connection
-        - Select a server (https://ftp.jaist.ac.jp for Japan is fast)
-        - At the package selection change View to Full and search for wget. Under the `New` section, choose the latest version
-        - Press Next and wait for the installation
-
-        Run C:\\tools\\cygwin64\\Cygwin.bat and run the below commands in the terminal
-
-        .. code-block:: console
-
-            wget raw.github.com/transcode-open/apt-cyg/master/apt-cyg
-            chmod +x apt-cyg
-            mv apt-cyg /usr/local/bin
-            which -a apt-cyg >/dev/null 2>&1 && echo ok
-            apt-cyg install python-{devel,pip,jinja2,six,yaml,crypto,cryptography}
-            apt-cyg install git curl dos2unix zip unzip openssl openssl-devel libffi-devel vim
-            mkdir /opt && cd /opt
-            git clone git://github.com/ansible/ansible
-            cd ansible && git checkout v2.9.22 # Or any version above
-            python2.7 setup.py install
-            # Then we can install rapyuta libs
-            apt-cyg install python3 python3-pip
-            pip3 install rapyuta-io
-            ansible-galaxy collection install rapyutarobotics.rr_io --upgrade
+   wget raw.github.com/transcode-open/apt-cyg/master/apt-cyg
+   chmod +x apt-cyg
+   mv apt-cyg /usr/local/bin
+   which -a apt-cyg >/dev/null 2>&1 && echo ok
+   apt-cyg install python-{devel,pip,jinja2,six,yaml,crypto,cryptography}
+   apt-cyg install git curl dos2unix zip unzip openssl openssl-devel libffi-devel vim
+   mkdir /opt && cd /opt
+   git clone git://github.com/ansible/ansible
+   cd ansible && git checkout v2.9.22 # Or any version above
+   python2.7 setup.py install
+   # Then we can install rapyuta libs
+   apt-cyg install python3 python3-pip
+   pip3 install rapyuta-io
+   ansible-galaxy collection install rapyutarobotics.rr_io --upgrade
 
 
 Deployment
