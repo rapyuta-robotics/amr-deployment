@@ -20,14 +20,14 @@ DEFAULT_HEADER = {
 }
 AUTOBOOTSTRAP = os.environ.get("AUTOBOOTSTRAP", False)
 
-GWM_URL = os.environ.get("GWM_CORE_URL", "http://localhost:8000")
+GWM_CORE_URL = os.environ.get("GWM_CORE_URL", "http://localhost:8000")
 if AUTOBOOTSTRAP:
     GWM_CORE_URL_HOST = os.environ.get('GWM_CORE_URL_HOST', 'localhost').rstrip('/')
     GWM_CORE_URL_PORT = str(os.environ.get('GWM_CORE_URL_PORT', '8000'))
     if not GWM_CORE_URL_PORT.isdigit():
         sys.exit("Port must be numeric")
     proto = 'https' if GWM_CORE_URL_PORT == '443' else 'http'
-    GWM_URL = "%s://%s:%s" % (proto, GWM_CORE_URL_HOST, GWM_CORE_URL_PORT)
+    GWM_CORE_URL = "%s://%s:%s" % (proto, GWM_CORE_URL_HOST, GWM_CORE_URL_PORT)
 
 GWM_INTERFACE_ENDPOINT_HOST = os.environ.get('GWM_INTERFACE_ENDPOINT_HOST', 'localhost').rstrip('/')
 GWM_INTERFACE_ENDPOINT_PORT = str(os.environ.get('GWM_INTERFACE_ENDPOINT_PORT', '8080'))
@@ -38,7 +38,7 @@ GWM_INTERFACE_URL = "%s://%s:%s" % (gwm_interface_proto, GWM_INTERFACE_ENDPOINT_
 
 session = requests.Session()
 retries = Retry(total=10, backoff_factor=0.5)
-session.mount(GWM_URL, HTTPAdapter(max_retries=retries))
+session.mount(GWM_CORE_URL, HTTPAdapter(max_retries=retries))
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='SiteCtl to manage sites.')
@@ -82,18 +82,18 @@ if __name__ == "__main__":
         data["endpoint"] = GWM_INTERFACE_URL
         site = data["name"]
         site_id = data["id"]
-        result = session.post(GWM_URL + '/v1/site/import_site', headers=DEFAULT_HEADER, json=data)
+        result = session.post(GWM_CORE_URL + '/v1/site/import_site', headers=DEFAULT_HEADER, json=data)
         if result.status_code == 201:
             print("Successfully created site %s" % site)
         elif result.status_code == 409:
             if not args.f:
                 exit('Site is already present consider using the `-f` flag')
             else:
-                result = session.get(GWM_URL + '/v1/site/%s' % site, headers=DEFAULT_HEADER)
+                result = session.get(GWM_CORE_URL + '/v1/site/%s' % site, headers=DEFAULT_HEADER)
                 site_id = result.json()['id']
                 print("deleting older site as forced")
-                session.delete(GWM_URL + '/v1/site/' + str(site_id), headers=DEFAULT_HEADER)
-                session.post(GWM_URL + '/v1/site/import_site', headers=DEFAULT_HEADER, json=data)
+                session.delete(GWM_CORE_URL + '/v1/site/' + str(site_id), headers=DEFAULT_HEADER)
+                session.post(GWM_CORE_URL + '/v1/site/import_site', headers=DEFAULT_HEADER, json=data)
                 print("Successfully created site %s" % site)
         else:
             print(result.text)
@@ -106,7 +106,7 @@ if __name__ == "__main__":
         image_headers.pop('Content-Type')
         image_headers["X-RRAMR-Site"] = str(site_id)
         for name, file in map_images.iteritems():
-            result = session.put(GWM_URL + '/v1/map/%s/image' % name, headers=image_headers,
+            result = session.put(GWM_CORE_URL + '/v1/map/%s/image' % name, headers=image_headers,
                                  files={'image': open(file, 'rb')})
             if result.status_code != 200:
                 print(result.text)
@@ -118,12 +118,12 @@ if __name__ == "__main__":
             else:
                 exit('Data exists and will be destroyed use the `-f` flag to force this ')
         os.makedirs(site_path)
-        result = session.get(GWM_URL + '/v1/site/%s' % args.site, headers=DEFAULT_HEADER)
+        result = session.get(GWM_CORE_URL + '/v1/site/%s' % args.site, headers=DEFAULT_HEADER)
         if result.status_code == 404:
             exit("No such site found :%s" % args.site)
         if len(result.json()):
             site_id = result.json()['id']
-            site_json = session.get(GWM_URL + '/v1/site/%s/export' % site_id, headers=DEFAULT_HEADER).json()
+            site_json = session.get(GWM_CORE_URL + '/v1/site/%s/export' % site_id, headers=DEFAULT_HEADER).json()
             with open(os.path.join(site_path, 'site.json'), 'w') as f:
                 json.dump(site_json, f, indent=4, sort_keys=True)
             for map_ in site_json['maps']:
