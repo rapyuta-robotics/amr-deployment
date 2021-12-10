@@ -237,7 +237,6 @@
         package_name: rio_gbc
         depends:
           deployments:
-            - "{{ prefix_name }}_postgres"
             - "{{ prefix_name }}_rr_gwm"
         networks:
           static_routes:
@@ -264,7 +263,6 @@
         package_name: rio_gbc
         depends:
           deployments:
-            - "{{ prefix_name }}_postgres"
             - "{{ prefix_name }}_rr_gwm"
         networks:
           static_routes:
