@@ -1,6 +1,6 @@
 {
   "name": "rio_db",
-  "packageVersion": "v1.0.0",
+  "packageVersion": "v2021.12.0",
   "description": "",
   "bindable": true,
   "plans": [

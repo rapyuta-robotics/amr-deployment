@@ -1,6 +1,6 @@
 {
   "name": "rio_gwm_ui",
-  "packageVersion": "v1.0.0",
+  "packageVersion": "v2021.12.0",
   "description": "",
   "bindable": false,
   "plans": [
@@ -22,7 +22,7 @@
                 "exposeExternally": true,
                 "port": 443,
                 "targetPort": 3000,
-                "proto": "HTTP"
+                "proto": "HTTPS"
               }
             ]
           },

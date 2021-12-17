@@ -1,6 +1,6 @@
 {
   "name": "rio_gbc",
-  "packageVersion": "v1.0.0",
+  "packageVersion": "v2021.12.0",
   "description": "",
   "bindable": true,
   "plans": [
@@ -178,8 +178,8 @@
                 "source ~/catkin_ws/install/setup.bash && rosrun gwm_interface sitectl.py -f && sleep 10 && roslaunch bringup global.launch simulation:=true & rosrun topic_tools relay /gazebo/clock /clock || sleep infinity"
               ],
               "limits": {
-                "cpu": 1,
-                "memory": 4096
+                "cpu": 0.5,
+                "memory": 2048
               }
             },
             {

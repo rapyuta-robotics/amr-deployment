@@ -70,11 +70,12 @@ To quickly get a running version, Open deploy_configs.yaml and enter your docker
     export RIO_AUTH_TOKEN=AUTH_TOKEN
 
     # To Deploy
-    ansible-playbook playbooks/deploy.yaml -vvv --extra-vars "@deploy_configs.yaml" --extra-vars "prefix_name=(insert prefix) present=true"
+    ansible-playbook playbooks/deploy.yaml --extra-vars "@deploy_configs.yaml" --extra-vars "prefix_name=(insert prefix) present=true"
 
     # To Deprovision
-    ansible-playbook playbooks/deploy.yaml -vvv --extra-vars "@deploy_configs.yaml" --extra-vars "present=false"
+    ansible-playbook playbooks/deploy.yaml --extra-vars "@deploy_configs.yaml" --extra-vars "present=false"
     
+Consider using the `-vvv` flag to see more details
 
 - Once IO-AMR is deployed, you can go to rapyuta.io > Deployments and click the UI deployment, scroll down to NETWORK ENDPOINTS, copy the GMW_UI Value and enter the fleet UI. Initial username and password is autobootstrap
 - You can also go to rapyuta.io > Deployments and click the GWM deployment, croll down to NETWORK ENDPOINTS, copy the GWM_CORE_URL and append /swagger/ to the URL and enter the GWM. On the top you can click ReDOC to enter detailed API description

@@ -1,6 +1,6 @@
 {
   "name": "rio_gazebo",
-  "packageVersion": "v1.0.0",
+  "packageVersion": "v2021.12.0",
   "description": "",
   "bindable": true,
   "plans": [
@@ -226,8 +226,8 @@
                 "/home/rr/headless/install/vnc_startup.sh 'roslaunch bringup simulator.launch paused:=false gzclient:=true' || sleep infinity"
               ],
               "limits": {
-                "cpu": 8,
-                "memory": 32768
+                "cpu": 4,
+                "memory": 16384
               }
             }
           ],

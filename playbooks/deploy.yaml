@@ -1,4 +1,4 @@
-- name: Secrets, Networks, Static Routes
+- name: Create_network_secret_routes
   hosts: localhost
   strategy: free
   connection: local
@@ -19,32 +19,40 @@
       set_fact:
         async_time: 0
       when: ansible_async|bool == false
-    - copy:
+    - name: generate_pa_amr_pkg
+      copy:
         src: rio_amr_pa.json
         dest: /tmp/rio_amr_pa.json
       when: tracing|bool == false
-    - copy:
+    - name: generate_pa_amr_tracing_pkg
+      copy:
         src: rio_amr_pa_tracing.json
         dest: /tmp/rio_amr_pa.json
       when: tracing|bool == true
-    - copy:
+    - name: generate_ui_pkg
+      copy:
         src: rio_amr_ui.json
         dest: /tmp/rio_amr_ui.json
-    - copy:
+    - name: generate_db_pkg  
+      copy:
         src: rio_db.json
         dest: /tmp/rio_db.json
-    - copy:
+    - name: generate_gazebo_pkg  
+      copy:
         src: rio_gazebo.json
         dest: /tmp/rio_gazebo.json
-    - copy:
+    - name: generate_gbc_pkg  
+      copy:
         src: rio_gbc.json
         dest: /tmp/rio_gbc.json
       when: tracing|bool == false
-    - copy:
+    - name: generate_gbc_tracing_pkg  
+      copy:
         src: rio_gbc_tracing.json
         dest: /tmp/rio_gbc.json
       when: tracing|bool == true
-    - copy:
+    - name: generate_gwm_pkg  
+      copy:
         src: rio_gwm.json
         dest: /tmp/rio_gwm.json
     - name: Docker Secret
@@ -58,7 +66,7 @@
         password: "{{ docker_password }}"
         email: rss2.admin@rapyuta-robotics.com
       register: docker_secret_id
-    - name: Native Network Deployment
+    - name: Create Native Network 
       async: "{{ async_time | default('100') }}"
       poll: 0
       rapyutarobotics.rr_io.networks:
@@ -69,7 +77,7 @@
         resource_type: small
       when: routed_network|bool == false
       register: native_network_id
-    - name: Routed Network Deployment
+    - name: create  Routed Network
       async: "{{ async_time | default('100') }}"
       poll: 0
       rapyutarobotics.rr_io.networks:
@@ -80,7 +88,7 @@
         resource_type: small
       when: routed_network|bool == true
       register: routed_network_id
-    - name: GWM Static Route
+    - name: create GWM Static Route
       async: "{{ async_time | default('100') }}"
       poll: 0
       rapyutarobotics.rr_io.networks:
@@ -88,7 +96,7 @@
         present: "{{ present }}"
         type: static_route
       register: gwm_static_route_id
-    - name: GBC Static Route
+    - name: create GBC Static Route
       async: "{{ async_time | default('100') }}"
       poll: 0
       rapyutarobotics.rr_io.networks:
@@ -96,7 +104,7 @@
         present: "{{ present }}"
         type: static_route
       register: gbc_static_route_id
-    - name: AMR UI Static Route
+    - name: create AMR UI Static Route
       async: "{{ async_time | default('100') }}"
       poll: 0
       rapyutarobotics.rr_io.networks:
@@ -104,7 +112,7 @@
         present: "{{ present }}"
         type: static_route
       register: amr_ui_static_route_id
-    - name: Gazebo UI Static Route
+    - name: create  Gazebo UI Static Route
       async: "{{ async_time | default('100') }}"
       poll: 0
       rapyutarobotics.rr_io.networks:
@@ -112,7 +120,7 @@
         present: "{{ present }}"
         type: static_route
       register: gazebo_ui_static_route_id
-    - name: rio_amr_pa package
+    - name: create  rio_amr_pa package
       async: "{{ async_time | default('1250') }}"
       poll: 0
       rapyutarobotics.rr_io.packages:
@@ -125,7 +133,7 @@
         secret: dockerhub
         manifest_path: /tmp/rio_amr_pa.json
       register: rio_amr_pa_package_id
-    - name: rio_gwm_ui package
+    - name: create rio_gwm_ui package
       async: "{{ async_time | default('1000') }}"
       poll: 0
       rapyutarobotics.rr_io.packages:
@@ -138,7 +146,7 @@
         secret: dockerhub
         manifest_path: /tmp/rio_amr_ui.json
       register: rio_gwm_ui_package_id
-    - name: rio_db package
+    - name: create rio_db package
       async: "{{ async_time | default('1000') }}"
       poll: 0
       rapyutarobotics.rr_io.packages:
@@ -150,7 +158,7 @@
         secret: dockerhub
         manifest_path: /tmp/rio_db.json
       register: rio_db_package_id
-    - name: rio_gazebo package
+    - name: create rio_gazebo package
       async: "{{ async_time | default('1250') }}"
       poll: 0
       rapyutarobotics.rr_io.packages:
@@ -163,7 +171,7 @@
         secret: dockerhub
         manifest_path: /tmp/rio_gazebo.json
       register: rio_gazebo_package_id
-    - name: rio_gbc package
+    - name: create rio_gbc package
       async: "{{ async_time | default('1250') }}"
       poll: 0
       rapyutarobotics.rr_io.packages:
@@ -176,7 +184,7 @@
         secret: dockerhub
         manifest_path: /tmp/rio_gbc.json
       register: rio_gbc_package_id
-    - name: rio_gwm package
+    - name: create rio_gwm package
       async: "{{ async_time | default('1000') }}"
       poll: 0
       rapyutarobotics.rr_io.packages:
@@ -237,7 +245,6 @@
         package_name: rio_gbc
         depends:
           deployments:
-            - "{{ prefix_name }}_postgres"
             - "{{ prefix_name }}_rr_gwm"
         networks:
           static_routes:
@@ -264,7 +271,6 @@
         package_name: rio_gbc
         depends:
           deployments:
-            - "{{ prefix_name }}_postgres"
             - "{{ prefix_name }}_rr_gwm"
         networks:
           static_routes:
@@ -292,7 +298,6 @@
         depends:
           deployments:
             - "{{ prefix_name }}_rr_gwm"
-            - "{{ prefix_name }}_rr_gbc"
         networks:
           static_routes:
             - name: "{{ prefix_name }}-amr-ui"
@@ -304,9 +309,9 @@
           DEFAULT_GWM_INTERFACE_PORT: 8080
           DEFAULT_GWM_INTERFACE_PROTOCOL: ws
       register: amr_ui_deploy_id
-- name: Gazebo and AMR deployments
+- name: AMR deployments
   hosts: localhost
-  strategy: free
+  strategy:  linear
   connection: local
   tasks:
     - name: Gazebo Deployment (Native Network)
@@ -435,7 +440,7 @@
       retries: 60
       delay: 20
       when:
-        - "{{ present }}"
+        - present|bool == true
         - routed_network|bool == false
         - ansible_async|bool == true
       with_items: "{{ amr_native_id.results }}"
@@ -447,7 +452,7 @@
       retries: 60
       delay: 20
       when:
-        - "{{ present }}"
+        - present|bool == true
         - routed_network|bool == true
         - ansible_async|bool == true
       with_items: "{{ amr_routed_id.results }}"

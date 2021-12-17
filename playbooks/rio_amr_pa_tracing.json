@@ -1,6 +1,6 @@
 {
   "name": "rio_amr_pa",
-  "packageVersion": "v1.0.0",
+  "packageVersion": "v2021.12.0",
   "description": "",
   "bindable": false,
   "plans": [
@@ -234,8 +234,8 @@
                 "source ~/catkin_ws/install/setup.bash && ROS_NAMESPACE=$RIO_ROS_ENV_ALIAS TF_PREFIX=$RIO_ROS_ENV_ALIAS/ stdbuf -oL /home/rr/headless/install/vnc_startup.sh 'roslaunch bringup agent.launch simulation:=true' || sleep infinity"
               ],
               "limits": {
-                "cpu": 1,
-                "memory": 8192
+                "cpu": 0.5,
+                "memory": 2048
               }
             },
             {
