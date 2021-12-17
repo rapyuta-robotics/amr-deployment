@@ -75,7 +75,8 @@
         source_io_project_info:
           project_id: project-xbaeosxiygjtkhuanbwhjmhi
           auth_token: sLySirwFmE106ZHdI6tydHERdC0mmYpNKT2TvPAM
-          package_uid: pkg-dpjhwktrjmxntqmerfcchadf
+          package_name: postgres_cloud
+          package_version: max
         type: docker
         docker_image: "{{ rio_db_image }}"
       register: rio_db_package_id
@@ -90,7 +91,8 @@
         source_io_project_info:
           project_id: project-xbaeosxiygjtkhuanbwhjmhi
           auth_token: sLySirwFmE106ZHdI6tydHERdC0mmYpNKT2TvPAM
-          package_uid: pkg-eyddkkkkwvswaimblqqjwuxs
+          package_name: gwm_cloud
+          package_version: max
         type: docker
         docker_image: "{{ rio_gwm_image }}"
         secret: dockerhub
@@ -106,7 +108,8 @@
         source_io_project_info:
           project_id: project-xbaeosxiygjtkhuanbwhjmhi
           auth_token: sLySirwFmE106ZHdI6tydHERdC0mmYpNKT2TvPAM
-          package_uid: pkg-qdufvrgecpaprpxbrczqvugx
+          package_name: amr_ui_cloud
+          package_version: max
         type: docker
         docker_image: "{{ rio_gwm_ui_image }}"
         secret: dockerhub
@@ -122,7 +125,8 @@
         source_io_project_info:
           project_id: project-xbaeosxiygjtkhuanbwhjmhi
           auth_token: sLySirwFmE106ZHdI6tydHERdC0mmYpNKT2TvPAM
-          package_uid: pkg-xuhtflegeomjemfsweemhmbj
+          package_name: simulator
+          package_version: max
         type: docker
         docker_image: "{{ rio_simulator_image }}"
         secret: dockerhub
