@@ -20,3 +20,8 @@ ansible_async: true
 
 # Simulation parameters
 item_spawn_from: AUTO
+
+
+# Source project package info
+source_project_id: project-xbaeosxiygjtkhuanbwhjmhi
+source_auth_token: E6zgG9mP3L8jjDRLVKAXhf9Xu1MYwwnECjikxgvC

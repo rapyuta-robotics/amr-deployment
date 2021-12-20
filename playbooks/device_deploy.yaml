@@ -59,7 +59,7 @@
       when: routed_network|bool == true
       register: routed_network_id
 
-- name: DB, GWM, AMR UI, SIMULATOR Packages
+- name: DB, GWM, AMR UI, AMR, SERVER_CLOUD Packages
   hosts: localhost
   strategy: free
   connection: local
@@ -114,25 +114,43 @@
         docker_image: "{{ rio_gwm_ui_image }}"
         secret: dockerhub
       register: rio_gwm_ui_package_id
-    - name: rio_simulator package
+    - name: rio_amr package
       async: "{{ async_time | default('1000') }}"
       poll: 0
       rapyutarobotics.rr_io.packages:
         version: auto
-        name: rio_simulator
+        name: device_amr
         present: "{{ present }}"
         package_from: io_project
         source_io_project_info:
           project_id: "{{ source_project_id }}"
           auth_token: "{{ source_auth_token }}"
-          package_name: simulator
+          package_name: amr
           package_version: max
         type: docker
-        docker_image: "{{ rio_simulator_image }}"
+        docker_image: "{{ rio_amr_image }}"
         secret: dockerhub
-      register: rio_simulator_package_id
+      register: rio_amr_package_id
+    - name: rio_server package
+      async: "{{ async_time | default('1000') }}"
+      poll: 0
+      rapyutarobotics.rr_io.packages:
+        version: auto
+        name: rio_server
+        present: "{{ present }}"
+        package_from: io_project
+        source_io_project_info:
+          project_id: "{{ source_project_id }}"
+          auth_token: "{{ source_auth_token }}"
+          package_name: server_cloud
+          package_version: max
+        type: docker
+        docker_image: "{{ rio_server_image }}"
+        secret: dockerhub
+      register: rio_server_package_id
 
-- name: DB, GWM, AMR UI, SIMULATOR Deployments
+
+- name: DB, GWM, AMR UI, AMR, server Deployments
   hosts: localhost
   strategy: free
   connection: local
@@ -184,32 +202,32 @@
           DEFAULT_GWM_INTERFACE_PORT: 8080
           DEFAULT_GWM_INTERFACE_PROTOCOL: ws
       register: amr_ui_deploy_id
-    - name: Simulator  deployment
+    - name: AMR  deployment
       async: "{{ async_time | default('2600') }}"
       poll: 0
       rapyutarobotics.rr_io.deployments:
-        name: "{{ prefix_name }}_simulator"
-        component_name: gazebo
+        name: "{{ prefix_name }}_amr"
+        component_name: amr
         present: "{{ present }}"
-        package_name: rio_simulator
+        package_name: device_amr
+        type: device
+        device_name: tsystems
         depends:
           deployments:
             - "{{ prefix_name }}_gwm"
-        component_params:
-          AUTOBOOTSTRAP: "true"
-          GWM_AUTH_TOKEN	: autobootstrap
-          GWM_CORE_URL_PORT: 443
-          ITEM: NONE
-          ITEM_SPAWN_FROM: "{{ item_spawn_from }}"
-          LEGACY_LOCALIZATION: "false"
-          LOCALIZATION_MODE: managed
-          LOCALIZATION_TYPE: amcl
-          MAPPING_TYPE: gmapping
-          PYTHONUNBUFFERED: 1
-          SITE: "{{ site_name }}"
-          VNC_PASSWORD: rapyuta
-          VNC_RESOLUTION: 1280x720
-      register: simulator_deploy_id
+      register: amr_deploy_id
+    - name: SERVER  deployment
+      async: "{{ async_time | default('2600') }}"
+      poll: 0
+      rapyutarobotics.rr_io.deployments:
+        name: "{{ prefix_name }}_server"
+        component_name: gbc
+        present: "{{ present }}"
+        package_name: rio_server
+        depends:
+          deployments:
+            - "{{ prefix_name }}_gwm"
+      register: server_deploy_id
 
 
 - name: Async wait on deployments
@@ -230,7 +248,8 @@
       - "{{ db_deploy_id }}"
       - "{{ gwm_deploy_id }}"
       - "{{ amr_ui_deploy_id }}"
-      - "{{ simulator_deploy_id }}"
+      - "{{ amr_deploy_id }}"
+      - "{{ server_deploy_id }}"
 
     - name: dump test output
       debug:
@@ -240,4 +259,5 @@
       - "{{ db_deploy_id }}"
       - "{{ gwm_deploy_id }}"
       - "{{ amr_ui_deploy_id }}"
-      - "{{ simulator_deploy_id }}"
+      - "{{ amr_deploy_id }}"
+      - "{{ server_deploy_id }}"
