@@ -43,7 +43,7 @@
         name: "{{ prefix_name }}_native_network"
         present: "{{ present }}"
         type: native_network
-        ros_distro: noetic
+        ros_distro: melodic
         resource_type: small
       when: routed_network|bool == false
       register: native_network_id
@@ -54,7 +54,7 @@
         name: "{{ prefix_name }}_routed_network"
         present: "{{ present }}"
         type: routed_network
-        ros_distro: noetic
+        ros_distro: melodic
         resource_type: small
       when: routed_network|bool == true
       register: routed_network_id
@@ -77,8 +77,10 @@
           auth_token: "{{ source_auth_token }}"
           package_name: postgres_cloud
           package_version: max
-        type: docker
-        docker_image: "{{ rio_db_image }}"
+        executables_info:
+        - name: pgsql
+          type: docker
+          docker_image: "{{ rio_db_image }}"
       register: rio_db_package_id
     - name: rio_gwm package
       async: "{{ async_time | default('1000') }}"
@@ -93,9 +95,11 @@
           auth_token: "{{ source_auth_token }}"
           package_name: gwm_cloud
           package_version: max
-        type: docker
-        docker_image: "{{ rio_gwm_image }}"
-        secret: dockerhub
+        executables_info:
+        - name: core
+          type: docker
+          docker_image: "{{ rio_gwm_image }}"
+          secret: dockerhub
       register: rio_gwm_package_id
     - name: rio_gwm_ui package
       async: "{{ async_time | default('1000') }}"
@@ -110,9 +114,11 @@
           auth_token: "{{ source_auth_token }}"
           package_name: amr_ui_cloud
           package_version: max
-        type: docker
-        docker_image: "{{ rio_gwm_ui_image }}"
-        secret: dockerhub
+        executables_info:
+        - name: core
+          type: docker
+          docker_image: "{{ rio_gwm_ui_image }}"
+          secret: dockerhub
       register: rio_gwm_ui_package_id
     - name: rio_simulator package
       async: "{{ async_time | default('1000') }}"
@@ -127,9 +133,15 @@
           auth_token: "{{ source_auth_token }}"
           package_name: simulator
           package_version: max
-        type: docker
-        docker_image: "{{ rio_simulator_image }}"
-        secret: dockerhub
+        executables_info:
+        - name: gzclient
+          type: docker
+          docker_image: "{{ rio_amr_pa_image }}"
+          secret: dockerhub
+        - name: gazebo
+          type: docker
+          docker_image: "{{ rio_amr_pa_image }}"
+          secret: dockerhub
       register: rio_simulator_package_id
 
 - name: DB, GWM, AMR UI, SIMULATOR Deployments

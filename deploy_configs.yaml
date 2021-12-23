@@ -6,10 +6,11 @@ docker_user: "insert username"
 docker_password: "insert password"
 
 # The images used for the simulation
-rio_simulator_image: "rrdockerhub/io_amr_pa:sim_stable"
-rio_gwm_ui_image: "rrdockerhub/io_amr_ui:sim_stable"
 rio_db_image: "mdillon/postgis:latest"
-rio_gwm_image: "rrdockerhub/io_amr_gwm:sim_stable"
+tracing_agent_image: "jaegertracing/jaeger-agent"
+rio_amr_pa_image: "rrdockerhub/io_amr_pa:iogen-build-fxxvhvnmgoudktpxproretbg-10"
+rio_gwm_ui_image: "rrdockerhub/io_amr_ui:iogen-build-lebhajixfbcntjhyitmgjznw-3"
+rio_gwm_image: "rrdockerhub/io_amr_gwm:21.12.0"
 
 prefix_name: "prefix"
 site_name: tatsumi
@@ -23,5 +24,8 @@ item_spawn_from: AUTO
 
 
 # Source project package info
-source_project_id: project-xbaeosxiygjtkhuanbwhjmhi
-source_auth_token: E6zgG9mP3L8jjDRLVKAXhf9Xu1MYwwnECjikxgvC
+source_project_id: "source project id"
+source_auth_token: "source auth token"
+
+device_name: "device name onbaoarded to rapyuta.io"
+device_network_interface: wlp1s0

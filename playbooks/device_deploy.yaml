@@ -43,7 +43,10 @@
         name: "{{ prefix_name }}_native_network"
         present: "{{ present }}"
         type: native_network
-        ros_distro: noetic
+        ros_distro: melodic
+        runtime: device
+        device_name: "{{ device_name }}"
+        network_interface: "{{ device_network_interface }}"
         resource_type: small
       when: routed_network|bool == false
       register: native_network_id
@@ -54,12 +57,13 @@
         name: "{{ prefix_name }}_routed_network"
         present: "{{ present }}"
         type: routed_network
-        ros_distro: noetic
+        runtime: cloud
+        ros_distro: melodic
         resource_type: small
       when: routed_network|bool == true
       register: routed_network_id
 
-- name: DB, GWM, AMR UI, AMR, SERVER_CLOUD Packages
+- name: DB, GWM, AMR UI, AMR, SERVER Packages
   hosts: localhost
   strategy: free
   connection: local
@@ -75,10 +79,12 @@
         source_io_project_info:
           project_id: "{{ source_project_id }}"
           auth_token: "{{ source_auth_token }}"
-          package_name: postgres_cloud
+          package_name: postgres
           package_version: max
-        type: docker
-        docker_image: "{{ rio_db_image }}"
+        executables_info:
+        - name: pgsql
+          type: docker
+          docker_image: "{{ rio_db_image }}"
       register: rio_db_package_id
     - name: rio_gwm package
       async: "{{ async_time | default('1000') }}"
@@ -91,11 +97,13 @@
         source_io_project_info:
           project_id: "{{ source_project_id }}"
           auth_token: "{{ source_auth_token }}"
-          package_name: gwm_cloud
+          package_name: gwm
           package_version: max
-        type: docker
-        docker_image: "{{ rio_gwm_image }}"
-        secret: dockerhub
+        executables_info:
+        - name: core
+          type: docker
+          docker_image: "{{ rio_gwm_image }}"
+          secret: dockerhub
       register: rio_gwm_package_id
     - name: rio_gwm_ui package
       async: "{{ async_time | default('1000') }}"
@@ -108,11 +116,13 @@
         source_io_project_info:
           project_id: "{{ source_project_id }}"
           auth_token: "{{ source_auth_token }}"
-          package_name: amr_ui_cloud
+          package_name: amr_ui
           package_version: max
-        type: docker
-        docker_image: "{{ rio_gwm_ui_image }}"
-        secret: dockerhub
+        executables_info:
+        - name: core
+          type: docker
+          docker_image: "{{ rio_gwm_ui_image }}"
+          secret: dockerhub
       register: rio_gwm_ui_package_id
     - name: rio_amr package
       async: "{{ async_time | default('1000') }}"
@@ -127,9 +137,11 @@
           auth_token: "{{ source_auth_token }}"
           package_name: amr
           package_version: max
-        type: docker
-        docker_image: "{{ rio_amr_image }}"
-        secret: dockerhub
+        executables_info:
+        - name: amr
+          type: docker
+          docker_image: "{{ rio_amr_pa_image }}"
+          secret: dockerhub
       register: rio_amr_package_id
     - name: rio_server package
       async: "{{ async_time | default('1000') }}"
@@ -142,15 +154,19 @@
         source_io_project_info:
           project_id: "{{ source_project_id }}"
           auth_token: "{{ source_auth_token }}"
-          package_name: server_cloud
+          package_name: server
           package_version: max
-        type: docker
-        docker_image: "{{ rio_server_image }}"
-        secret: dockerhub
+        executables_info:
+        - name: gbc
+          type: docker
+          docker_image: "{{ rio_amr_pa_image }}"
+          secret: dockerhub
+        - name: tracing_agent
+          type: docker
+          docker_image: "{{ tracing_agent_image }}"
       register: rio_server_package_id
 
-
-- name: DB, GWM, AMR UI, AMR, server Deployments
+- name: DB, GWM, AMR UI, AMR, SERVER Deployments
   hosts: localhost
   strategy: free
   connection: local
@@ -163,6 +179,8 @@
         component_name: postgres
         present: "{{ present }}"
         package_name: rio_db
+        runtime: device
+        device_name: "{{ device_name }}"
         component_params:
           POSTGRES_DB: gwm_core
           POSTGRES_USER: postgres
@@ -176,6 +194,8 @@
         component_name: core
         present: "{{ present }}"
         package_name: rio_gwm
+        runtime: device
+        device_name: "{{ device_name }}"
         depends:
           deployments:
             - "{{ prefix_name }}_postgres"
@@ -192,13 +212,14 @@
         component_name: amr_ui
         present: "{{ present }}"
         package_name: rio_gwm_ui
+        runtime: device
+        device_name: "{{ device_name }}"
         depends:
           deployments:
             - "{{ prefix_name }}_gwm"
         component_params:
           SKIP_PREFLIGHT_CHECK: "true"
           GWM_API_VERSION: v1
-          DEFAULT_GWM_INTERFACE_HOST: gbc
           DEFAULT_GWM_INTERFACE_PORT: 8080
           DEFAULT_GWM_INTERFACE_PROTOCOL: ws
       register: amr_ui_deploy_id
@@ -210,8 +231,11 @@
         component_name: amr
         present: "{{ present }}"
         package_name: device_amr
-        type: device
-        device_name: tsystems
+        runtime: device
+        device_name: "{{ device_name }}"
+        networks:
+          native_networks:
+            - name: "{{ prefix_name }}_native_network"
         depends:
           deployments:
             - "{{ prefix_name }}_gwm"
@@ -224,6 +248,11 @@
         component_name: gbc
         present: "{{ present }}"
         package_name: rio_server
+        runtime: device
+        device_name: "{{ device_name }}"
+        networks:
+          native_networks:
+            - name: "{{ prefix_name }}_native_network"
         depends:
           deployments:
             - "{{ prefix_name }}_gwm"
