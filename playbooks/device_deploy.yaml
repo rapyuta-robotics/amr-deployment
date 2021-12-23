@@ -220,7 +220,7 @@
         component_params:
           SKIP_PREFLIGHT_CHECK: "true"
           GWM_API_VERSION: v1
-          DEFAULT_GWM_INTERFACE_PORT: 8080
+          DEFAULT_GWM_INTERFACE_PORT: "8080"
           DEFAULT_GWM_INTERFACE_PROTOCOL: ws
       register: amr_ui_deploy_id
     - name: AMR  deployment
@@ -234,8 +234,8 @@
         runtime: device
         device_name: "{{ device_name }}"
         networks:
-          native_networks:
-            - name: "{{ prefix_name }}_native_network"
+          routed_networks:
+            - name: "{{ prefix_name }}_routed_network"
         depends:
           deployments:
             - "{{ prefix_name }}_gwm"
@@ -251,8 +251,8 @@
         runtime: device
         device_name: "{{ device_name }}"
         networks:
-          native_networks:
-            - name: "{{ prefix_name }}_native_network"
+          routed_networks:
+            - name: "{{ prefix_name }}_routed_network"
         depends:
           deployments:
             - "{{ prefix_name }}_gwm"
