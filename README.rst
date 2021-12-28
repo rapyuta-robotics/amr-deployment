@@ -7,6 +7,8 @@ Before you start you must make sure you have the following
 - A linux/windows computer for running the deployment
 - rapyuta.io account and credentials for deploying instances
 - docker credentials for io_amr (ioamrreadonly)
+- Note: rapyutarobotics.rr_io==2.0 has breaking changes and the newer version of the playbook will not support the older version (1.0.13)
+- Please use the older version if you get the error: `"msg": "missing required arguments: type"`
 
 Installing Prerequisites
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -14,12 +16,14 @@ Installing Prerequisites
 
 .. code-block:: console
 
-      sudo apt update
-      sudo apt install software-properties-common
-      sudo add-apt-repository --yes --update ppa:ansible/ansible
-      sudo apt install python3.6 python3-pip ansible
-      ansible-galaxy collection install rapyutarobotics.rr_io --upgrade
-      git clone https://github.com/rapyuta-robotics/amr-deployment/
+    sudo apt update
+    sudo apt install software-properties-common
+    sudo apt install python3.6 python3-pip
+    curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+    sudo python3 get-pip.py
+    sudo python3 -m pip install ansible rapyuta-io
+    ansible-galaxy collection install 'rapyutarobotics.rr_io:<3' --upgrade
+    git clone https://github.com/rapyuta-robotics/amr-deployment/
 
 ### Windows
 
@@ -54,7 +58,7 @@ Run C:\\tools\\cygwin64\\Cygwin.bat and run the below commands in the terminal
       # Then we can install rapyuta libs
       apt-cyg install python3 python3-pip
       pip3 install rapyuta-io
-      ansible-galaxy collection install rapyutarobotics.rr_io --upgrade
+      ansible-galaxy collection install 'rapyutarobotics.rr_io:<3' --upgrade
 
 
 Deployment
