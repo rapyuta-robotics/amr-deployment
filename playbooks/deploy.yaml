@@ -27,13 +27,13 @@
   connection: local
   tasks:
     - copy:
-        src: postgres.json
+        src: postgres_cloud.json
         dest: /tmp/postgres.json
     - copy:
-        src: gwm.json
+        src: gwm_cloud.json
         dest: /tmp/gwm.json
     - copy:
-        src: user_interface.json
+        src: user_interface_cloud.json
         dest: /tmp/user_interface.json
     - copy:
         src: simulator.json
@@ -216,7 +216,7 @@
           GWM_AUTH_TOKEN	: autobootstrap
           GWM_CORE_URL_PORT: 443
           ITEM: NONE
-          ITEM_SPAWN_FROM: "{{ item_spawn_from }}"
+          ITEM_SPAWN_FROM: AUTO
           LEGACY_LOCALIZATION: "false"
           LOCALIZATION_MODE: managed
           LOCALIZATION_TYPE: amcl

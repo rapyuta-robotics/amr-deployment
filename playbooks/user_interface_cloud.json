@@ -1,6 +1,6 @@
 {
     "bindable": false,
-    "packageVersion": "v1.0.0",
+    "packageVersion": "v2.5.0-7",
     "plans": [
         {
             "includePackages": [],
@@ -18,9 +18,13 @@
                             "simulationOptions": {
                                 "simulation": false
                             },
-                            "cmd": [],
                             "docker": "",
-                            "secret": ""
+                            "secret": "",
+                            "cmd": [],
+                            "limits": {
+                                "cpu": 0.5,
+                                "memory": 2048
+                            }
                         }
                     ],
                     "name": "amr_ui",
@@ -47,7 +51,7 @@
                         }
                     ],
                     "architecture": "amd64",
-                    "requiredRuntime": "device",
+                    "requiredRuntime": "cloud",
                     "ros": {
                         "services": [],
                         "topics": [],
@@ -55,13 +59,24 @@
                         "actions": []
                     },
                     "description": "",
-                    "restart_policy": "always"
+                    "cloudInfra": {
+                        "replicas": 1,
+                        "endpoints": [
+                            {
+                                "name": "AMR_UI",
+                                "exposeExternally": true,
+                                "port": 80,
+                                "targetPort": 3000,
+                                "proto": "HTTP"
+                            }
+                        ]
+                    }
                 }
             ],
             "exposedParameters": [],
             "metadata": {}
         }
     ],
-    "name": "rio_gwm_ui",
+    "name": "amr_ui_cloud",
     "description": ""
 }

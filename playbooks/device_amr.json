@@ -21,8 +21,8 @@
                             "cmd": [
                                 "/bin/bash -c \"source /home/rr/catkin_ws/install/setup.bash && roslaunch bringup agent.launch __ns:=amr$${ROBOT_ID} robot_name:=amr$${ROBOT_ID} agent_id:=$${ROBOT_ID} map:=$${MAP} site:=$${SITE} launch_drivers:=true tf_prefix:=amr$${ROBOT_ID}/ x_pos:=$${X_POS} y_pos:=$${Y_POS} robot_ui:=true || sleep infinity\""
                             ],
-                            "docker": "rrdockerhub/io_amr_pa:iogen-build-fxxvhvnmgoudktpxproretbg-12",
-                            "secret": "secret-pftwimdychmmxoopiswqyylx"
+                            "docker": "",
+                            "secret": ""
                         }
                     ],
                     "name": "amr",
