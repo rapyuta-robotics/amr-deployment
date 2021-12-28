@@ -2,8 +2,8 @@
 present: "true"
 
 # The username and password of the dockerhub account with access to the images. This is needed to pull the IO AMR images for the simulation
-docker_user: "dsatherr"
-docker_password: "Funny#Fish"
+docker_user: "insert username"
+docker_password: "insert password"
 
 # The images used for the simulation
 rio_db_image: "mdillon/postgis:latest"
@@ -12,7 +12,7 @@ rio_amr_pa_image: "rrdockerhub/io_amr_pa:iogen-build-fxxvhvnmgoudktpxproretbg-12
 rio_gwm_ui_image: "rrdockerhub/io_amr_ui:iogen-build-lebhajixfbcntjhyitmgjznw-4"
 rio_gwm_image: "rrdockerhub/io_amr_gwm:21.12.0"
 
-prefix_name: "testing"
+prefix_name: "prefix"
 site_name: kiba
 
 # if routed_networks is set to true, please remember to deleted the routed network after deprovisioning
