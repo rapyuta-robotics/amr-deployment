@@ -20,6 +20,26 @@
         async_time: 0
       when: ansible_async|bool == false
 
+
+- name: Copy manifests to temp directory
+  hosts: localhost
+  strategy: free
+  connection: local
+  tasks:
+    - copy:
+        src: postgres.json
+        dest: /tmp/postgres.json
+    - copy:
+        src: gwm.json
+        dest: /tmp/gwm.json
+    - copy:
+        src: user_interface.json
+        dest: /tmp/user_interface.json
+    - copy:
+        src: simulator.json
+        dest: /tmp/simulator.json
+
+
 - name: Secrets, Networks
   hosts: localhost
   strategy: free
