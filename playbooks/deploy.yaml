@@ -59,80 +59,64 @@
       when: routed_network|bool == true
       register: routed_network_id
 
-- name: DB, GWM, AMR UI, SIMULATOR Packages
+- name: POSTGRES, GWM, USER_INTERFACE, SIMULATOR Packages
   hosts: localhost
   strategy: free
   connection: local
   tasks:
-    - name: rio_db package
+    - name: postgres package
       async: "{{ async_time | default('1000') }}"
       poll: 0
       rapyutarobotics.rr_io.packages:
         version: auto
-        name: rio_db
+        name: postgres
         present: "{{ present }}"
-        package_from: io_project
-        source_io_project_info:
-          project_id: "{{ source_project_id }}"
-          auth_token: "{{ source_auth_token }}"
-          package_name: postgres_cloud
-          package_version: max
+        package_from: manifest_path
+        manifest_path: /tmp/postgres.json
         executables_info:
         - name: pgsql
           type: docker
           docker_image: "{{ rio_db_image }}"
-      register: rio_db_package_id
-    - name: rio_gwm package
+      register: postgres_package_id
+    - name: gwm package
       async: "{{ async_time | default('1000') }}"
       poll: 0
       rapyutarobotics.rr_io.packages:
         version: auto
-        name: rio_gwm
+        name: gwm
         present: "{{ present }}"
-        package_from: io_project
-        source_io_project_info:
-          project_id: "{{ source_project_id }}"
-          auth_token: "{{ source_auth_token }}"
-          package_name: gwm_cloud
-          package_version: max
+        package_from: manifest_path
+        manifest_path: /tmp/gwm.json
         executables_info:
         - name: core
           type: docker
           docker_image: "{{ rio_gwm_image }}"
           secret: dockerhub
-      register: rio_gwm_package_id
-    - name: rio_gwm_ui package
+      register: gwm_package_id
+    - name: user_interface package
       async: "{{ async_time | default('1000') }}"
       poll: 0
       rapyutarobotics.rr_io.packages:
         version: auto
-        name: rio_gwm_ui
+        name: user_interface
         present: "{{ present }}"
-        package_from: io_project
-        source_io_project_info:
-          project_id: "{{ source_project_id }}"
-          auth_token: "{{ source_auth_token }}"
-          package_name: amr_ui_cloud
-          package_version: max
+        package_from: manifest_path
+        manifest_path: /tmp/user_interface.json
         executables_info:
         - name: core
           type: docker
           docker_image: "{{ rio_gwm_ui_image }}"
           secret: dockerhub
-      register: rio_gwm_ui_package_id
-    - name: rio_simulator package
+      register: user_interface_package_id
+    - name: simulator package
       async: "{{ async_time | default('1000') }}"
       poll: 0
       rapyutarobotics.rr_io.packages:
         version: auto
-        name: rio_simulator
+        name: simulator
         present: "{{ present }}"
-        package_from: io_project
-        source_io_project_info:
-          project_id: "{{ source_project_id }}"
-          auth_token: "{{ source_auth_token }}"
-          package_name: simulator
-          package_version: max
+        package_from: manifest_path
+        manifest_path: /tmp/simulator.json
         executables_info:
         - name: gzclient
           type: docker
@@ -142,21 +126,21 @@
           type: docker
           docker_image: "{{ rio_amr_pa_image }}"
           secret: dockerhub
-      register: rio_simulator_package_id
+      register: simulator_package_id
 
-- name: DB, GWM, AMR UI, SIMULATOR Deployments
+- name: POSTGRES, GWM, UI, SIMULATOR Deployments
   hosts: localhost
   strategy: free
   connection: local
   tasks:
-    - name: DB Deployment
+    - name: POSTGRES Deployment
       async: "{{ async_time | default('100') }}"
       poll: 0
       rapyutarobotics.rr_io.deployments:
         name: "{{ prefix_name }}_postgres"
         component_name: postgres
         present: "{{ present }}"
-        package_name: rio_db
+        package_name: postgres
         component_params:
           POSTGRES_DB: gwm_core
           POSTGRES_USER: postgres
@@ -169,7 +153,7 @@
         name: "{{ prefix_name }}_gwm"
         component_name: core
         present: "{{ present }}"
-        package_name: rio_gwm
+        package_name: gwm
         depends:
           deployments:
             - "{{ prefix_name }}_postgres"
@@ -185,7 +169,7 @@
         name: "{{ prefix_name }}_amr_ui"
         component_name: amr_ui
         present: "{{ present }}"
-        package_name: rio_gwm_ui
+        package_name: user_interface
         depends:
           deployments:
             - "{{ prefix_name }}_gwm"
@@ -203,7 +187,7 @@
         name: "{{ prefix_name }}_simulator"
         component_name: gazebo
         present: "{{ present }}"
-        package_name: rio_simulator
+        package_name: simulator
         depends:
           deployments:
             - "{{ prefix_name }}_gwm"

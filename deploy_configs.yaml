@@ -8,24 +8,19 @@ docker_password: "insert password"
 # The images used for the simulation
 rio_db_image: "mdillon/postgis:latest"
 tracing_agent_image: "jaegertracing/jaeger-agent"
-rio_amr_pa_image: "rrdockerhub/io_amr_pa:iogen-build-fxxvhvnmgoudktpxproretbg-10"
-rio_gwm_ui_image: "rrdockerhub/io_amr_ui:iogen-build-lebhajixfbcntjhyitmgjznw-3"
+rio_amr_pa_image: "rrdockerhub/io_amr_pa:iogen-build-fxxvhvnmgoudktpxproretbg-12"
+rio_gwm_ui_image: "rrdockerhub/io_amr_ui:iogen-build-lebhajixfbcntjhyitmgjznw-4"
 rio_gwm_image: "rrdockerhub/io_amr_gwm:21.12.0"
 
 prefix_name: "prefix"
-site_name: tatsumi
+site_name: kiba
 
 # if routed_networks is set to true, please remember to deleted the routed network after deprovisioning
 routed_network: false
+native_network: true
 ansible_async: true
 
-# Simulation parameters
-item_spawn_from: AUTO
-
-
-# Source project package info
-source_project_id: "source project id"
-source_auth_token: "source auth token"
-
-device_name: "device name onbaoarded to rapyuta.io"
-device_network_interface: wlp1s0
+robot_device_name: robot_device_name
+nuc_device_name: nuc_device_name
+nuc_device_network_interface: eno1
+robot_device_network_interface: wlp1s0
