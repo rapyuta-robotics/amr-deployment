@@ -45,7 +45,8 @@
                             "simulationOptions": {
                                 "simulation": false
                             },
-                            "buildGUID": "build-fxxvhvnmgoudktpxproretbg",
+                            "docker": "",
+                            "secret": "",
                             "cmd": [
                                 "/bin/bash",
                                 "-c",
@@ -61,7 +62,8 @@
                             "simulationOptions": {
                                 "simulation": false
                             },
-                            "buildGUID": "build-fxxvhvnmgoudktpxproretbg",
+                            "docker": "",
+                            "secret": "",
                             "cmd": [
                                 "/bin/bash",
                                 "-c",

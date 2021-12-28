@@ -16,8 +16,8 @@ prefix_name: "prefix"
 site_name: kiba
 
 # if routed_networks is set to true, please remember to deleted the routed network after deprovisioning
-routed_network: false
-native_network: true
+routed_network: true
+native_network: false
 ansible_async: true
 
 robot_device_name: robot_device_name

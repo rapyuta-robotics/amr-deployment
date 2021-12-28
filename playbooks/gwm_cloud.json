@@ -1,6 +1,6 @@
 {
     "bindable": true,
-    "packageVersion": "v1.0.0",
+    "packageVersion": "v0.3.0-9",
     "plans": [
         {
             "includePackages": [],
@@ -18,40 +18,21 @@
                             "simulationOptions": {
                                 "simulation": false
                             },
+                            "docker": "",
+                            "secret": "",
                             "cmd": [
+                                "/bin/bash",
+                                "-c",
                                 "python manage.py runserver 0.0.0.0:8000"
                             ],
-                            "docker": "",
-                            "secret": ""
+                            "limits": {
+                                "cpu": 0.5,
+                                "memory": 2048
+                            }
                         }
                     ],
                     "name": "core",
                     "parameters": [
-                        {
-                            "default": "5432",
-                            "name": "POSTGRES_PORT",
-                            "description": ""
-                        },
-                        {
-                            "default": "localhost",
-                            "name": "POSTGRES_HOST",
-                            "description": ""
-                        },
-                        {
-                            "default": "postgres",
-                            "name": "POSTGRES_USER",
-                            "description": ""
-                        },
-                        {
-                            "default": "postgres",
-                            "name": "POSTGRES_PASSWORD",
-                            "description": ""
-                        },
-                        {
-                            "default": "gwm_core",
-                            "name": "POSTGRES_DB",
-                            "description": ""
-                        },
                         {
                             "default": "true",
                             "name": "DEBUG",
@@ -84,7 +65,7 @@
                         }
                     ],
                     "architecture": "amd64",
-                    "requiredRuntime": "device",
+                    "requiredRuntime": "cloud",
                     "ros": {
                         "services": [],
                         "topics": [],
@@ -92,7 +73,18 @@
                         "actions": []
                     },
                     "description": "",
-                    "restart_policy": "always"
+                    "cloudInfra": {
+                        "replicas": 1,
+                        "endpoints": [
+                            {
+                                "name": "GWM_CORE_URL",
+                                "exposeExternally": true,
+                                "port": 443,
+                                "targetPort": 8000,
+                                "proto": "HTTPS"
+                            }
+                        ]
+                    }
                 }
             ],
             "exposedParameters": [
@@ -105,6 +97,6 @@
             "metadata": {}
         }
     ],
-    "name": "rio_gwm",
+    "name": "gwm_cloud",
     "description": ""
 }
