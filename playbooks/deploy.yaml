@@ -217,7 +217,6 @@
           GWM_CORE_URL_PORT: 443
           ITEM: NONE
           ITEM_SPAWN_FROM: AUTO
-          LEGACY_LOCALIZATION: "false"
           LOCALIZATION_MODE: managed
           LOCALIZATION_TYPE: amcl
           MAPPING_TYPE: gmapping
