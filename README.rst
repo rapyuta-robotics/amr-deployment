@@ -14,7 +14,7 @@ Before you start you must make sure you have the following
 
 Installing Prerequisites
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-### Linux
+###Linux
 
 .. code-block:: console
 
@@ -27,7 +27,7 @@ Installing Prerequisites
     ansible-galaxy collection install 'rapyutarobotics.rr_io:<3' --upgrade
     git clone https://github.com/rapyuta-robotics/amr-deployment/
 
-### Windows
+###Windows
 
 Using WSL2 or a VM is the easiest. If these are not an option, then ansible can be run through cygwin.
 
