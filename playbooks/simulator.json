@@ -102,11 +102,6 @@
                             "description": ""
                         },
                         {
-                            "default": "false",
-                            "name": "LEGACY_LOCALIZATION",
-                            "description": ""
-                        },
-                        {
                             "default": "NONE",
                             "name": "ITEM",
                             "description": ""

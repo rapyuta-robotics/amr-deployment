@@ -43,16 +43,6 @@
                             "description": ""
                         },
                         {
-                            "default": "false",
-                            "name": "LEGACY_LOCALIZATION",
-                            "description": ""
-                        },
-                        {
-                            "default": "true",
-                            "name": "AMCL_OPTION",
-                            "description": ""
-                        },
-                        {
                             "default": "2",
                             "name": "MAP_ID",
                             "description": ""

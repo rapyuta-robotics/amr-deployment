@@ -242,10 +242,8 @@
           deployments:
             - "{{ prefix_name }}_gwm"
         component_params:
-          LEGACY_LOCALIZATION: "false"
           LOCALIZATION_MODE: "managed"
           LOCALIZATION_TYPE: "amcl"
-          AMCL_OPTION: "true"
           XDG_RUNTIME_DIR: "/run/user/1000"
           DISPLAY: ":0"
           SITE: "{{ site_name }}"
@@ -268,10 +266,8 @@
           deployments:
             - "{{ prefix_name }}_gwm"
         component_params:
-          LEGACY_LOCALIZATION: "false"
           LOCALIZATION_MODE: "managed"
           LOCALIZATION_TYPE: "amcl"
-          AMCL_OPTION: "true"
           XDG_RUNTIME_DIR: "/run/user/1000"
           DISPLAY: ":0"
           SITE: "{{ site_name }}"
