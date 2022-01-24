@@ -6,21 +6,30 @@ docker_user: "insert username"
 docker_password: "insert password"
 
 # The images used for the simulation
-rio_db_image: "mdillon/postgis:latest"
-tracing_agent_image: "jaegertracing/jaeger-agent"
-rio_amr_pa_image: "rrdockerhub/io_amr_pa:iogen-build-fxxvhvnmgoudktpxproretbg-12"
-rio_gwm_ui_image: "rrdockerhub/io_amr_ui:iogen-build-lebhajixfbcntjhyitmgjznw-4"
-rio_gwm_image: "rrdockerhub/io_amr_gwm:21.12.0"
+postgres_version: "v1.0.0-3"
+postgres_cloud_version: "v1.0.0-6"
+amr_version: "v21.12.0-19"
+amr_ui_version: "v2.5.0-4"
+amr_ui_cloud_version: "v2.5.0-7"
+gwm_version: "v0.3.0-6"
+gwm_cloud_version: "v0.3.0-9"
+server_version: "v21.12.0-11"
+server_cloud_version: "v21.12.0-19"
+simulator_version: "v21.12.0-11"
 
 prefix_name: "prefix"
 site_name: kiba
 
 # if routed_networks is set to true, please remember to deleted the routed network after deprovisioning
-routed_network: true
-native_network: false
+# Either "routed" or "native"
+network_type: "routed"
 ansible_async: true
 
-robot_device_name: robot_device_name
-nuc_device_name: nuc_device_name
-nuc_device_network_interface: eno1
+robot_device_name:
+- robot_device_name1
+- robot_device_name2
+- robot_device_name3
+
+server_device_name: server_device_name
+server_device_network_interface: eno1
 robot_device_network_interface: wlp1s0
