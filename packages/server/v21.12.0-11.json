@@ -1,6 +1,6 @@
 {
-  "bindable": false,
-  "packageVersion": "v21.12.0-19",
+  "bindable": true,
+  "packageVersion": "v21.12.0-11",
   "plans": [
     {
       "includePackages": [],
@@ -14,60 +14,30 @@
         {
           "executables": [
             {
-              "name": "amr",
+              "name": "gbc",
               "simulationOptions": {
                 "simulation": false
               },
               "cmd": [
-                "/bin/bash -c \"source /home/rr/catkin_ws/install/setup.bash && roslaunch bringup agent.launch __ns:=amr$${ROBOT_ID} robot_name:=amr$${ROBOT_ID} agent_id:=$${ROBOT_ID} map:=$${MAP} site:=$${SITE} launch_drivers:=true tf_prefix:=amr$${ROBOT_ID}/ x_pos:=$${X_POS} y_pos:=$${Y_POS} robot_ui:=true || sleep infinity\""
+                "/bin/bash -c \"source /opt/ros/melodic/setup.bash && [ -f /home/rr/catkin_ws/devel/setup.bash ] && source /home/rr/catkin_ws/devel/setup.bash || source /home/rr/catkin_ws/install/setup.bash &&         if [[ ! -z \"$${AUTOBOOTSTRAP}\" ]] && [[ \"$${AUTOBOOTSTRAP}\" == \"true\" ]]; then rosrun gwm_interface sitectl.py -f --site $${SITE}; fi &&         stdbuf -o L roslaunch bringup global.launch site:=$${SITE} || sleep infinity\""
               ]
+            },
+            {
+              "name": "tracing_agent",
+              "simulationOptions": {
+                "simulation": false
+              },
+              "cmd": [
+                "--reporter.grpc.host-port=trace-collector-kqdbp.ep-r.io:443"
+              ],
+              "docker": "jaegertracing/jaeger-agent"
             }
           ],
-          "name": "amr",
+          "name": "gbc",
           "parameters": [
             {
-              "default": "autobootstrap",
-              "name": "GWM_AUTH_TOKEN",
-              "description": ""
-            },
-            {
-              "default": "amcl",
-              "name": "LOCALIZATION_TYPE",
-              "description": ""
-            },
-            {
-              "default": "managed",
-              "name": "LOCALIZATION_MODE",
-              "description": ""
-            },
-            {
-              "default": "false",
-              "name": "LEGACY_LOCALIZATION",
-              "description": ""
-            },
-            {
               "default": "true",
-              "name": "AMCL_OPTION",
-              "description": ""
-            },
-            {
-              "default": "2",
-              "name": "MAP_ID",
-              "description": ""
-            },
-            {
-              "default": "kiba_2F",
-              "name": "MAP",
-              "description": ""
-            },
-            {
-              "default": "kiba",
-              "name": "WORLD",
-              "description": ""
-            },
-            {
-              "default": "YAML",
-              "name": "ITEM_SPAWN_FROM",
+              "name": "AUTOBOOTSTRAP",
               "description": ""
             },
             {
@@ -76,23 +46,13 @@
               "description": ""
             },
             {
-              "default": "/run/user/1000",
-              "name": "XDG_RUNTIME_DIR",
-              "description": ""
-            },
-            {
-              "default": "NONE",
-              "name": "ITEM",
+              "default": "YAML",
+              "name": "ITEM_SPAWN_FROM",
               "description": ""
             },
             {
               "default": "kiba",
               "name": "SITE",
-              "description": ""
-            },
-            {
-              "default": ":0",
-              "name": "DISPLAY",
               "description": ""
             }
           ],
@@ -102,154 +62,133 @@
             "services": [],
             "topics": [
               {
-                "name": "/gwm_interface/site/fetch_error_type_request",
+                "name": "/gwm_interface/site/fetch_error_type_response",
                 "qos": "low",
                 "compression": "",
                 "scoped": false,
                 "targeted": false
               },
               {
-                "name": "/gbc/reserve_spot_request",
+                "name": "/plc/move_mobile_rack/cancel",
                 "qos": "low",
                 "compression": "",
                 "scoped": false,
                 "targeted": false
               },
               {
-                "name": "/agent_status",
+                "name": "/plc/move_mobile_rack/goal",
                 "qos": "low",
                 "compression": "",
                 "scoped": false,
                 "targeted": false
               },
               {
-                "name": "/mrrp/route_request",
+                "name": "/gbc/ext_device_lock_response",
                 "qos": "low",
                 "compression": "",
                 "scoped": false,
                 "targeted": false
               },
               {
-                "name": "/gwm/destination_request",
+                "name": "/gbc/update_task_response",
                 "qos": "low",
                 "compression": "",
                 "scoped": false,
                 "targeted": false
               },
               {
-                "name": "/AlicaEngine/AlicaEngineInfo",
+                "name": "/gwm_interface/site/fetch_external_devices_response",
                 "qos": "low",
                 "compression": "",
                 "scoped": false,
                 "targeted": false
               },
               {
-                "name": "/AlicaEngine/PlanTreeInfo",
+                "name": "/gwm_interface/mapping/nodes_disabled",
                 "qos": "low",
                 "compression": "",
                 "scoped": false,
                 "targeted": false
               },
               {
-                "name": "/AlicaEngine/AgentQuery",
+                "name": "/gwm_interface/mapping/get_spots_response",
                 "qos": "low",
                 "compression": "",
                 "scoped": false,
                 "targeted": false
               },
               {
-                "name": "/AlicaEngine/AgentAnnouncement",
+                "name": "/gwm_interface/mapping/get_regions_response",
                 "qos": "low",
                 "compression": "",
                 "scoped": false,
                 "targeted": false
               },
               {
-                "name": "/AlicaEngine/AllocationAuthorityInfo",
+                "name": "/gwm_interface/mapping/get_graph_response",
                 "qos": "low",
                 "compression": "",
                 "scoped": false,
                 "targeted": false
               },
               {
-                "name": "/AlicaEngine/OwnRole",
+                "name": "/gbc/error_action_response",
                 "qos": "low",
                 "compression": "",
                 "scoped": false,
                 "targeted": false
               },
               {
-                "name": "/AlicaEngine/SolverResult",
+                "name": "/gbc/amr_action_request",
                 "qos": "low",
                 "compression": "",
                 "scoped": false,
                 "targeted": false
               },
               {
-                "name": "/gbc/amr_action_response",
+                "name": "/gwm_interface/mapping/status",
                 "qos": "low",
                 "compression": "",
                 "scoped": false,
                 "targeted": false
               },
               {
-                "name": "/gbc/error_action_request",
+                "name": "/mrrp/route_response",
                 "qos": "low",
                 "compression": "",
                 "scoped": false,
                 "targeted": false
               },
               {
-                "name": "/gwm_interface/mapping/get_graph_request",
+                "name": "/gbc/task",
                 "qos": "low",
                 "compression": "",
                 "scoped": false,
                 "targeted": false
               },
               {
-                "name": "/gwm_interface/mapping/get_regions_request",
+                "name": "/gbc/spots_reservation_status",
                 "qos": "low",
                 "compression": "",
                 "scoped": false,
                 "targeted": false
               },
               {
-                "name": "/gwm_interface/mapping/get_spots_request",
+                "name": "/gbc/reserve_spot_response",
                 "qos": "low",
                 "compression": "",
                 "scoped": false,
                 "targeted": false
               },
               {
-                "name": "/gwm_interface/site/fetch_external_devices_request",
+                "name": "/lbc/set_mode_request",
                 "qos": "low",
                 "compression": "",
                 "scoped": false,
                 "targeted": false
               },
               {
-                "name": "/gwm_interface/work/fetch_work_request",
-                "qos": "low",
-                "compression": "",
-                "scoped": false,
-                "targeted": false
-              },
-              {
-                "name": "/gwm_interface/work/update_work_request",
-                "qos": "low",
-                "compression": "",
-                "scoped": false,
-                "targeted": false
-              },
-              {
-                "name": "/gbc/update_task_request",
-                "qos": "low",
-                "compression": "",
-                "scoped": false,
-                "targeted": false
-              },
-              {
-                "name": "/gbc/ext_device_lock_request",
+                "name": "/lbc/set_mode_response",
                 "qos": "low",
                 "compression": "",
                 "scoped": false,
@@ -269,6 +208,6 @@
       "metadata": {}
     }
   ],
-  "name": "amr",
+  "name": "server",
   "description": ""
 }
