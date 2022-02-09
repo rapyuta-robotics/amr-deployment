@@ -1,0 +1,38 @@
+name: daily_package_updater
+
+on:
+  # Run early morning Mon-Fri JST (cron job times in UTC)
+  schedule:
+    - cron:  '0 21 * * 0,1,2,3,4'
+  # For manual triggers
+  workflow_dispatch:
+
+jobs:
+  update_packages:
+    name: "Update amr deployment packages"
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: amr-deployment/
+    steps:
+    - name: Check out repository code
+      uses: actions/checkout@v2
+    - name: Install dependencies
+      run: |
+       curl https://bootstrap.pypa.io/pip/get-pip.py -o get-pip.py
+       sudo python3 get-pip.py
+       sudo python3 -m pip install ansible rapyuta-io
+
+    - name: Run playbook update script
+      run: python scripts/playbook_updater.py
+
+    - name: Create branch
+      run: hub checkout -b package_update_$(date +%F)
+
+    - name: Commit
+      run: hub config user.email "larry.ng@rapyuta-robotics.com" && hub config user.name "Larry Ng" && git status --porcelain | awk '{ print $2}' | xargs -n1 -I repo_name sh -c '{ git add repo_name; git commit --author "$(cd repo_name; git log -1 --pretty="%an <%ae>"; cd ..)" -m "`cd repo_name; git log -1 --pretty="%s"; cd ..`"; echo repo_name; }'
+
+    - name: Create PR
+      run:  hub pull-request -m "Package Update on $(date +%F)" -p -f -b main
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
