@@ -1,0 +1,107 @@
+{
+  "bindable": true, 
+  "packageVersion": "v21.12.0-0", 
+  "plans": [
+    {
+      "includePackages": [], 
+      "singleton": false, 
+      "name": "default", 
+      "inboundROSInterfaces": {
+        "anyIncomingScopedOrTargetedRosConfig": false
+      }, 
+      "dependentDeployments": [], 
+      "components": [
+        {
+          "executables": [
+            {
+              "name": "gazebo", 
+              "limits": {
+                "cpu": 8, 
+                "memory": 32768
+              }, 
+              "simulationOptions": {
+                "simulation": false
+              }, 
+              "cmd": [
+                "/bin/bash -c \"/home/rr/headless/install/vnc_startup.sh 'roslaunch bringup simulator.launch paused:=false gzclient:=true' || sleep infinity\""
+              ], 
+              "docker": "docker.io/rrdockerhub/io_amr_pa:iogen-build-qzislyacaxwdlbwfainigiya-24"
+            }
+          ], 
+          "cloudInfra": {
+            "endpoints": [], 
+            "replicas": 1
+          }, 
+          "name": "gazebo", 
+          "parameters": [
+            {
+              "default": "tatsumi", 
+              "name": "WORLD", 
+              "description": ""
+            }, 
+            {
+              "default": "True", 
+              "name": "RACK", 
+              "description": ""
+            }, 
+            {
+              "default": "autobootstrap", 
+              "name": "GWM_AUTH_TOKEN", 
+              "description": ""
+            }, 
+            {
+              "default": "YAML", 
+              "name": "ITEM_SPAWN_FROM", 
+              "description": ""
+            }, 
+            {
+              "default": "rapyuta", 
+              "name": "VNC_PASSWORD", 
+              "description": ""
+            }, 
+            {
+              "default": "1280x720", 
+              "name": "VNC_RESOLUTION", 
+              "description": ""
+            }, 
+            {
+              "default": "1", 
+              "name": "PYTHONUNBUFFERED", 
+              "description": ""
+            }, 
+            {
+              "default": "[${time}][${severity}][${logger}]: ${message}", 
+              "name": "ROSCONSOLE_FORMAT", 
+              "description": ""
+            }, 
+            {
+              "default": "localhost", 
+              "name": "GAZEBO_MASTER_IP", 
+              "description": ""
+            }, 
+            {
+              "default": "localhost:11345", 
+              "name": "GAZEBO_MASTER_URI", 
+              "description": ""
+            }
+          ], 
+          "architecture": "amd64", 
+          "rosBagJobDefs": [], 
+          "requiredRuntime": "cloud", 
+          "ros": {
+            "services": [], 
+            "topics": [], 
+            "ros_distro": "melodic", 
+            "isROS": true, 
+            "actions": []
+          }, 
+          "description": ""
+        }
+      ], 
+      "exposedParameters": [], 
+      "metadata": {}
+    }
+  ], 
+  "name": "simulator", 
+  "description": ""
+}
