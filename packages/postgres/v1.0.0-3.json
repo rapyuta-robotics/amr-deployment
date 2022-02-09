@@ -1,77 +1,78 @@
 {
-  "bindable": true,
-  "packageVersion": "v1.0.0-3",
+  "bindable": true, 
+  "packageVersion": "v1.0.0-3", 
+  "description": "", 
   "plans": [
     {
-      "includePackages": [],
-      "singleton": false,
-      "name": "default",
+      "includePackages": [], 
+      "singleton": false, 
+      "name": "default", 
       "inboundROSInterfaces": {
         "anyIncomingScopedOrTargetedRosConfig": false
-      },
-      "dependentDeployments": [],
+      }, 
+      "dependentDeployments": [], 
       "components": [
         {
           "executables": [
             {
-              "name": "pgsql",
               "simulationOptions": {
                 "simulation": false
-              },
-              "cmd": [],
-              "docker": "mdillon/postgis:latest"
+              }, 
+              "docker": "mdillon/postgis:latest", 
+              "cmd": [], 
+              "name": "pgsql", 
+              "secret": "secret-phpgivrxlrdzjvqddhiisusi"
             }
-          ],
-          "name": "postgres",
+          ], 
+          "name": "postgres", 
           "parameters": [
             {
-              "default": "postgres",
-              "name": "POSTGRES_PASSWORD",
+              "default": "postgres", 
+              "name": "POSTGRES_PASSWORD", 
               "description": ""
-            },
+            }, 
             {
-              "default": "postgres",
-              "name": "POSTGRES_USER",
+              "default": "postgres", 
+              "name": "POSTGRES_USER", 
               "description": ""
-            },
+            }, 
             {
-              "default": "gwm_core",
-              "name": "POSTGRES_DB",
+              "default": "gwm_core", 
+              "name": "POSTGRES_DB", 
               "description": ""
             }
-          ],
-          "architecture": "amd64",
-          "requiredRuntime": "device",
+          ], 
+          "restart_policy": "always", 
+          "architecture": "amd64", 
+          "requiredRuntime": "device", 
           "ros": {
-            "services": [],
-            "topics": [],
-            "isROS": false,
+            "services": [], 
+            "topics": [], 
+            "isROS": false, 
             "actions": []
-          },
-          "description": "",
-          "restart_policy": "always"
+          }, 
+          "description": ""
         }
-      ],
+      ], 
       "exposedParameters": [
         {
-          "component": "postgres",
-          "param": "POSTGRES_PASSWORD",
-          "targetParam": "POSTGRES_PASSWORD"
-        },
+          "targetParam": "POSTGRES_PASSWORD", 
+          "component": "postgres", 
+          "param": "POSTGRES_PASSWORD"
+        }, 
         {
-          "component": "postgres",
-          "param": "POSTGRES_USER",
-          "targetParam": "POSTGRES_USER"
-        },
+          "targetParam": "POSTGRES_USER", 
+          "component": "postgres", 
+          "param": "POSTGRES_USER"
+        }, 
         {
-          "component": "postgres",
-          "param": "POSTGRES_DB",
-          "targetParam": "POSTGRES_DB"
+          "targetParam": "POSTGRES_DB", 
+          "component": "postgres", 
+          "param": "POSTGRES_DB"
         }
-      ],
+      ], 
       "metadata": {}
     }
-  ],
-  "name": "postgres",
-  "description": ""
+  ], 
+  "name": "postgres"
 }

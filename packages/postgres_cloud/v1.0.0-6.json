@@ -1,92 +1,93 @@
 {
-  "bindable": true,
-  "packageVersion": "v1.0.0-6",
+  "bindable": true, 
+  "packageVersion": "v1.0.0-6", 
+  "description": "", 
   "plans": [
     {
-      "includePackages": [],
-      "singleton": false,
-      "name": "default",
+      "includePackages": [], 
+      "singleton": false, 
+      "name": "default", 
       "inboundROSInterfaces": {
         "anyIncomingScopedOrTargetedRosConfig": false
-      },
-      "dependentDeployments": [],
+      }, 
+      "dependentDeployments": [], 
       "components": [
         {
           "executables": [
             {
-              "name": "pgsql",
+              "name": "pgsql", 
+              "limits": {
+                "cpu": 1, 
+                "memory": 4096
+              }, 
               "simulationOptions": {
                 "simulation": false
-              },
-              "cmd": [],
-              "docker": "mdillon/postgis:latest",
-              "limits": {
-                "cpu": 1,
-                "memory": 4096
-              }
+              }, 
+              "cmd": [], 
+              "secret": "secret-phpgivrxlrdzjvqddhiisusi", 
+              "docker": "mdillon/postgis:latest"
             }
-          ],
-          "name": "postgres",
-          "parameters": [
-            {
-              "default": "postgres",
-              "name": "POSTGRES_PASSWORD",
-              "description": ""
-            },
-            {
-              "default": "postgres",
-              "name": "POSTGRES_USER",
-              "description": ""
-            },
-            {
-              "default": "gwm_core",
-              "name": "POSTGRES_DB",
-              "description": ""
-            }
-          ],
-          "architecture": "amd64",
-          "requiredRuntime": "cloud",
-          "ros": {
-            "services": [],
-            "topics": [],
-            "isROS": false,
-            "actions": []
-          },
-          "description": "",
+          ], 
           "cloudInfra": {
-            "replicas": 1,
             "endpoints": [
               {
-                "name": "POSTGRES",
-                "exposeExternally": false,
-                "port": 5432,
-                "targetPort": 5432,
-                "proto": "TCP"
+                "targetPort": 5432, 
+                "proto": "TCP", 
+                "exposeExternally": false, 
+                "name": "POSTGRES", 
+                "port": 5432
               }
-            ]
-          }
+            ], 
+            "replicas": 1
+          }, 
+          "name": "postgres", 
+          "parameters": [
+            {
+              "default": "postgres", 
+              "name": "POSTGRES_PASSWORD", 
+              "description": ""
+            }, 
+            {
+              "default": "postgres", 
+              "name": "POSTGRES_USER", 
+              "description": ""
+            }, 
+            {
+              "default": "gwm_core", 
+              "name": "POSTGRES_DB", 
+              "description": ""
+            }
+          ], 
+          "architecture": "amd64", 
+          "requiredRuntime": "cloud", 
+          "ros": {
+            "services": [], 
+            "topics": [], 
+            "isROS": false, 
+            "actions": []
+          }, 
+          "description": ""
         }
-      ],
+      ], 
       "exposedParameters": [
         {
-          "component": "postgres",
-          "param": "POSTGRES_PASSWORD",
-          "targetParam": "POSTGRES_PASSWORD"
-        },
+          "targetParam": "POSTGRES_PASSWORD", 
+          "component": "postgres", 
+          "param": "POSTGRES_PASSWORD"
+        }, 
         {
-          "component": "postgres",
-          "param": "POSTGRES_USER",
-          "targetParam": "POSTGRES_USER"
-        },
+          "targetParam": "POSTGRES_USER", 
+          "component": "postgres", 
+          "param": "POSTGRES_USER"
+        }, 
         {
-          "component": "postgres",
-          "param": "POSTGRES_DB",
-          "targetParam": "POSTGRES_DB"
+          "targetParam": "POSTGRES_DB", 
+          "component": "postgres", 
+          "param": "POSTGRES_DB"
         }
-      ],
+      ], 
       "metadata": {}
     }
-  ],
-  "name": "postgres_cloud",
-  "description": ""
+  ], 
+  "name": "postgres_cloud"
 }
