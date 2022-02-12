@@ -42,7 +42,6 @@
               "cmd": [
                 "--reporter.grpc.host-port=trace-collector-kqdbp.ep-r.io:443"
               ], 
-              "secret": "secret-phpgivrxlrdzjvqddhiisusi", 
               "docker": "jaegertracing/jaeger-agent"
             }
           ], 

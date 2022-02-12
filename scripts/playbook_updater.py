@@ -137,6 +137,10 @@ def main():
             subpackage_manifest = get_subpackage_manifest_from_io(project_id, auth_token, subpackage["packageId"])
             for i in range(0, len(subpackage_manifest["plans"][0]["components"][0]["executables"])):
                 container = subpackage_manifest["plans"][0]["components"][0]["executables"][i]
+
+                if "secret" in container:
+                    del subpackage_manifest["plans"][0]["components"][0]["executables"][i]["secret"]
+
                 if "buildGUID" in container:
                     build = get_build_info_from_io(project_id, auth_token, container["buildGUID"])
 

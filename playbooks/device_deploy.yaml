@@ -100,8 +100,7 @@
         manifest_path: /tmp/postgres.json
         executables_info:
         - name: pgsql
-          type: docker
-          docker_image: "{{ rio_db_image }}"
+          type: manifest
       register: postgres_package_id
     - name: gwm package
       async: "{{ async_time | default('1000') }}"
@@ -114,8 +113,7 @@
         manifest_path: /tmp/gwm.json
         executables_info:
         - name: core
-          type: docker
-          docker_image: "{{ rio_gwm_image }}"
+          type: manifest
           secret: dockerhub
       register: gwm_package_id
     - name: user_interface package
@@ -129,8 +127,7 @@
         manifest_path: /tmp/user_interface.json
         executables_info:
         - name: core
-          type: docker
-          docker_image: "{{ rio_gwm_ui_image }}"
+          type: manifest
           secret: dockerhub
       register: user_interface_package_id
     - name: device_amr package
@@ -144,8 +141,7 @@
         manifest_path: /tmp/device_amr.json
         executables_info:
         - name: amr
-          type: docker
-          docker_image: "{{ rio_amr_pa_image }}"
+          type: manifest
           secret: dockerhub
       register: device_amr_package_id
     - name: server package
@@ -234,7 +230,7 @@
         present: "{{ present }}"
         package_name: device_amr
         runtime: device
-        device_name: "{{ robot_device_name }}"
+        device_name: "{{ item }}"
         networks:
           routed_networks:
             - name: "{{ prefix_name }}_routed_network"
@@ -247,6 +243,7 @@
           XDG_RUNTIME_DIR: "/run/user/1000"
           DISPLAY: ":0"
           SITE: "{{ site_name }}"
+      loop: "{{ robot_device_name }}"
       register: amr_routed_deploy_id
     - name: AMR  deployment (Native Network)
       async: "{{ async_time | default('2600') }}"
@@ -258,7 +255,7 @@
         present: "{{ present }}"
         package_name: device_amr
         runtime: device
-        device_name: "{{ robot_device_name }}"
+        device_name: "{{ item }}"
         networks:
           native_networks:
             - name: "{{ prefix_name }}_native_network"
@@ -271,6 +268,7 @@
           XDG_RUNTIME_DIR: "/run/user/1000"
           DISPLAY: ":0"
           SITE: "{{ site_name }}"
+      loop: "{{ robot_device_name }}"
       register: amr_native_deploy_id
     - name: SERVER  deployment (Routed Network)
       async: "{{ async_time | default('2600') }}"

@@ -32,8 +32,7 @@
               "cmd": [
                 "--reporter.grpc.host-port=trace-collector-kqdbp.ep-r.io:443"
               ], 
-              "name": "tracing_agent", 
-              "secret": "secret-effuhermvsjqlqtkpuuaates"
+              "name": "tracing_agent"
             }
           ], 
           "name": "gbc", 

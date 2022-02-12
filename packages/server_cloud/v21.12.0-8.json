@@ -26,7 +26,6 @@
               "cmd": [
                 "/bin/bash -c \"source /opt/ros/melodic/setup.bash && [ -f /home/rr/catkin_ws/devel/setup.bash ] && source /home/rr/catkin_ws/devel/setup.bash || source /home/rr/catkin_ws/install/setup.bash &&         if [[ ! -z \"$${AUTOBOOTSTRAP}\" ]] && [[ \"$${AUTOBOOTSTRAP}\" == \"true\" ]]; then rosrun gwm_interface sitectl.py -f --site $${SITE}; fi &&         stdbuf -o L roslaunch bringup global.launch site:=$${SITE} || sleep infinity\""
               ], 
-              "secret": "secret-fofoebjqfyjcnuzalgqzpmtl", 
               "docker": "rrdockerhub/io_amr_pa:iogen-build-qzislyacaxwdlbwfainigiya-8"
             }, 
             {
@@ -41,7 +40,6 @@
               "cmd": [
                 "--reporter.grpc.host-port=trace-collector-kqdbp.ep-r.io:443"
               ], 
-              "secret": "secret-phpgivrxlrdzjvqddhiisusi", 
               "docker": "jaegertracing/jaeger-agent"
             }
           ], 

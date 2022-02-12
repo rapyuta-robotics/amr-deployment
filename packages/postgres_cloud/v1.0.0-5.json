@@ -24,7 +24,6 @@
                 "simulation": false
               }, 
               "cmd": [], 
-              "secret": "secret-phpgivrxlrdzjvqddhiisusi", 
               "docker": "mdillon/postgis:latest"
             }
           ], 
