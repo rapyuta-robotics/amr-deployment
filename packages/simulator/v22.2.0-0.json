@@ -14,36 +14,36 @@
         {
           "executables": [
             {
-              "simulationOptions": {
-                "simulation": false
-              }, 
+              "name": "gzclient", 
               "limits": {
                 "cpu": 0.5, 
                 "memory": 2048
+              }, 
+              "simulationOptions": {
+                "simulation": false
               }, 
               "cmd": [
                 "/bin/bash", 
                 "-c", 
                 "/home/rr/headless/install/vnc_startup.sh 'gzclient' || sleep infinity"
               ], 
-              "name": "gzclient", 
-              "buildGUID": "build-omjpdooqferzbedivugqmzzc"
+              "docker": "docker.io/rrdockerhub/io_amr_pa:iogen-build-omjpdooqferzbedivugqmzzc-4"
             }, 
             {
-              "simulationOptions": {
-                "simulation": false
-              }, 
+              "name": "gazebo", 
               "limits": {
                 "cpu": 8, 
                 "memory": 32768
+              }, 
+              "simulationOptions": {
+                "simulation": false
               }, 
               "cmd": [
                 "/bin/bash", 
                 "-c", 
                 "source /opt/ros/melodic/setup.bash && [ -f /home/rr/catkin_ws/devel/setup.bash ] && source /home/rr/catkin_ws/devel/setup.bash || source /home/rr/catkin_ws/install/setup.bash &&         if [[ ! -z \"$${AUTOBOOTSTRAP}\" ]] && [[ $${AUTOBOOTSTRAP} == \"true\" ]]; then rosrun gwm_interface sitectl.py -f --site $${SITE}; fi &&         roslaunch bringup simulation_$${SITE}.launch rviz:=false item:=$${ITEM} || sleep infinity"
               ], 
-              "name": "gazebo", 
-              "buildGUID": "build-omjpdooqferzbedivugqmzzc"
+              "docker": "docker.io/rrdockerhub/io_amr_pa:iogen-build-omjpdooqferzbedivugqmzzc-4"
             }
           ], 
           "cloudInfra": {

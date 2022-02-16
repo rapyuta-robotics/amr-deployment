@@ -7,9 +7,10 @@ import requests
 from rapyuta_io import BuildStatus
 import rapyuta_io
 import pprint
+import sys, getopt
 
-project_id = "project-xbaeosxiygjtkhuanbwhjmhi"
-auth_token = "G7mNtDL2BpS678zI3aAq2wDTCR9vluG3SsPGLFLK"
+# project_id = "project-xbaeosxiygjtkhuanbwhjmhi"
+# auth_token = "G7mNtDL2BpS678zI3aAq2wDTCR9vluG3SsPGLFLK"
 
 def package_list():
     # pack_list = [
@@ -127,34 +128,61 @@ def semver_to_int(version_string):
     return int(major) * 10**6 + int(minor) * 10**3 + int(patch) * 10 + int(prerel)
 
 
-def main():
+def get_args(argv):
+    project_id = ''
+    auth_token = ''
+    try:
+        opts, args = getopt.getopt(argv, "hp:a:", ["help","project_id=", "auth_token="])
+    except getopt.GetoptError as err:
+        print(err)
+        sys.exit(2)
+    for opt, arg in opts:
+        if opt in ('-h', '--help'):
+            print('Run from amr-deployment directory')
+            print('scripts/manifest_updater.py -p <project_id> -a <auth_token>')
+            sys.exit()
+        elif opt in ("-p", "--project_id"):
+            project_id = arg
+        elif opt in ("-a", "--auth_token"):
+            auth_token = arg
+    return project_id, auth_token
+
+def main(project_id, auth_token):
 
     packages = package_list()
 
     for package in packages:
+        print("Getting all subpackages in package: " + package["package_name"])
         subpackages = get_all_subpackages_from_io(project_id, auth_token, package["package_name"])
+
         for subpackage in subpackages:
             subpackage_manifest = get_subpackage_manifest_from_io(project_id, auth_token, subpackage["packageId"])
-            for i in range(0, len(subpackage_manifest["plans"][0]["components"][0]["executables"])):
-                container = subpackage_manifest["plans"][0]["components"][0]["executables"][i]
+            print("Pulling subpackage " + subpackage_manifest["packageVersion"] + " of " + package["package_name"])
 
-                if "secret" in container:
-                    del subpackage_manifest["plans"][0]["components"][0]["executables"][i]["secret"]
+            for container_id in range(0, len(subpackage_manifest["plans"][0]["components"])):
+                for executable_id in range(0, len(subpackage_manifest["plans"][0]["components"][container_id]["executables"])):
+                    container = subpackage_manifest["plans"][0]["components"][container_id]["executables"][executable_id]
 
-                if "buildGUID" in container:
-                    build = get_build_info_from_io(project_id, auth_token, container["buildGUID"])
+                    if "secret" in container:
+                        del subpackage_manifest["plans"][0]["components"][container_id]["executables"][executable_id]["secret"]
+                        print("Removing secret in subpackage " + subpackage_manifest["packageVersion"] + " for executable " + subpackage_manifest["plans"][0]["components"][container_id]["executables"][executable_id]["name"])
 
-                    for j in range(1, len(build["buildRequests"])):
-                        latest_build = build["buildRequests"][len(build["buildRequests"]) - j]
+                    if "buildGUID" in container:
+                        build = get_build_info_from_io(project_id, auth_token, container["buildGUID"])
 
-                        if latest_build["errorString"] == "":
-                            docker_image = latest_build["executableImageInfo"]["imageInfo"][0]["imageName"]
-                            subpackage_manifest["plans"][0]["components"][0]["executables"][i]["docker"] = docker_image
-                            del subpackage_manifest["plans"][0]["components"][0]["executables"][i]["buildGUID"]
-                            break
 
-                        if (len(build["buildRequests"]) - j) <= 0:
-                            print("no successful builds found for subpackage")
+                        for j in range(1, len(build["buildRequests"])):
+                            latest_build = build["buildRequests"][len(build["buildRequests"]) - j]
+
+                            if latest_build["errorString"] == "":
+                                print("Replacing BuildGUID " + container["buildGUID"] + " with Image " +latest_build["executableImageInfo"]["imageInfo"][0]["imageName"])
+                                docker_image = latest_build["executableImageInfo"]["imageInfo"][0]["imageName"]
+                                subpackage_manifest["plans"][0]["components"][container_id]["executables"][executable_id]["docker"] = docker_image
+                                del subpackage_manifest["plans"][0]["components"][container_id]["executables"][executable_id]["buildGUID"]
+                                break
+
+                            if (len(build["buildRequests"]) - j) <= 0:
+                                print("no successful builds found for subpackage")
 
 
             #Save to file
@@ -163,4 +191,5 @@ def main():
             file.close()
 
 if __name__ == '__main__':
-    main()
+    project_id, auth_token = get_args(sys.argv[1:])
+    main(project_id, auth_token)

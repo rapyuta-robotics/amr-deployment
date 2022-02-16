@@ -15,20 +15,20 @@
         {
           "executables": [
             {
-              "simulationOptions": {
-                "simulation": false
-              }, 
+              "name": "core", 
               "limits": {
                 "cpu": 0.5, 
                 "memory": 2048
+              }, 
+              "simulationOptions": {
+                "simulation": false
               }, 
               "cmd": [
                 "/bin/bash", 
                 "-c", 
                 "python manage.py runserver 0.0.0.0:8000"
               ], 
-              "name": "core", 
-              "buildGUID": "build-hrotlieegsjjgoskenvdkdtm"
+              "docker": "docker.io/rrdockerhub/io_amr_gwm:iogen-build-hrotlieegsjjgoskenvdkdtm-2"
             }
           ], 
           "cloudInfra": {

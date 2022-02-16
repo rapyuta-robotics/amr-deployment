@@ -15,36 +15,36 @@
         {
           "executables": [
             {
-              "simulationOptions": {
-                "simulation": false
-              }, 
+              "name": "vnc", 
               "limits": {
                 "cpu": 0.5, 
                 "memory": 2048
+              }, 
+              "simulationOptions": {
+                "simulation": false
               }, 
               "cmd": [
                 "/bin/bash", 
                 "-c", 
                 "/home/rr/headless/install/vnc_startup.sh 'sleep infinity' || sleep infinity"
               ], 
-              "name": "vnc", 
-              "buildGUID": "build-omjpdooqferzbedivugqmzzc"
+              "docker": "docker.io/rrdockerhub/io_amr_pa:iogen-build-omjpdooqferzbedivugqmzzc-4"
             }, 
             {
-              "simulationOptions": {
-                "simulation": false
-              }, 
+              "name": "gbc", 
               "limits": {
                 "cpu": 2, 
                 "memory": 8192
+              }, 
+              "simulationOptions": {
+                "simulation": false
               }, 
               "cmd": [
                 "/bin/bash", 
                 "-c", 
                 "source /opt/ros/melodic/setup.bash && [ -f /home/rr/catkin_ws/devel/setup.bash ] && source /home/rr/catkin_ws/devel/setup.bash || source /home/rr/catkin_ws/install/setup.bash &&         if [[ ! -z \"$${AUTOBOOTSTRAP}\" ]] && [[ \"$${AUTOBOOTSTRAP}\" == \"true\" ]]; then rosrun gwm_interface sitectl.py -f --site $${SITE}; fi &&         stdbuf -o L roslaunch bringup global.launch site:=$${SITE} || sleep infinity"
               ], 
-              "name": "gbc", 
-              "buildGUID": "build-omjpdooqferzbedivugqmzzc"
+              "docker": "docker.io/rrdockerhub/io_amr_pa:iogen-build-omjpdooqferzbedivugqmzzc-4"
             }, 
             {
               "name": "tracing_agent", 

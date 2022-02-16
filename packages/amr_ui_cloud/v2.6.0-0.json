@@ -15,16 +15,16 @@
         {
           "executables": [
             {
-              "simulationOptions": {
-                "simulation": false
-              }, 
+              "name": "core", 
               "limits": {
                 "cpu": 0.5, 
                 "memory": 2048
               }, 
+              "simulationOptions": {
+                "simulation": false
+              }, 
               "cmd": [], 
-              "name": "core", 
-              "buildGUID": "build-fkssxfklhtrmievfpofviylb"
+              "docker": "docker.io/rrdockerhub/io_amr_ui:iogen-build-fkssxfklhtrmievfpofviylb-2"
             }
           ], 
           "cloudInfra": {

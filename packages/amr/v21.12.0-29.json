@@ -61,11 +61,11 @@
               "simulationOptions": {
                 "simulation": false
               }, 
+              "docker": "docker.io/rrdockerhub/io_amr_pa:iogen-build-fxxvhvnmgoudktpxproretbg-24", 
               "cmd": [
                 "/bin/bash -c \"unset DISPLAY && /home/rr/headless/install/vnc_startup.sh 'gzclient' || sleep infinity\""
               ], 
-              "name": "vnc", 
-              "buildGUID": "build-fxxvhvnmgoudktpxproretbg"
+              "name": "vnc"
             }, 
             {
               "simulationOptions": {

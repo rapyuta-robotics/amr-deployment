@@ -1,3 +1,4 @@
+#remove native network allow noetic as option, add prefix and see if can match version for package
 - name: Playbook Sanity checks and configuration
   hosts: localhost
   strategy: free
@@ -35,9 +36,11 @@
         src: "../packages/amr_ui_cloud/{{ amr_ui_cloud_version }}.json"
         dest: /tmp/amr_ui_cloud.json
     - copy:
-        src: "../packages/simulator/{{ simulator_version }}.json"
-        dest: /tmp/simulator.json
-
+        src: "../packages/server_cloud/{{ server_cloud_version }}.json"
+        dest: /tmp/server_cloud.json
+    - copy:
+        src: "../packages/amr/{{ amr_version }}.json"
+        dest: /tmp/amr.json
 
 - name: Secrets, Networks
   hosts: localhost
@@ -55,17 +58,6 @@
         password: "{{ docker_password }}"
         email: rss2.admin@rapyuta-robotics.com
       register: docker_secret_id
-    - name: Native Network Deployment
-      async: "{{ async_time | default('100') }}"
-      poll: 0
-      rapyutarobotics.rr_io.networks:
-        name: "{{ prefix_name }}_native_network"
-        present: "{{ present }}"
-        type: native_network
-        ros_distro: melodic
-        resource_type: small
-      when: network_type == "native"
-      register: native_network_id
     - name: Routed Network Deployment
       async: "{{ async_time | default('100') }}"
       poll: 0
@@ -73,191 +65,187 @@
         name: "{{ prefix_name }}_routed_network"
         present: "{{ present }}"
         type: routed_network
-        ros_distro: melodic
+        runtime: cloud
+        ros_distro: "{{ ros_distro }}"
         resource_type: small
-      when: network_type == "routed"
+      when: routed_network|bool == true
       register: routed_network_id
 
-- name: POSTGRES, GWM, AMR UI CLOUD, SIMULATOR Packages
+- name: POSTGRES, GWM, AMR UI, AMR, SERVER Packages
   hosts: localhost
   strategy: free
   connection: local
-  vars:
-    postgres_cloud_json: "{{ lookup('file','/tmp/postgres_cloud.json') | from_json }}"
-    gwm_cloud_json: "{{ lookup('file','/tmp/gwm_cloud.json') | from_json }}"
-    amr_ui_cloud_json: "{{ lookup('file','/tmp/amr_ui_cloud.json') | from_json }}"
-    simulator_json: "{{ lookup('file','/tmp/simulator.json') | from_json }}"
   tasks:
-    - name: postgres_cloud package
+    - name: postgres package
       async: "{{ async_time | default('1000') }}"
       poll: 0
       rapyutarobotics.rr_io.packages:
         version: auto
-        name: postgres_cloud
+        name: "{{ prefix_name }}_postgres_cloud"
         present: "{{ present }}"
         package_from: manifest_path
         manifest_path: /tmp/postgres_cloud.json
         executables_info:
-        - name: pgsql
-          type: manifest
-#          docker_image: "{{ postgres_cloud_json.plans[0].components[0].executables[0].docker }}"
+        - type: manifest
           secret: dockerhub
-      register: postgres_cloud_package_id
-    - name: gwm cloud package
+      register: postgres_package_id
+    - name: gwm package
       async: "{{ async_time | default('1000') }}"
       poll: 0
       rapyutarobotics.rr_io.packages:
         version: auto
-        name: gwm_cloud
+        name: "{{ prefix_name }}_gwm_cloud"
         present: "{{ present }}"
         package_from: manifest_path
         manifest_path: /tmp/gwm_cloud.json
         executables_info:
-        - name: core
-          type: manifest
-#          docker_image: "{{ gwm_cloud_json.plans[0].components[0].executables[0].docker }}"
+        - type: manifest
           secret: dockerhub
-      register: gwm_cloud_package_id
-    - name: amr_ui_cloud package
+      register: gwm_package_id
+    - name: amr_ui package
       async: "{{ async_time | default('1000') }}"
       poll: 0
       rapyutarobotics.rr_io.packages:
         version: auto
-        name: amr_ui_cloud
+        name: "{{ prefix_name }}_amr_ui_cloud"
         present: "{{ present }}"
         package_from: manifest_path
         manifest_path: /tmp/amr_ui_cloud.json
         executables_info:
-        - name: core
-          type: manifest
-#          docker_image: "{{ amr_ui_cloud_json.plans[0].components[0].executables[0].docker }}"
+        - type: manifest
           secret: dockerhub
-      register: amr_ui_cloud_package_id
-    - name: simulator package
+      register: amr_ui_package_id
+    - name: device_amr package
       async: "{{ async_time | default('1000') }}"
       poll: 0
       rapyutarobotics.rr_io.packages:
         version: auto
-        name: simulator
+        name: "{{ prefix_name }}_amr"
         present: "{{ present }}"
         package_from: manifest_path
-        manifest_path: /tmp/simulator.json
+        manifest_path: /tmp/amr.json
         executables_info:
-        - name: gzclient
-          type: manifest
-#          docker_image: "{{ simulator_json.plans[0].components[0].executables[0].docker }}"
+        - type: manifest
           secret: dockerhub
-        - name: gazebo
-          type: manifest
-#          docker_image: "{{ simulator_json.plans[0].components[0].executables[1].docker }}"
+      register: device_amr_package_id
+    - name: server package
+      async: "{{ async_time | default('1000') }}"
+      poll: 0
+      rapyutarobotics.rr_io.packages:
+        version: auto
+        name: "{{ prefix_name }}_server_cloud"
+        present: "{{ present }}"
+        package_from: manifest_path
+        manifest_path: /tmp/server.json
+        executables_info:
+        - type: manifest
           secret: dockerhub
-      register: simulator_package_id
+      register: server_package_id
 
-- name: POSTGRES, GWM CLOUD, UI, SIMULATOR Deployments
+- name: Postgres, GWM, UI, AMR, SERVER Deployments
   hosts: localhost
   strategy: free
   connection: local
   tasks:
-    - name: POSTGRES Deployment
+    - name: Postgres Deployment
       async: "{{ async_time | default('100') }}"
       poll: 0
       rapyutarobotics.rr_io.deployments:
         name: "{{ prefix_name }}_postgres_cloud"
         component_name: postgres
         present: "{{ present }}"
-        package_name: postgres_cloud
-        component_params:
-          POSTGRES_DB: gwm_cloud_core
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
+        package_name: "{{ prefix_name }}_postgres_cloud"
       register: db_deploy_id
-    - name: GWM CLOUD deployment
+    - name: GWM deployment
       async: "{{ async_time | default('2000') }}"
       poll: 0
       rapyutarobotics.rr_io.deployments:
         name: "{{ prefix_name }}_gwm_cloud"
         component_name: core
         present: "{{ present }}"
-        package_name: gwm_cloud
+        package_name: "{{ prefix_name }}_gwm_cloud"
         depends:
           deployments:
             - "{{ prefix_name }}_postgres_cloud"
-        component_params:
-          AUTOBOOTSTRAP: "true"
-          DEBUG: "true"
-          DJANGO_LOG_LEVEL: WARNING
-      register: gwm_cloud_deploy_id
-    - name: AMR UI  deployment
+      register: gwm_deploy_id
+    - name: User Interface  deployment
       async: "{{ async_time | default('2600') }}"
       poll: 0
       rapyutarobotics.rr_io.deployments:
         name: "{{ prefix_name }}_amr_ui_cloud"
         component_name: amr_ui
         present: "{{ present }}"
-        package_name: amr_ui_cloud
+        package_name: "{{ prefix_name }}_amr_ui_cloud"
         depends:
           deployments:
             - "{{ prefix_name }}_gwm_cloud"
-        component_params:
-          SKIP_PREFLIGHT_CHECK: "true"
-          GWM_API_VERSION: v1
-          DEFAULT_GWM_INTERFACE_HOST: gbc
-          DEFAULT_GWM_INTERFACE_PORT: 8080
-          DEFAULT_GWM_INTERFACE_PROTOCOL: ws
-      register: amr_ui_cloud_deploy_id
-    - name: Simulator  deployment
+      register: amr_ui_deploy_id
+    - name: AMR  deployment (Routed Network)
       async: "{{ async_time | default('2600') }}"
       poll: 0
+      when: routed_network|bool == true
       rapyutarobotics.rr_io.deployments:
-        name: "{{ prefix_name }}_simulator"
-        component_name: gazebo
+        name: "{{ prefix_name }}_amr_{{ robot_device_name }}"
+        component_name: amr
         present: "{{ present }}"
-        package_name: simulator
+        package_name: "{{ prefix_name }}_amr"
+        runtime: device
+        device_name: "{{ item }}"
+        networks:
+          routed_networks:
+            - name: "{{ prefix_name }}_routed_network"
         depends:
           deployments:
             - "{{ prefix_name }}_gwm_cloud"
         component_params:
-          AUTOBOOTSTRAP: "true"
-          GWM_AUTH_TOKEN	: autobootstrap
-          GWM_CORE_URL_PORT: 443
-          ITEM: NONE
-          ITEM_SPAWN_FROM: AUTO
-          LOCALIZATION_MODE: managed
-          LOCALIZATION_TYPE: amcl
-          MAPPING_TYPE: gmapping
-          PYTHONUNBUFFERED: 1
           SITE: "{{ site_name }}"
-          VNC_PASSWORD: rapyuta
-          VNC_RESOLUTION: 1280x720
-      register: simulator_deploy_id
-
+      loop: "{{ robot_device_name }}"
+      register: amr_routed_deploy_id
+    - name: SERVER  deployment (Routed Network)
+      async: "{{ async_time | default('2600') }}"
+      poll: 0
+      when: routed_network|bool == true
+      rapyutarobotics.rr_io.deployments:
+        name: "{{ prefix_name }}_server_cloud"
+        component_name: gbc
+        present: "{{ present }}"
+        package_name: "{{ prefix_name }}_server_cloud"
+        networks:
+          routed_networks:
+            - name: "{{ prefix_name }}_routed_network"
+        depends:
+          deployments:
+            - "{{ prefix_name }}_gwm_cloud"
+      register: server_routed_deploy_id
 
 - name: Async wait on deployments
   hosts: localhost
   strategy: free
   connection: local
   tasks:
-    - name: "DB, GWM CLOUD, AMR UI, SIMULATOR DEPLOYMENTS - check on async status"
+    - name: "DB, GWM, AMR UI, SIMULATOR DEPLOYMENTS - check on async status Routed Network"
       async_status:
-        jid: "{{ item.ansible_job_id}}"
+        jid: "{{ item.ansible_job_id }}"
+      when: routed_network|bool == true
       register: amr_log
       until: amr_log.finished
       retries: 600
       delay: 20
-      when:
-        - ansible_async|bool == true
       loop:
       - "{{ db_deploy_id }}"
-      - "{{ gwm_cloud_deploy_id }}"
-      - "{{ amr_ui_cloud_deploy_id }}"
-      - "{{ simulator_deploy_id }}"
+      - "{{ gwm_deploy_id }}"
+      - "{{ amr_ui_deploy_id }}"
+      - "{{ amr_routed_deploy_id }}"
+      - "{{ server_routed_deploy_id }}"
+
+
 
     - name: dump test output
       debug:
         msg: '{{ item }}'
-      when: ansible_async|bool == true
       loop:
       - "{{ db_deploy_id }}"
-      - "{{ gwm_cloud_deploy_id }}"
-      - "{{ amr_ui_cloud_deploy_id }}"
-      - "{{ simulator_deploy_id }}"
+      - "{{ gwm_deploy_id }}"
+      - "{{ amr_ui_deploy_id }}"
+      - "{{ amr_routed_deploy_id }}"
+      - "{{ server_routed_deploy_id }}"

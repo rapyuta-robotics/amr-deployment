@@ -15,20 +15,20 @@
         {
           "executables": [
             {
-              "simulationOptions": {
-                "simulation": false
-              }, 
+              "name": "vnc_forward", 
               "limits": {
                 "cpu": 1, 
                 "memory": 4096
+              }, 
+              "simulationOptions": {
+                "simulation": false
               }, 
               "cmd": [
                 "/bin/bash", 
                 "-c", 
                 "sudo apt-get install python3-pip -y && python3 -m pip install rapyuta-io rapyuta-io-cli && mkdir -p $HOME/.config/rio-cli/ && echo {\\\"email_id\\\": \\\"\"$VNC_RIO_EMAIL\"\\\", \\\"password\\\": \\\"\"$VNC_RIO_PASSWORD\"\\\", \\\"project_id\\\": \\\"\"$(echo $RIO_TENANT_ID| cut -c 9-)\"\\\"} >> $HOME/.config/rio-cli/config.json && ~/.local/bin/rio auth refresh-token && ~/.local/bin/rio device tools init $RIO_DEVICE_NAME && ~/.local/bin/rio device tools port-forward $RIO_DEVICE_NAME 6901 6901"
               ], 
-              "name": "vnc_forward", 
-              "buildGUID": "build-omjpdooqferzbedivugqmzzc"
+              "docker": "docker.io/rrdockerhub/io_amr_pa:iogen-build-omjpdooqferzbedivugqmzzc-4"
             }
           ], 
           "cloudInfra": {
@@ -77,21 +77,21 @@
               "simulationOptions": {
                 "simulation": false
               }, 
+              "docker": "docker.io/rrdockerhub/io_amr_pa:iogen-build-omjpdooqferzbedivugqmzzc-4", 
               "cmd": [
                 "/bin/bash -c \"unset DISPLAY && /home/rr/headless/install/vnc_startup.sh 'gzclient' || sleep infinity\""
               ], 
-              "name": "vnc", 
-              "buildGUID": "build-omjpdooqferzbedivugqmzzc"
+              "name": "vnc"
             }, 
             {
               "simulationOptions": {
                 "simulation": false
               }, 
+              "docker": "docker.io/rrdockerhub/io_amr_pa:iogen-build-omjpdooqferzbedivugqmzzc-4", 
               "cmd": [
                 "/bin/bash -c \"source /home/rr/catkin_ws/install/setup.bash && roslaunch bringup agent.launch __ns:=amr$${ROBOT_ID} robot_name:=amr$${ROBOT_ID} agent_id:=$${ROBOT_ID} map:=$${MAP} site:=$${SITE} launch_drivers:=true tf_prefix:=amr$${ROBOT_ID}/ x_pos:=$${X_POS} y_pos:=$${Y_POS} robot_ui:=true || sleep infinity\""
               ], 
-              "name": "amr", 
-              "buildGUID": "build-omjpdooqferzbedivugqmzzc"
+              "name": "amr"
             }
           ], 
           "name": "amr", 

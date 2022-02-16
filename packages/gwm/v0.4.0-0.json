@@ -18,11 +18,11 @@
               "simulationOptions": {
                 "simulation": false
               }, 
+              "docker": "docker.io/rrdockerhub/io_amr_gwm:iogen-build-hrotlieegsjjgoskenvdkdtm-2", 
               "cmd": [
                 "python manage.py runserver 0.0.0.0:8000"
               ], 
-              "name": "core", 
-              "buildGUID": "build-hrotlieegsjjgoskenvdkdtm"
+              "name": "core"
             }
           ], 
           "name": "core", 

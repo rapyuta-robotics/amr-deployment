@@ -19,6 +19,16 @@
       set_fact:
         async_time: 0
       when: ansible_async|bool == false
+    - name: set_native_status
+      set_fact:
+        native_network: true
+        routed_network: false
+      when: network_type == "native"
+    - name: set_routed_status
+      set_fact:
+        native_network: false
+        routed_network: true
+      when: network_type == "routed"
 
 - name: Copy manifests to temp directory
   hosts: localhost
@@ -26,20 +36,20 @@
   connection: local
   tasks:
     - copy:
-        src: postgres.json
+        src: "../packages/postgres/{{ postgres_version }}.json"
         dest: /tmp/postgres.json
     - copy:
-        src: gwm.json
+        src: "../packages/gwm/{{ gwm_version }}.json"
         dest: /tmp/gwm.json
     - copy:
-        src: user_interface.json
-        dest: /tmp/user_interface.json
+        src: "../packages/amr_ui/{{ amr_ui_version }}.json"
+        dest: /tmp/amr_ui.json
     - copy:
-        src: server.json
+        src: "../packages/server/{{ server_version }}.json"
         dest: /tmp/server.json
     - copy:
-        src: device_amr.json
-        dest: /tmp/device_amr.json
+        src: "../packages/amr/{{ amr_version }}.json"
+        dest: /tmp/amr.json
 
 - name: Secrets, Networks
   hosts: localhost
@@ -64,7 +74,7 @@
         name: "{{ prefix_name }}_native_network"
         present: "{{ present }}"
         type: native_network
-        ros_distro: melodic
+        ros_distro: "{{ ros_distro }}"
         runtime: device
         device_name: "{{ nuc_device_name }}"
         network_interface: "{{ nuc_device_network_interface }}"
@@ -79,7 +89,7 @@
         present: "{{ present }}"
         type: routed_network
         runtime: cloud
-        ros_distro: melodic
+        ros_distro: "{{ ros_distro }}"
         resource_type: small
       when: routed_network|bool == true
       register: routed_network_id
@@ -94,40 +104,38 @@
       poll: 0
       rapyutarobotics.rr_io.packages:
         version: auto
-        name: postgres
+        name: "{{ prefix_name }}_postgres"
         present: "{{ present }}"
         package_from: manifest_path
         manifest_path: /tmp/postgres.json
         executables_info:
-        - name: pgsql
-          type: manifest
+        - type: manifest
+          secret: dockerhub
       register: postgres_package_id
     - name: gwm package
       async: "{{ async_time | default('1000') }}"
       poll: 0
       rapyutarobotics.rr_io.packages:
         version: auto
-        name: gwm
+        name: "{{ prefix_name }}_gwm"
         present: "{{ present }}"
         package_from: manifest_path
         manifest_path: /tmp/gwm.json
         executables_info:
-        - name: core
-          type: manifest
+        - type: manifest
           secret: dockerhub
       register: gwm_package_id
-    - name: user_interface package
+    - name: amr_ui package
       async: "{{ async_time | default('1000') }}"
       poll: 0
       rapyutarobotics.rr_io.packages:
         version: auto
-        name: user_interface
+        name: "{{ prefix_name }}_amr_ui"
         present: "{{ present }}"
         package_from: manifest_path
-        manifest_path: /tmp/user_interface.json
+        manifest_path: /tmp/amr_ui.json
         executables_info:
-        - name: core
-          type: manifest
+        - type: manifest
           secret: dockerhub
       register: user_interface_package_id
     - name: device_amr package
@@ -135,13 +143,12 @@
       poll: 0
       rapyutarobotics.rr_io.packages:
         version: auto
-        name: device_amr
+        name: "{{ prefix_name }}_amr"
         present: "{{ present }}"
         package_from: manifest_path
-        manifest_path: /tmp/device_amr.json
+        manifest_path: /tmp/amr.json
         executables_info:
-        - name: amr
-          type: manifest
+        - type: manifest
           secret: dockerhub
       register: device_amr_package_id
     - name: server package
@@ -149,18 +156,13 @@
       poll: 0
       rapyutarobotics.rr_io.packages:
         version: auto
-        name: server
+        name: "{{ prefix_name }}_server"
         present: "{{ present }}"
         package_from: manifest_path
         manifest_path: /tmp/server.json
         executables_info:
-        - name: gbc
-          type: docker
-          docker_image: "{{ rio_amr_pa_image }}"
+        - type: manifest
           secret: dockerhub
-        - name: tracing_agent
-          type: docker
-          docker_image: "{{ tracing_agent_image }}"
       register: server_package_id
 
 - name: Postgres, GWM, UI, DEVICE_AMR, SERVER Deployments
@@ -175,13 +177,9 @@
         name: "{{ prefix_name }}_postgres"
         component_name: postgres
         present: "{{ present }}"
-        package_name: postgres
+        package_name: "{{ prefix_name }}_postgres"
         runtime: device
         device_name: "{{ nuc_device_name }}"
-        component_params:
-          POSTGRES_DB: gwm_core
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
       register: db_deploy_id
     - name: GWM deployment
       async: "{{ async_time | default('2000') }}"
@@ -190,16 +188,12 @@
         name: "{{ prefix_name }}_gwm"
         component_name: core
         present: "{{ present }}"
-        package_name: gwm
+        package_name: "{{ prefix_name }}_gwm"
         runtime: device
         device_name: "{{ nuc_device_name }}"
         depends:
           deployments:
             - "{{ prefix_name }}_postgres"
-        component_params:
-          AUTOBOOTSTRAP: "true"
-          DEBUG: "true"
-          DJANGO_LOG_LEVEL: WARNING
       register: gwm_deploy_id
     - name: User Interface  deployment
       async: "{{ async_time | default('2600') }}"
@@ -208,27 +202,22 @@
         name: "{{ prefix_name }}_amr_ui"
         component_name: amr_ui
         present: "{{ present }}"
-        package_name: user_interface
+        package_name: "{{ prefix_name }}_amr_ui"
         runtime: device
         device_name: "{{ nuc_device_name }}"
         depends:
           deployments:
             - "{{ prefix_name }}_gwm"
-        component_params:
-          SKIP_PREFLIGHT_CHECK: "true"
-          GWM_API_VERSION: v1
-          DEFAULT_GWM_INTERFACE_PORT: "8080"
-          DEFAULT_GWM_INTERFACE_PROTOCOL: ws
       register: amr_ui_deploy_id
     - name: AMR  deployment (Routed Network)
       async: "{{ async_time | default('2600') }}"
       poll: 0
       when: routed_network|bool == true
       rapyutarobotics.rr_io.deployments:
-        name: "{{ prefix_name }}_amr"
+        name: "{{ prefix_name }}_amr_{{ robot_device_name }}"
         component_name: amr
         present: "{{ present }}"
-        package_name: device_amr
+        package_name: "{{ prefix_name }}_amr"
         runtime: device
         device_name: "{{ item }}"
         networks:
@@ -238,10 +227,6 @@
           deployments:
             - "{{ prefix_name }}_gwm"
         component_params:
-          LOCALIZATION_MODE: "managed"
-          LOCALIZATION_TYPE: "amcl"
-          XDG_RUNTIME_DIR: "/run/user/1000"
-          DISPLAY: ":0"
           SITE: "{{ site_name }}"
       loop: "{{ robot_device_name }}"
       register: amr_routed_deploy_id
@@ -250,10 +235,10 @@
       poll: 0
       when: native_network|bool == true
       rapyutarobotics.rr_io.deployments:
-        name: "{{ prefix_name }}_amr"
+        name: "{{ prefix_name }}_amr_{{ robot_device_name }}"
         component_name: amr
         present: "{{ present }}"
-        package_name: device_amr
+        package_name: "{{ prefix_name }}_amr"
         runtime: device
         device_name: "{{ item }}"
         networks:
@@ -263,10 +248,6 @@
           deployments:
             - "{{ prefix_name }}_gwm"
         component_params:
-          LOCALIZATION_MODE: "managed"
-          LOCALIZATION_TYPE: "amcl"
-          XDG_RUNTIME_DIR: "/run/user/1000"
-          DISPLAY: ":0"
           SITE: "{{ site_name }}"
       loop: "{{ robot_device_name }}"
       register: amr_native_deploy_id
@@ -278,7 +259,7 @@
         name: "{{ prefix_name }}_server"
         component_name: gbc
         present: "{{ present }}"
-        package_name: server
+        package_name: "{{ prefix_name }}_server"
         runtime: device
         device_name: "{{ nuc_device_name }}"
         networks:
@@ -296,7 +277,7 @@
         name: "{{ prefix_name }}_server"
         component_name: gbc
         present: "{{ present }}"
-        package_name: server
+        package_name: "{{ prefix_name }}_server"
         runtime: device
         device_name: "{{ nuc_device_name }}"
         networks:
@@ -324,7 +305,6 @@
       - "{{ db_deploy_id }}"
       - "{{ gwm_deploy_id }}"
       - "{{ amr_ui_deploy_id }}"
-      - "{{ amr_routed_deploy_id }}"
       - "{{ server_routed_deploy_id }}"
 
     - name: "DB, GWM, AMR UI, SIMULATOR DEPLOYMENTS - check on async status Native Network"

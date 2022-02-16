@@ -2,20 +2,20 @@
 present: "true"
 
 # The username and password of the dockerhub account with access to the images. This is needed to pull the IO AMR images for the simulation
-docker_user: "ioamrreadonly"
-docker_password: "#3=L#L_UVSDT{enY"
+docker_user: "insert username"
+docker_password: "insert password"
 
 # The images used for the simulation
 postgres_version: "v1.0.0-3"
 postgres_cloud_version: "v1.0.0-6"
-amr_version: "v21.12.0-19"
-amr_ui_version: "v2.5.0-4"
-amr_ui_cloud_version: "v2.5.0-7"
-gwm_version: "v0.3.0-6"
-gwm_cloud_version: "v0.3.0-9"
-server_version: "v21.12.0-11"
-server_cloud_version: "v21.12.0-19"
-simulator_version: "v21.12.0-11"
+amr_version: "v22.2.0-1"
+amr_ui_version: "v2.6.0-0"
+amr_ui_cloud_version: "v2.6.0-0"
+gwm_version: "v0.4.0-0"
+gwm_cloud_version: "v0.4.0-0"
+server_version: "v22.2.0-2"
+server_cloud_version: "v22.2.0-1"
+simulator_version: "v22.2.0-1"
 
 prefix_name: "prefix"
 site_name: kiba
@@ -24,12 +24,13 @@ site_name: kiba
 # Either "routed" or "native"
 network_type: "routed"
 ansible_async: true
+ros_distro: noetic
 
 robot_device_name:
-- robot_device_name1
-- robot_device_name2
-- robot_device_name3
+- robot_device_1
+- robot_device_2
+- robot_device_3
 
-server_device_name: server_device_name
-server_device_network_interface: eno1
+nuc_device_name: jason
+nuc_device_network_interface: wlp0s20f3
 robot_device_network_interface: wlp1s0

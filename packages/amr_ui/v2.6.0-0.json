@@ -18,9 +18,9 @@
               "simulationOptions": {
                 "simulation": false
               }, 
+              "docker": "docker.io/rrdockerhub/io_amr_ui:iogen-build-fkssxfklhtrmievfpofviylb-2", 
               "cmd": [], 
-              "name": "core", 
-              "buildGUID": "build-fkssxfklhtrmievfpofviylb"
+              "name": "core"
             }
           ], 
           "name": "amr_ui", 
