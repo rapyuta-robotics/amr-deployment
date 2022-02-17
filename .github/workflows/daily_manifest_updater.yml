@@ -11,9 +11,6 @@ jobs:
   update_packages:
     name: "Update amr deployment packages"
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: amr-deployment/
     steps:
     - name: Check out repository code
       uses: actions/checkout@v2
