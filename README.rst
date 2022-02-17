@@ -75,17 +75,19 @@ To quickly get a running version, Open deploy_configs.yaml and enter your docker
     # Get the Authentication token from https://auth.rapyuta.io/authToken/, or clicking the Get Auth Token under your name on the menu
     export RIO_AUTH_TOKEN=AUTH_TOKEN
 
-    # To Deploy (For device deployment use device_deploy.yaml)
-    ansible-playbook playbooks/cloud_deploy.yaml --extra-vars "@deploy_configs.yaml" --extra-vars "prefix_name=(insert prefix) present=true"
+    # To Deploy (For device deployment use deploy_cloud.yaml if deploying on cloud and deploy_local.yaml if deploying on local device)
+    ansible-playbook playbooks/deploy_simulation.yaml --extra-vars "@deploy_configs.yaml" --extra-vars "prefix_name=(insert prefix) present=true"
 
     # To Deprovision
-    ansible-playbook playbooks/cloud_deploy.yaml --extra-vars "@deploy_configs.yaml" --extra-vars "present=false"
+    ansible-playbook playbooks/deploy_simulation.yaml --extra-vars "@deploy_configs.yaml" --extra-vars "present=false"
     
 
 - Once IO-AMR is deployed, you can go to rapyuta.io > Deployments and click the UI deployment, scroll down to NETWORK ENDPOINTS, copy the GMW_UI Value and enter the fleet UI. Initial username and password is autobootstrap
 - You can also go to rapyuta.io > Deployments and click the GWM deployment, croll down to NETWORK ENDPOINTS, copy the GWM_CORE_URL and append /swagger/ to the URL and enter the GWM. On the top you can click ReDOC to enter detailed API description
-- The device deployment is for the setup where you want to deploy (postgres, gwm, user interface, server on an NUC and device_amr on the AMR)
-- The cloud deployment is for the setup where you want to deploy all components (postgres, gwm, user_interface, simulator on the cloud)
+- The cloud deployment is for the setup where you want to deploy (postgres, gwm, user interface, server on the cloud and device_amr on the AMR)
+- The local deployment is for the setup where you want to deploy (postgres, gwm, user interface, server on an NUC and device_amr on the AMR)
+- The simulation deployment is for the setup where you want to deploy all components (postgres, gwm, user_interface, simulator on the cloud)
+- If you wish to update the manifests run manifest updater from amr_deployment as such: scripts/manifest_updater.py -p <project_id> -a <auth_token> with <project_id> being the IO-AMR Project
 - Consider using the `-vvv` flag in the above command for a verbose output
 
 deploy_configs Parameters:
@@ -106,19 +108,19 @@ deploy_configs Parameters:
  amr_pa docker image to be used on rapyuta.io for the simulation. Default image should be sim_stable
 ``site_name``
  site to be used in the simulation.
-``routed_network``
- determines if a routed network is used on rapyuta.io instead of a native network. **Warning** if this is set to true, please remember to go to Networks on rapyuta.io and manually remove the created routed network after you deprovision the deployment
-``native_network``
- determines if a native network is used on rapyuta.io instead of a routed network. Both `native_network` and `routed_network` cannot be set to `true`.
+``network_type``
+ determines which network is used on rapyuta.io options are routed or native. **Warning** if this is set to routed, please remember to go to Networks on rapyuta.io and manually remove the created routed network after you deprovision the deployment
 ``ansible_async``
  sets whether async is used by the deployment playbook or not, running asynchronously will allow the deployment to complete faster, if set to true, playbook will attempt to run all the steps together as soon as dependencies allow and will only poll for results after all steps are started. If false, playbook will proceed step by step default is 'true'
-```robot_device_name```:
+``ros_distro``
+ select ros distro, currently supported are melodic and noetic
+``robot_device_name``:
 The name of the robot device onboarded to rapyuta.io when device_deploy.yaml is being used.
-```nuc_device_name```:
+``nuc_device_name``:
 The name of the NUC device onboarded to rapyuta.io when device_deploy.yaml is being used.
-```nuc_device_network_interface```:
+``nuc_device_network_interface``:
 The network interface to be used when native network is used in device_deploy.yaml and native network is deployed on NUC device.
-```robot_device_network_interface```:
+``robot_device_network_interface``:
 The network interface to be used when native network is used in device_deploy.yaml and native network is deployed on Robot device.
 
 Troubleshooting Tips:

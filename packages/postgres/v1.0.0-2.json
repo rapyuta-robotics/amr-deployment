@@ -1,0 +1,77 @@
+{
+  "bindable": true, 
+  "packageVersion": "v1.0.0-2", 
+  "description": "", 
+  "plans": [
+    {
+      "includePackages": [], 
+      "singleton": false, 
+      "name": "default", 
+      "inboundROSInterfaces": {
+        "anyIncomingScopedOrTargetedRosConfig": false
+      }, 
+      "dependentDeployments": [], 
+      "components": [
+        {
+          "executables": [
+            {
+              "simulationOptions": {
+                "simulation": false
+              }, 
+              "docker": "mdillon/postgis:latest", 
+              "cmd": [], 
+              "name": "pgsql"
+            }
+          ], 
+          "name": "postgres", 
+          "parameters": [
+            {
+              "default": "postgres", 
+              "name": "POSTGRES_PASSWORD", 
+              "description": ""
+            }, 
+            {
+              "default": "postgres", 
+              "name": "POSTGRES_USER", 
+              "description": ""
+            }, 
+            {
+              "default": "gwm_core", 
+              "name": "POSTGRES_DB", 
+              "description": ""
+            }
+          ], 
+          "restart_policy": "no", 
+          "architecture": "amd64", 
+          "requiredRuntime": "device", 
+          "ros": {
+            "services": [], 
+            "topics": [], 
+            "isROS": false, 
+            "actions": []
+          }, 
+          "description": ""
+        }
+      ], 
+      "exposedParameters": [
+        {
+          "targetParam": "POSTGRES_PASSWORD", 
+          "component": "postgres", 
+          "param": "POSTGRES_PASSWORD"
+        }, 
+        {
+          "targetParam": "POSTGRES_USER", 
+          "component": "postgres", 
+          "param": "POSTGRES_USER"
+        }, 
+        {
+          "targetParam": "POSTGRES_DB", 
+          "component": "postgres", 
+          "param": "POSTGRES_DB"
+        }
+      ], 
+      "metadata": {}
+    }
+  ], 
+  "name": "postgres"
+}

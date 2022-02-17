@@ -1,0 +1,81 @@
+{
+  "bindable": false, 
+  "packageVersion": "v2.5.0-7", 
+  "description": "", 
+  "plans": [
+    {
+      "includePackages": [], 
+      "singleton": false, 
+      "name": "default", 
+      "inboundROSInterfaces": {
+        "anyIncomingScopedOrTargetedRosConfig": false
+      }, 
+      "dependentDeployments": [], 
+      "components": [
+        {
+          "executables": [
+            {
+              "name": "core", 
+              "limits": {
+                "cpu": 0.5, 
+                "memory": 2048
+              }, 
+              "simulationOptions": {
+                "simulation": false
+              }, 
+              "cmd": [], 
+              "docker": "docker.io/rrdockerhub/io_amr_ui:iogen-build-lebhajixfbcntjhyitmgjznw-4"
+            }
+          ], 
+          "cloudInfra": {
+            "endpoints": [
+              {
+                "targetPort": 3000, 
+                "proto": "HTTP", 
+                "exposeExternally": true, 
+                "name": "AMR_UI", 
+                "port": 80
+              }
+            ], 
+            "replicas": 1
+          }, 
+          "name": "amr_ui", 
+          "parameters": [
+            {
+              "default": "ws", 
+              "name": "DEFAULT_GWM_INTERFACE_PROTOCOL", 
+              "description": ""
+            }, 
+            {
+              "default": "8080", 
+              "name": "DEFAULT_GWM_INTERFACE_PORT", 
+              "description": ""
+            }, 
+            {
+              "default": "true", 
+              "name": "SKIP_PREFLIGHT_CHECK", 
+              "description": ""
+            }, 
+            {
+              "default": "v1", 
+              "name": "GWM_API_VERSION", 
+              "description": ""
+            }
+          ], 
+          "architecture": "amd64", 
+          "requiredRuntime": "cloud", 
+          "ros": {
+            "services": [], 
+            "topics": [], 
+            "isROS": false, 
+            "actions": []
+          }, 
+          "description": ""
+        }
+      ], 
+      "exposedParameters": [], 
+      "metadata": {}
+    }
+  ], 
+  "name": "amr_ui_cloud"
+}

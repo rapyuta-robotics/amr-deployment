@@ -1,0 +1,148 @@
+{
+  "bindable": true, 
+  "packageVersion": "v21.12.0-9", 
+  "plans": [
+    {
+      "includePackages": [], 
+      "singleton": false, 
+      "name": "default", 
+      "inboundROSInterfaces": {
+        "anyIncomingScopedOrTargetedRosConfig": false
+      }, 
+      "dependentDeployments": [], 
+      "components": [
+        {
+          "executables": [
+            {
+              "name": "gzclient", 
+              "limits": {
+                "cpu": 0.5, 
+                "memory": 2048
+              }, 
+              "simulationOptions": {
+                "simulation": false
+              }, 
+              "cmd": [
+                "/bin/bash", 
+                "-c", 
+                "/home/rr/headless/install/vnc_startup.sh 'gzclient' || sleep infinity"
+              ], 
+              "docker": "docker.io/rrdockerhub/io_amr_pa:iogen-build-fxxvhvnmgoudktpxproretbg-24"
+            }, 
+            {
+              "name": "gazebo", 
+              "limits": {
+                "cpu": 8, 
+                "memory": 32768
+              }, 
+              "simulationOptions": {
+                "simulation": false
+              }, 
+              "cmd": [
+                "/bin/bash", 
+                "-c", 
+                "source /opt/ros/melodic/setup.bash && [ -f /home/rr/catkin_ws/devel/setup.bash ] && source /home/rr/catkin_ws/devel/setup.bash || source /home/rr/catkin_ws/install/setup.bash &&         if [[ ! -z \"$${AUTOBOOTSTRAP}\" ]] && [[ $${AUTOBOOTSTRAP} == \"true\" ]]; then rosrun gwm_interface sitectl.py -f --site $${SITE}; fi &&         roslaunch bringup simulation_$${SITE}.launch rviz:=false item:=$${ITEM} || sleep infinity"
+              ], 
+              "docker": "docker.io/rrdockerhub/io_amr_pa:iogen-build-qzislyacaxwdlbwfainigiya-24"
+            }
+          ], 
+          "cloudInfra": {
+            "endpoints": [
+              {
+                "targetPort": 6901, 
+                "proto": "HTTPS", 
+                "exposeExternally": true, 
+                "name": "VNC", 
+                "port": 443
+              }, 
+              {
+                "targetPort": 8080, 
+                "proto": "HTTP", 
+                "exposeExternally": true, 
+                "name": "GWM_INTERFACE_ENDPOINT", 
+                "port": 80
+              }
+            ], 
+            "replicas": 1
+          }, 
+          "name": "gazebo", 
+          "parameters": [
+            {
+              "default": "true", 
+              "name": "AUTOBOOTSTRAP", 
+              "description": ""
+            }, 
+            {
+              "default": "autobootstrap", 
+              "name": "GWM_AUTH_TOKEN", 
+              "description": ""
+            }, 
+            {
+              "default": "gmapping", 
+              "name": "MAPPING_TYPE", 
+              "description": ""
+            }, 
+            {
+              "default": "amcl", 
+              "name": "LOCALIZATION_TYPE", 
+              "description": ""
+            }, 
+            {
+              "default": "managed", 
+              "name": "LOCALIZATION_MODE", 
+              "description": ""
+            }, 
+            {
+              "default": "false", 
+              "name": "LEGACY_LOCALIZATION", 
+              "description": ""
+            }, 
+            {
+              "default": "NONE", 
+              "name": "ITEM", 
+              "description": ""
+            }, 
+            {
+              "default": "kiba", 
+              "name": "SITE", 
+              "description": ""
+            }, 
+            {
+              "default": "1", 
+              "name": "PYTHONUNBUFFERED", 
+              "description": ""
+            }, 
+            {
+              "default": "YAML", 
+              "name": "ITEM_SPAWN_FROM", 
+              "description": ""
+            }, 
+            {
+              "default": "1280x720", 
+              "name": "VNC_RESOLUTION", 
+              "description": ""
+            }, 
+            {
+              "default": "rapyuta", 
+              "name": "VNC_PASSWORD", 
+              "description": ""
+            }
+          ], 
+          "architecture": "amd64", 
+          "requiredRuntime": "cloud", 
+          "ros": {
+            "services": [], 
+            "topics": [], 
+            "isROS": false, 
+            "actions": []
+          }, 
+          "description": ""
+        }
+      ], 
+      "exposedParameters": [], 
+      "metadata": {}
+    }
+  ], 
+  "name": "simulator", 
+  "description": ""
+}
