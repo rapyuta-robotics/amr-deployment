@@ -1,349 +1,349 @@
 {
-  "bindable": false, 
-  "packageVersion": "v22.2.0-1", 
-  "description": "", 
+  "bindable": false,
+  "packageVersion": "v22.2.0-1",
   "plans": [
     {
-      "includePackages": [], 
-      "singleton": false, 
-      "name": "default", 
+      "includePackages": [],
+      "singleton": false,
+      "name": "default",
       "inboundROSInterfaces": {
         "anyIncomingScopedOrTargetedRosConfig": true
-      }, 
-      "dependentDeployments": [], 
+      },
+      "dependentDeployments": [],
       "components": [
         {
-          "executables": [
-            {
-              "name": "vnc_forward", 
-              "limits": {
-                "cpu": 1, 
-                "memory": 4096
-              }, 
-              "simulationOptions": {
-                "simulation": false
-              }, 
-              "cmd": [
-                "/bin/bash", 
-                "-c", 
-                "sudo apt-get install python3-pip -y && python3 -m pip install rapyuta-io rapyuta-io-cli && mkdir -p $HOME/.config/rio-cli/ && echo {\\\"email_id\\\": \\\"\"$VNC_RIO_EMAIL\"\\\", \\\"password\\\": \\\"\"$VNC_RIO_PASSWORD\"\\\", \\\"project_id\\\": \\\"\"$(echo $RIO_TENANT_ID| cut -c 9-)\"\\\"} >> $HOME/.config/rio-cli/config.json && ~/.local/bin/rio auth refresh-token && ~/.local/bin/rio device tools init $RIO_DEVICE_NAME && ~/.local/bin/rio device tools port-forward $RIO_DEVICE_NAME 6901 6901"
-              ], 
-              "docker": "docker.io/rrdockerhub/io_amr_pa:iogen-build-omjpdooqferzbedivugqmzzc-4"
-            }
-          ], 
+          "name": "vncbridge",
+          "description": "",
           "cloudInfra": {
+            "replicas": 1,
             "endpoints": [
               {
-                "targetPort": 6901, 
-                "proto": "HTTPS", 
-                "exposeExternally": true, 
-                "name": "VNC_ENDPOINT", 
-                "port": 443
+                "name": "VNC_ENDPOINT",
+                "exposeExternally": true,
+                "port": 443,
+                "targetPort": 6901,
+                "proto": "HTTPS"
               }
-            ], 
-            "replicas": 1
-          }, 
-          "name": "vncbridge", 
+            ]
+          },
+          "ros": {
+            "topics": [],
+            "services": [],
+            "actions": [],
+            "isROS": false
+          },
+          "requiredRuntime": "cloud",
+          "architecture": "amd64",
+          "executables": [
+            {
+              "name": "vnc_forward",
+              "simulationOptions": {
+                "simulation": false
+              },
+              "cmd": [
+                "/bin/bash",
+                "-c",
+                "sudo apt-get install python3-pip -y && python3 -m pip install rapyuta-io rapyuta-io-cli && mkdir -p $HOME/.config/rio-cli/ && echo {\\\"email_id\\\": \\\"\"$VNC_RIO_EMAIL\"\\\", \\\"password\\\": \\\"\"$VNC_RIO_PASSWORD\"\\\", \\\"project_id\\\": \\\"\"$(echo $RIO_TENANT_ID| cut -c 9-)\"\\\"} >> $HOME/.config/rio-cli/config.json && ~/.local/bin/rio auth refresh-token && ~/.local/bin/rio device tools init $RIO_DEVICE_NAME && ~/.local/bin/rio device tools port-forward $RIO_DEVICE_NAME 6901 6901"
+              ],
+              "limits": {
+                "cpu": 1,
+                "memory": 4096
+              },
+              "docker": "docker.io/rrdockerhub/io_amr_pa:iogen-build-omjpdooqferzbedivugqmzzc-8"
+            }
+          ],
           "parameters": [
             {
-              "default": "default_device_name", 
-              "name": "RIO_DEVICE_NAME", 
+              "default": "default_device_name",
+              "name": "RIO_DEVICE_NAME",
               "description": ""
-            }, 
+            },
             {
-              "default": "default_email", 
-              "name": "VNC_RIO_EMAIL", 
+              "default": "default_email",
+              "name": "VNC_RIO_EMAIL",
               "description": ""
-            }, 
+            },
             {
-              "default": "default_password", 
-              "name": "VNC_RIO_PASSWORD", 
+              "default": "default_password",
+              "name": "VNC_RIO_PASSWORD",
               "description": ""
             }
-          ], 
-          "architecture": "amd64", 
-          "requiredRuntime": "cloud", 
-          "ros": {
-            "services": [], 
-            "topics": [], 
-            "isROS": false, 
-            "actions": []
-          }, 
-          "description": ""
-        }, 
+          ]
+        },
         {
           "executables": [
             {
+              "name": "vnc",
               "simulationOptions": {
                 "simulation": false
-              }, 
-              "docker": "docker.io/rrdockerhub/io_amr_pa:iogen-build-omjpdooqferzbedivugqmzzc-4", 
+              },
               "cmd": [
                 "/bin/bash -c \"unset DISPLAY && /home/rr/headless/install/vnc_startup.sh 'gzclient' || sleep infinity\""
-              ], 
-              "name": "vnc"
-            }, 
+              ],
+              "docker": "docker.io/rrdockerhub/io_amr_pa:iogen-build-omjpdooqferzbedivugqmzzc-8"
+            },
             {
+              "name": "amr",
               "simulationOptions": {
                 "simulation": false
-              }, 
-              "docker": "docker.io/rrdockerhub/io_amr_pa:iogen-build-omjpdooqferzbedivugqmzzc-4", 
+              },
               "cmd": [
                 "/bin/bash -c \"source /home/rr/catkin_ws/install/setup.bash && roslaunch bringup agent.launch __ns:=amr$${ROBOT_ID} robot_name:=amr$${ROBOT_ID} agent_id:=$${ROBOT_ID} map:=$${MAP} site:=$${SITE} launch_drivers:=true tf_prefix:=amr$${ROBOT_ID}/ x_pos:=$${X_POS} y_pos:=$${Y_POS} robot_ui:=true || sleep infinity\""
-              ], 
-              "name": "amr"
+              ],
+              "docker": "docker.io/rrdockerhub/io_amr_pa:iogen-build-omjpdooqferzbedivugqmzzc-8"
             }
-          ], 
-          "name": "amr", 
+          ],
+          "name": "amr",
           "parameters": [
             {
-              "default": "1280x720", 
-              "name": "VNC_RESOLUTION", 
+              "default": "1280x720",
+              "name": "VNC_RESOLUTION",
               "description": ""
-            }, 
+            },
             {
-              "default": "autobootstrap", 
-              "name": "GWM_AUTH_TOKEN", 
+              "default": "autobootstrap",
+              "name": "GWM_AUTH_TOKEN",
               "description": ""
-            }, 
+            },
             {
-              "default": "amcl", 
-              "name": "LOCALIZATION_TYPE", 
+              "default": "amcl",
+              "name": "LOCALIZATION_TYPE",
               "description": ""
-            }, 
+            },
             {
-              "default": "managed", 
-              "name": "LOCALIZATION_MODE", 
+              "default": "managed",
+              "name": "LOCALIZATION_MODE",
               "description": ""
-            }, 
+            },
             {
-              "default": "false", 
-              "name": "LEGACY_LOCALIZATION", 
+              "default": "false",
+              "name": "LEGACY_LOCALIZATION",
               "description": ""
-            }, 
+            },
             {
-              "default": "true", 
-              "name": "AMCL_OPTION", 
+              "default": "true",
+              "name": "AMCL_OPTION",
               "description": ""
-            }, 
+            },
             {
-              "default": "2", 
-              "name": "MAP_ID", 
+              "default": "2",
+              "name": "MAP_ID",
               "description": ""
-            }, 
+            },
             {
-              "default": "kiba_2F", 
-              "name": "MAP", 
+              "default": "kiba_2F",
+              "name": "MAP",
               "description": ""
-            }, 
+            },
             {
-              "default": "kiba", 
-              "name": "WORLD", 
+              "default": "kiba",
+              "name": "WORLD",
               "description": ""
-            }, 
+            },
             {
-              "default": "YAML", 
-              "name": "ITEM_SPAWN_FROM", 
+              "default": "YAML",
+              "name": "ITEM_SPAWN_FROM",
               "description": ""
-            }, 
+            },
             {
-              "default": "1", 
-              "name": "PYTHONUNBUFFERED", 
+              "default": "1",
+              "name": "PYTHONUNBUFFERED",
               "description": ""
-            }, 
+            },
             {
-              "default": "/run/user/1000", 
-              "name": "XDG_RUNTIME_DIR", 
+              "default": "/run/user/1000",
+              "name": "XDG_RUNTIME_DIR",
               "description": ""
-            }, 
+            },
             {
-              "default": "NONE", 
-              "name": "ITEM", 
+              "default": "NONE",
+              "name": "ITEM",
               "description": ""
-            }, 
+            },
             {
-              "default": "kiba", 
-              "name": "SITE", 
+              "default": "kiba",
+              "name": "SITE",
               "description": ""
-            }, 
+            },
             {
-              "default": ":0", 
-              "name": "DISPLAY", 
+              "default": ":0",
+              "name": "DISPLAY",
               "description": ""
             }
-          ], 
-          "restart_policy": "always", 
-          "architecture": "amd64", 
-          "rosBagJobDefs": [], 
-          "requiredRuntime": "device", 
+          ],
+          "architecture": "amd64",
+          "requiredRuntime": "device",
           "ros": {
-            "services": [], 
+            "services": [],
             "topics": [
               {
-                "targeted": false, 
-                "qos": "low", 
-                "name": "/gwm_interface/site/fetch_error_type_request", 
-                "scoped": false, 
-                "compression": ""
-              }, 
+                "name": "/gwm_interface/site/fetch_error_type_request",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
               {
-                "targeted": false, 
-                "qos": "low", 
-                "name": "/gbc/reserve_spot_request", 
-                "scoped": false, 
-                "compression": ""
-              }, 
+                "name": "/gbc/reserve_spot_request",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
               {
-                "targeted": false, 
-                "qos": "low", 
-                "name": "/agent_status", 
-                "scoped": false, 
-                "compression": ""
-              }, 
+                "name": "/agent_status",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
               {
-                "targeted": false, 
-                "qos": "low", 
-                "name": "/mrrp/route_request", 
-                "scoped": false, 
-                "compression": ""
-              }, 
+                "name": "/mrrp/route_request",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
               {
-                "targeted": false, 
-                "qos": "low", 
-                "name": "/gwm/destination_request", 
-                "scoped": false, 
-                "compression": ""
-              }, 
+                "name": "/gwm/destination_request",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
               {
-                "targeted": false, 
-                "qos": "low", 
-                "name": "/AlicaEngine/AlicaEngineInfo", 
-                "scoped": false, 
-                "compression": ""
-              }, 
+                "name": "/AlicaEngine/AlicaEngineInfo",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
               {
-                "targeted": false, 
-                "qos": "low", 
-                "name": "/AlicaEngine/PlanTreeInfo", 
-                "scoped": false, 
-                "compression": ""
-              }, 
+                "name": "/AlicaEngine/PlanTreeInfo",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
               {
-                "targeted": false, 
-                "qos": "low", 
-                "name": "/AlicaEngine/AgentQuery", 
-                "scoped": false, 
-                "compression": ""
-              }, 
+                "name": "/AlicaEngine/AgentQuery",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
               {
-                "targeted": false, 
-                "qos": "low", 
-                "name": "/AlicaEngine/AgentAnnouncement", 
-                "scoped": false, 
-                "compression": ""
-              }, 
+                "name": "/AlicaEngine/AgentAnnouncement",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
               {
-                "targeted": false, 
-                "qos": "low", 
-                "name": "/AlicaEngine/AllocationAuthorityInfo", 
-                "scoped": false, 
-                "compression": ""
-              }, 
+                "name": "/AlicaEngine/AllocationAuthorityInfo",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
               {
-                "targeted": false, 
-                "qos": "low", 
-                "name": "/AlicaEngine/OwnRole", 
-                "scoped": false, 
-                "compression": ""
-              }, 
+                "name": "/AlicaEngine/OwnRole",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
               {
-                "targeted": false, 
-                "qos": "low", 
-                "name": "/AlicaEngine/SolverResult", 
-                "scoped": false, 
-                "compression": ""
-              }, 
+                "name": "/AlicaEngine/SolverResult",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
               {
-                "targeted": false, 
-                "qos": "low", 
-                "name": "/gbc/amr_action_response", 
-                "scoped": false, 
-                "compression": ""
-              }, 
+                "name": "/gbc/amr_action_response",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
               {
-                "targeted": false, 
-                "qos": "low", 
-                "name": "/gbc/error_action_request", 
-                "scoped": false, 
-                "compression": ""
-              }, 
+                "name": "/gbc/error_action_request",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
               {
-                "targeted": false, 
-                "qos": "low", 
-                "name": "/gwm_interface/mapping/get_graph_request", 
-                "scoped": false, 
-                "compression": ""
-              }, 
+                "name": "/gwm_interface/mapping/get_graph_request",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
               {
-                "targeted": false, 
-                "qos": "low", 
-                "name": "/gwm_interface/mapping/get_regions_request", 
-                "scoped": false, 
-                "compression": ""
-              }, 
+                "name": "/gwm_interface/mapping/get_regions_request",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
               {
-                "targeted": false, 
-                "qos": "low", 
-                "name": "/gwm_interface/mapping/get_spots_request", 
-                "scoped": false, 
-                "compression": ""
-              }, 
+                "name": "/gwm_interface/mapping/get_spots_request",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
               {
-                "targeted": false, 
-                "qos": "low", 
-                "name": "/gwm_interface/site/fetch_external_devices_request", 
-                "scoped": false, 
-                "compression": ""
-              }, 
+                "name": "/gwm_interface/site/fetch_external_devices_request",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
               {
-                "targeted": false, 
-                "qos": "low", 
-                "name": "/gwm_interface/work/fetch_work_request", 
-                "scoped": false, 
-                "compression": ""
-              }, 
+                "name": "/gwm_interface/work/fetch_work_request",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
               {
-                "targeted": false, 
-                "qos": "low", 
-                "name": "/gwm_interface/work/update_work_request", 
-                "scoped": false, 
-                "compression": ""
-              }, 
+                "name": "/gwm_interface/work/update_work_request",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
               {
-                "targeted": false, 
-                "qos": "low", 
-                "name": "/gbc/update_task_request", 
-                "scoped": false, 
-                "compression": ""
-              }, 
+                "name": "/gbc/update_task_request",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
               {
-                "targeted": false, 
-                "qos": "low", 
-                "name": "/gbc/ext_device_lock_request", 
-                "scoped": false, 
-                "compression": ""
+                "name": "/gbc/ext_device_lock_request",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
               }
-            ], 
-            "ros_distro": "noetic", 
-            "isROS": true, 
-            "actions": []
-          }, 
-          "description": ""
+            ],
+            "isROS": true,
+            "actions": [],
+            "ros_distro": "noetic"
+          },
+          "description": "",
+          "restart_policy": "always",
+          "rosBagJobDefs": []
         }
-      ], 
-      "exposedParameters": [], 
+      ],
+      "exposedParameters": [],
       "metadata": {}
     }
-  ], 
-  "name": "amr"
+  ],
+  "name": "amr",
+  "description": ""
 }
