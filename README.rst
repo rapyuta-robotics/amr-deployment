@@ -20,7 +20,6 @@ Installing Prerequisites
 
     sudo apt update
     sudo apt install software-properties-common
-    sudo apt install python3.6 python3-pip
     curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
     sudo python3 get-pip.py
     sudo python3 -m pip install ansible rapyuta-io
