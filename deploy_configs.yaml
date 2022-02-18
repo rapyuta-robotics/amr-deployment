@@ -15,7 +15,7 @@ gwm_version: "v0.4.0-0"
 gwm_cloud_version: "v0.4.0-0"
 server_version: "v22.2.0-2"
 server_cloud_version: "v22.2.0-1"
-simulator_version: "v22.2.0-1"
+simulator_version: "v22.2.0-2"
 
 prefix_name: "prefix"
 site_name: kiba
