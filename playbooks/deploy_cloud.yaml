@@ -68,7 +68,6 @@
         runtime: cloud
         ros_distro: "{{ ros_distro }}"
         resource_type: small
-      when: routed_network|bool == true
       register: routed_network_id
 
 - name: POSTGRES, GWM, AMR UI, AMR, SERVER Packages
