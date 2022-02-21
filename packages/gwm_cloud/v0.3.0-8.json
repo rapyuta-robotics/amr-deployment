@@ -1,99 +1,99 @@
 {
-  "bindable": true, 
-  "packageVersion": "v0.3.0-8", 
-  "description": "", 
+  "bindable": true,
+  "packageVersion": "v0.3.0-8",
   "plans": [
     {
-      "includePackages": [], 
-      "singleton": false, 
-      "name": "default", 
+      "includePackages": [],
+      "singleton": false,
+      "name": "default",
       "inboundROSInterfaces": {
         "anyIncomingScopedOrTargetedRosConfig": false
-      }, 
-      "dependentDeployments": [], 
+      },
+      "dependentDeployments": [],
       "components": [
         {
           "executables": [
             {
-              "name": "core", 
-              "limits": {
-                "cpu": 0.5, 
-                "memory": 2048
-              }, 
+              "name": "core",
               "simulationOptions": {
                 "simulation": false
-              }, 
+              },
               "cmd": [
                 "python manage.py runserver 0.0.0.0:8000"
-              ], 
+              ],
+              "limits": {
+                "cpu": 0.5,
+                "memory": 2048
+              },
               "docker": "docker.io/rrdockerhub/io_amr_gwm:iogen-build-aqxoolbsvzihahythkirnfxk-7"
             }
-          ], 
-          "cloudInfra": {
-            "endpoints": [
-              {
-                "targetPort": 8000, 
-                "proto": "HTTPS", 
-                "exposeExternally": true, 
-                "name": "GWM_CORE_URL", 
-                "port": 443
-              }
-            ], 
-            "replicas": 1
-          }, 
-          "name": "core", 
+          ],
+          "name": "core",
           "parameters": [
             {
-              "default": "true", 
-              "name": "DEBUG", 
+              "default": "true",
+              "name": "DEBUG",
               "description": ""
-            }, 
+            },
             {
-              "default": "true", 
-              "name": "AUTOBOOTSTRAP", 
+              "default": "true",
+              "name": "AUTOBOOTSTRAP",
               "description": ""
-            }, 
+            },
             {
-              "default": "autobootstrap", 
-              "name": "AUTO_ORG_NAME", 
+              "default": "autobootstrap",
+              "name": "AUTO_ORG_NAME",
               "description": "Autocreated organisation name"
-            }, 
+            },
             {
-              "default": "autobootstrap", 
-              "name": "AUTO_ROOT_USER", 
+              "default": "autobootstrap",
+              "name": "AUTO_ROOT_USER",
               "description": "Autocreated username"
-            }, 
+            },
             {
-              "default": "autobootstrap", 
-              "name": "AUTO_ROOT_PASS", 
+              "default": "autobootstrap",
+              "name": "AUTO_ROOT_PASS",
               "description": "Autocreated root password"
-            }, 
+            },
             {
-              "default": "autobootstrap", 
-              "name": "AUTO_AUTH_TOKEN", 
+              "default": "autobootstrap",
+              "name": "AUTO_AUTH_TOKEN",
               "description": "Autocreated initial token"
             }
-          ], 
-          "architecture": "amd64", 
-          "requiredRuntime": "cloud", 
+          ],
+          "architecture": "amd64",
+          "requiredRuntime": "cloud",
           "ros": {
-            "services": [], 
-            "topics": [], 
-            "isROS": false, 
+            "services": [],
+            "topics": [],
+            "isROS": false,
             "actions": []
-          }, 
-          "description": ""
+          },
+          "description": "",
+          "cloudInfra": {
+            "replicas": 1,
+            "endpoints": [
+              {
+                "name": "GWM_CORE_URL",
+                "exposeExternally": true,
+                "port": 443,
+                "targetPort": 8000,
+                "proto": "HTTPS"
+              }
+            ]
+          }
         }
-      ], 
+      ],
       "exposedParameters": [
         {
-          "targetParam": "AUTO_AUTH_TOKEN", 
-          "component": "core", 
-          "param": "GWM_AUTH_TOKEN"
+          "component": "core",
+          "param": "GWM_AUTH_TOKEN",
+          "targetParam": "AUTO_AUTH_TOKEN"
         }
-      ], 
+      ],
       "metadata": {}
     }
-  ], 
-  "name": "gwm_cloud"
+  ],
+  "name": "gwm_cloud",
+  "description": ""
 }
