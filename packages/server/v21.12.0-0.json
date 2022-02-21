@@ -1,78 +1,78 @@
 {
-  "bindable": true, 
-  "packageVersion": "v21.12.0-0", 
-  "description": "", 
+  "bindable": true,
+  "packageVersion": "v21.12.0-0",
   "plans": [
     {
-      "includePackages": [], 
-      "singleton": false, 
-      "name": "default", 
+      "includePackages": [],
+      "singleton": false,
+      "name": "default",
       "inboundROSInterfaces": {
         "anyIncomingScopedOrTargetedRosConfig": false
-      }, 
-      "dependentDeployments": [], 
+      },
+      "dependentDeployments": [],
       "components": [
         {
           "executables": [
             {
+              "name": "gbc",
               "simulationOptions": {
                 "simulation": false
-              }, 
-              "docker": "docker.io/rrdockerhub/io_amr_pa:iogen-build-qzislyacaxwdlbwfainigiya-24", 
+              },
               "cmd": [
                 "/bin/bash -c \"source /opt/ros/melodic/setup.bash && [ -f /home/rr/catkin_ws/devel/setup.bash ] && source /home/rr/catkin_ws/devel/setup.bash || source /home/rr/catkin_ws/install/setup.bash &&         if [[ -z \"$${AUTOBOOTSTRAP}\" ]] && [[ \"$${AUTOBOOTSTRAP}\" == \"true\" ]]; then rosrun gwm_interface sitectl.py -f --site $${SITE}; fi &&         stdbuf -o L roslaunch bringup global.launch site:=$${SITE} || sleep infinity\""
-              ], 
-              "name": "gbc"
-            }, 
+              ],
+              "docker": "docker.io/rrdockerhub/io_amr_pa:iogen-build-qzislyacaxwdlbwfainigiya-24"
+            },
             {
+              "name": "tracing_agent",
               "simulationOptions": {
                 "simulation": false
-              }, 
-              "docker": "jaegertracing/jaeger-agent", 
+              },
               "cmd": [
                 "--reporter.grpc.host-port=trace-collector-kqdbp.ep-r.io:443"
-              ], 
-              "name": "tracing_agent"
+              ],
+              "docker": "jaegertracing/jaeger-agent"
             }
-          ], 
-          "name": "gbc", 
+          ],
+          "name": "gbc",
           "parameters": [
             {
-              "default": "true", 
-              "name": "AUTOBOOTSTRAP", 
+              "default": "true",
+              "name": "AUTOBOOTSTRAP",
               "description": ""
-            }, 
+            },
             {
-              "default": "1", 
-              "name": "PYTHONUNBUFFERED", 
+              "default": "1",
+              "name": "PYTHONUNBUFFERED",
               "description": ""
-            }, 
+            },
             {
-              "default": "YAML", 
-              "name": "ITEM_SPAWN_FROM", 
+              "default": "YAML",
+              "name": "ITEM_SPAWN_FROM",
               "description": ""
-            }, 
+            },
             {
-              "default": "kiba", 
-              "name": "SITE", 
+              "default": "kiba",
+              "name": "SITE",
               "description": ""
             }
-          ], 
-          "restart_policy": "no", 
-          "architecture": "amd64", 
-          "requiredRuntime": "device", 
+          ],
+          "architecture": "amd64",
+          "requiredRuntime": "device",
           "ros": {
-            "services": [], 
-            "topics": [], 
-            "isROS": false, 
+            "services": [],
+            "topics": [],
+            "isROS": false,
             "actions": []
-          }, 
-          "description": ""
+          },
+          "description": "",
+          "restart_policy": "no"
         }
-      ], 
-      "exposedParameters": [], 
+      ],
+      "exposedParameters": [],
       "metadata": {}
     }
-  ], 
-  "name": "server"
+  ],
+  "name": "server",
+  "description": ""
 }
