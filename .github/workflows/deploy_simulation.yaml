@@ -22,10 +22,10 @@ on:
         description: 'RIO_AUTH_TOKEN'
         required: true
       docker_username:
-        description: 'Docker username for downloading the images'
+        description: 'Docker Username'
         required: true
       docker_password:
-        description: 'Docker password for downloading the images'
+        description: 'Docker Password'
         required: true
 jobs:
   deploy_simulation:
