@@ -135,7 +135,7 @@
         name: "{{ prefix_name }}_server_cloud"
         present: "{{ present }}"
         package_from: manifest_path
-        manifest_path: /tmp/server.json
+        manifest_path: /tmp/server_cloud.json
         executables_info:
         - type: manifest
           secret: dockerhub
