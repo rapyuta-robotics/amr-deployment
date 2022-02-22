@@ -88,10 +88,10 @@ Deployment
             export RIO_AUTH_TOKEN=AUTH_TOKEN
 
             # To Deploy (For device deployment use deploy_cloud.yaml)
-            ansible-playbook playbooks/deploy_simulation.yaml --extra-vars "@deploy_configs.yaml" --extra-vars "present=true"
+            ansible-playbook playbooks/deploy_simulation.yaml --extra-vars "@deploy_configs.yaml" --extra-vars "present=true prefix_name=project_name"
 
             # To Deprovision
-            ansible-playbook playbooks/deploy_simulation.yaml --extra-vars "@deploy_configs.yaml" --extra-vars "present=false"
+            ansible-playbook playbooks/deploy_simulation.yaml --extra-vars "@deploy_configs.yaml" --extra-vars "present=false prefix_name=project_name"
 
    .. tab:: Server on cloud
         Onboard a robot
@@ -119,10 +119,10 @@ Deployment
             export RIO_AUTH_TOKEN=AUTH_TOKEN
 
             # To Deploy (For device deployment use device_deploy.yaml)
-            ansible-playbook playbooks/deploy_cloud.yaml --extra-vars "@deploy_configs.yaml" --extra-vars "present=true"
+            ansible-playbook playbooks/deploy_cloud.yaml --extra-vars "@deploy_configs.yaml" --extra-vars "present=true prefix_name=project_name"
 
             # To Deprovision
-            ansible-playbook playbooks/deploy_cloud.yaml --extra-vars "@deploy_configs.yaml" --extra-vars "present=false"
+            ansible-playbook playbooks/deploy_cloud.yaml --extra-vars "@deploy_configs.yaml" --extra-vars "present=false prefix_name=project_name"
 
 
    .. tab:: Server on device
@@ -154,10 +154,10 @@ Deployment
             export RIO_AUTH_TOKEN=AUTH_TOKEN
 
             # To Deploy (For device deployment use device_deploy.yaml)
-            ansible-playbook playbooks/deploy_local.yaml --extra-vars "@deploy_configs.yaml" --extra-vars "present=true"
+            ansible-playbook playbooks/deploy_local.yaml --extra-vars "@deploy_configs.yaml" --extra-vars "present=true prefix_name=project_name"
 
             # To Deprovision
-            ansible-playbook playbooks/deploy_local.yaml --extra-vars "@deploy_configs.yaml" --extra-vars "present=false"
+            ansible-playbook playbooks/deploy_local.yaml --extra-vars "@deploy_configs.yaml" --extra-vars "present=false prefix_name=project_name"
 
 
 Verifying Completion of Deployment
