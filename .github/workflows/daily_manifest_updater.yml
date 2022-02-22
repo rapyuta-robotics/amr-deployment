@@ -20,13 +20,16 @@ jobs:
        sudo python3 get-pip.py
        sudo python3 -m pip install ansible rapyuta-io
 
+    - name: Create branch
+      run: hub checkout -b package_update_$(date +%F)
+      
+    - name: Update
+      run: hub pull origin rr_devel
+      
     - name: Run playbook update script
       run: |
         python scripts/manifest_updater.py -p ${{ secrets.IO_AMR_PROJECT }} -a ${{ secrets.IO_AUTH_TOKEN }}
         python scripts/update_deploy_configs.py
-
-    - name: Create branch
-      run: hub checkout -b package_update_$(date +%F)
 
     - name: Commit
       run: hub config user.email "larry.ng@rapyuta-robotics.com" && hub config user.name "Larry Ng" && git status --porcelain | awk '{ print $2}' | xargs -n1 -I repo_name sh -c '{ git add repo_name; git commit --author "$(cd repo_name; git log -1 --pretty="%an <%ae>"; cd ..)" -m "`cd repo_name; git log -1 --pretty="%s"; cd ..`"; echo repo_name; }'
