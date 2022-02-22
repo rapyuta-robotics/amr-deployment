@@ -20,6 +20,9 @@ jobs:
        sudo python3 get-pip.py
        sudo python3 -m pip install ansible rapyuta-io
 
+    - name: delete branch if exists
+      run: git push origin --delete prbot/package_update_$(date +%F)
+
     - name: Create branch
       run: hub checkout -b prbot/package_update_$(date +%F)
       
