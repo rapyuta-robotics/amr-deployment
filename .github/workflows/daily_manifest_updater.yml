@@ -21,7 +21,9 @@ jobs:
        sudo python3 -m pip install ansible rapyuta-io
 
     - name: Run playbook update script
-      run: python scripts/manifest_updater.py -p ${{ secrets.IO_AMR_PROJECT }} -a ${{ secrets.IO_AUTH_TOKEN }}
+      run: |
+        python scripts/manifest_updater.py -p ${{ secrets.IO_AMR_PROJECT }} -a ${{ secrets.IO_AUTH_TOKEN }}
+        python scripts/update_deploy_configs.py
 
     - name: Create branch
       run: hub checkout -b package_update_$(date +%F)
