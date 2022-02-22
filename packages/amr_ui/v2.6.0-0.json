@@ -19,7 +19,7 @@
                 "simulation": false
               },
               "cmd": [],
-              "docker": "docker.io/rrdockerhub/io_amr_ui:iogen-build-fkssxfklhtrmievfpofviylb-4"
+              "docker": "docker.io/rrdockerhub/io_amr_ui:iogen-build-fkssxfklhtrmievfpofviylb-5"
             }
           ],
           "name": "amr_ui",
