@@ -21,10 +21,7 @@ jobs:
        sudo python3 -m pip install ansible rapyuta-io
 
     - name: Create branch
-      run: hub checkout -b package_update_$(date +%F)
-      
-    - name: Update
-      run: hub pull
+      run: hub checkout -b prbot/package_update_$(date +%F)
       
     - name: Update
       run: hub pull origin rr_devel
