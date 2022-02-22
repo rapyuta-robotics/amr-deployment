@@ -231,7 +231,6 @@
       - "{{ db_deploy_id }}"
       - "{{ gwm_deploy_id }}"
       - "{{ amr_ui_deploy_id }}"
-      - "{{ amr_routed_deploy_id }}"
       - "{{ server_routed_deploy_id }}"
 
 
