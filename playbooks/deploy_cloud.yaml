@@ -182,7 +182,6 @@
     - name: AMR  deployment (Routed Network)
       async: "{{ async_time | default('2600') }}"
       poll: 0
-      when: routed_network|bool == true
       rapyutarobotics.rr_io.deployments:
         name: "{{ prefix_name }}_amr_{{ robot_device_name }}"
         component_name: amr
@@ -203,7 +202,6 @@
     - name: SERVER  deployment (Routed Network)
       async: "{{ async_time | default('2600') }}"
       poll: 0
-      when: routed_network|bool == true
       rapyutarobotics.rr_io.deployments:
         name: "{{ prefix_name }}_server_cloud"
         component_name: gbc
@@ -225,7 +223,6 @@
     - name: "DB, GWM, AMR UI, SIMULATOR DEPLOYMENTS - check on async status Routed Network"
       async_status:
         jid: "{{ item.ansible_job_id }}"
-      when: routed_network|bool == true
       register: amr_log
       until: amr_log.finished
       retries: 600
