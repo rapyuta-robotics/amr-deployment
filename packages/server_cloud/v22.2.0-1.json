@@ -27,7 +27,7 @@
                 "cpu": 0.5,
                 "memory": 2048
               },
-              "docker": "docker.io/rrdockerhub/io_amr_pa:iogen-build-omjpdooqferzbedivugqmzzc-10"
+              "docker": "docker.io/rrdockerhub/io_amr_pa:iogen-build-omjpdooqferzbedivugqmzzc-11"
             },
             {
               "name": "gbc",
@@ -43,7 +43,7 @@
                 "cpu": 2,
                 "memory": 8192
               },
-              "docker": "docker.io/rrdockerhub/io_amr_pa:iogen-build-omjpdooqferzbedivugqmzzc-10"
+              "docker": "docker.io/rrdockerhub/io_amr_pa:iogen-build-omjpdooqferzbedivugqmzzc-11"
             },
             {
               "name": "tracing_agent",
