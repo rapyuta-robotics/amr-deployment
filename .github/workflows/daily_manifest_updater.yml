@@ -30,6 +30,9 @@ jobs:
     - name: Update
       run: hub pull origin rr_devel
       
+    - name: remove get-pip file
+      run: rm get-pip.py   
+      
     - name: Run playbook update script
       run: |
         python scripts/manifest_updater.py -p ${{ secrets.IO_AMR_PROJECT }} -a ${{ secrets.IO_AUTH_TOKEN }}
