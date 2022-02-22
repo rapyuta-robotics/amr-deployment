@@ -1,0 +1,48 @@
+# This is a basic workflow that is manually triggered
+
+name: Deploy Simulation
+
+# Controls when the action will run. Workflow runs when manually triggered using the UI
+# or API.
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch of amr_deployment to deploy'
+        default: 'rr_devel'
+        required: true
+      package_prefix:
+        description: 'Prefix of the packages being used'
+        default: 'kiba'
+        required: true
+      rio_project_id:
+        description: 'RIO_PROJECT_ID'
+        required: true
+      rio_auth_token:
+        description: 'RIO_AUTH_TOKEN'
+        required: true
+      docker_username:
+        description: 'Docker username for downloading the images'
+        required: true
+      docker_password:
+        description: 'Docker password for downloading the images'
+        required: true
+jobs:
+  deploy_simulation:
+    runs-on: ubuntu-latest
+    steps:
+    - name: deploy_simulation
+      run: |
+        git clone https://github.com/rapyuta-robotics/amr-deployment.git
+        cd amr-deployment && git checkout ${{ github.event.inputs.branch }}
+        sudo apt update
+        sudo apt install software-properties-common
+        curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+        sudo python3 get-pip.py
+        sudo python3 -m pip install ansible rapyuta-io
+        until ansible-galaxy collection install rapyutarobotics.rr_io -f; do echo "Try again"; done
+        echo "RIO_PROJECT_ID ${{ github.event.inputs.rio_project_id }}"
+        echo "RIO_AUTH_TOKEN ${{ github.event.inputs.rio_auth_token }}"
+        export RIO_PROJECT_ID=${{ github.event.inputs.rio_project_id }}
+        export RIO_AUTH_TOKEN=${{ github.event.inputs.rio_auth_token }}
+        ansible-playbook playbooks/deploy_simulation.yaml -e 'ansible_python_interpreter=/usr/bin/python3' --extra-vars "@deploy_configs.yaml" --extra-vars "present=true docker_user=${{ github.event.inputs.docker_username }} docker_password=${{ github.event.inputs.docker_password }} prefix_name=${{ github.event.inputs.package_prefix }}"
