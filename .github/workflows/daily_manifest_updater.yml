@@ -24,6 +24,9 @@ jobs:
       run: hub checkout -b package_update_$(date +%F)
       
     - name: Update
+      run: hub pull
+      
+    - name: Update
       run: hub pull origin rr_devel
       
     - name: Run playbook update script
