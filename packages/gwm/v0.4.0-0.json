@@ -1,109 +1,109 @@
 {
-  "bindable": true, 
-  "packageVersion": "v0.4.0-0", 
-  "description": "", 
+  "bindable": true,
+  "packageVersion": "v0.4.0-0",
   "plans": [
     {
-      "includePackages": [], 
-      "singleton": false, 
-      "name": "default", 
+      "includePackages": [],
+      "singleton": false,
+      "name": "default",
       "inboundROSInterfaces": {
         "anyIncomingScopedOrTargetedRosConfig": false
-      }, 
-      "dependentDeployments": [], 
+      },
+      "dependentDeployments": [],
       "components": [
         {
           "executables": [
             {
+              "name": "core",
               "simulationOptions": {
                 "simulation": false
-              }, 
-              "docker": "docker.io/rrdockerhub/io_amr_gwm:iogen-build-hrotlieegsjjgoskenvdkdtm-2", 
+              },
               "cmd": [
                 "python manage.py runserver 0.0.0.0:8000"
-              ], 
-              "name": "core"
+              ],
+              "docker": "docker.io/rrdockerhub/io_amr_gwm:iogen-build-hrotlieegsjjgoskenvdkdtm-4"
             }
-          ], 
-          "name": "core", 
+          ],
+          "name": "core",
           "parameters": [
             {
-              "default": "5432", 
-              "name": "POSTGRES_PORT", 
+              "default": "5432",
+              "name": "POSTGRES_PORT",
               "description": ""
-            }, 
+            },
             {
-              "default": "localhost", 
-              "name": "POSTGRES_HOST", 
+              "default": "localhost",
+              "name": "POSTGRES_HOST",
               "description": ""
-            }, 
+            },
             {
-              "default": "postgres", 
-              "name": "POSTGRES_USER", 
+              "default": "postgres",
+              "name": "POSTGRES_USER",
               "description": ""
-            }, 
+            },
             {
-              "default": "postgres", 
-              "name": "POSTGRES_PASSWORD", 
+              "default": "postgres",
+              "name": "POSTGRES_PASSWORD",
               "description": ""
-            }, 
+            },
             {
-              "default": "gwm_core", 
-              "name": "POSTGRES_DB", 
+              "default": "gwm_core",
+              "name": "POSTGRES_DB",
               "description": ""
-            }, 
+            },
             {
-              "default": "true", 
-              "name": "DEBUG", 
+              "default": "true",
+              "name": "DEBUG",
               "description": ""
-            }, 
+            },
             {
-              "default": "true", 
-              "name": "AUTOBOOTSTRAP", 
+              "default": "true",
+              "name": "AUTOBOOTSTRAP",
               "description": ""
-            }, 
+            },
             {
-              "default": "autobootstrap", 
-              "name": "AUTO_ORG_NAME", 
+              "default": "autobootstrap",
+              "name": "AUTO_ORG_NAME",
               "description": "Autocreated organisation name"
-            }, 
+            },
             {
-              "default": "autobootstrap", 
-              "name": "AUTO_ROOT_USER", 
+              "default": "autobootstrap",
+              "name": "AUTO_ROOT_USER",
               "description": "Autocreated username"
-            }, 
+            },
             {
-              "default": "autobootstrap", 
-              "name": "AUTO_ROOT_PASS", 
+              "default": "autobootstrap",
+              "name": "AUTO_ROOT_PASS",
               "description": "Autocreated root password"
-            }, 
+            },
             {
-              "default": "autobootstrap", 
-              "name": "AUTO_AUTH_TOKEN", 
+              "default": "autobootstrap",
+              "name": "AUTO_AUTH_TOKEN",
               "description": "Autocreated initial token"
             }
-          ], 
-          "restart_policy": "always", 
-          "architecture": "amd64", 
-          "requiredRuntime": "device", 
+          ],
+          "architecture": "amd64",
+          "requiredRuntime": "device",
           "ros": {
-            "services": [], 
-            "topics": [], 
-            "isROS": false, 
+            "services": [],
+            "topics": [],
+            "isROS": false,
             "actions": []
-          }, 
-          "description": ""
+          },
+          "description": "",
+          "restart_policy": "always"
         }
-      ], 
+      ],
       "exposedParameters": [
         {
-          "targetParam": "AUTO_AUTH_TOKEN", 
-          "component": "core", 
-          "param": "GWM_AUTH_TOKEN"
+          "component": "core",
+          "param": "GWM_AUTH_TOKEN",
+          "targetParam": "AUTO_AUTH_TOKEN"
         }
-      ], 
+      ],
       "metadata": {}
     }
-  ], 
-  "name": "gwm"
+  ],
+  "name": "gwm",
+  "description": ""
 }

@@ -1,107 +1,107 @@
 {
-  "bindable": true, 
-  "packageVersion": "v21.12.0-0", 
+  "name": "simulator",
+  "packageVersion": "v21.12.0-0",
+  "description": "",
+  "bindable": true,
   "plans": [
     {
-      "includePackages": [], 
-      "singleton": false, 
-      "name": "default", 
-      "inboundROSInterfaces": {
-        "anyIncomingScopedOrTargetedRosConfig": false
-      }, 
-      "dependentDeployments": [], 
+      "name": "default",
+      "metadata": {},
+      "singleton": false,
       "components": [
         {
+          "name": "gazebo",
+          "description": "",
+          "cloudInfra": {
+            "replicas": 1,
+            "endpoints": []
+          },
+          "ros": {
+            "topics": [],
+            "services": [],
+            "actions": [],
+            "isROS": true,
+            "ros_distro": "melodic"
+          },
+          "requiredRuntime": "cloud",
+          "architecture": "amd64",
           "executables": [
             {
-              "name": "gazebo", 
-              "limits": {
-                "cpu": 8, 
-                "memory": 32768
-              }, 
+              "name": "gazebo",
               "simulationOptions": {
                 "simulation": false
-              }, 
+              },
               "cmd": [
                 "/bin/bash -c \"/home/rr/headless/install/vnc_startup.sh 'roslaunch bringup simulator.launch paused:=false gzclient:=true' || sleep infinity\""
-              ], 
+              ],
+              "limits": {
+                "cpu": 8,
+                "memory": 32768
+              },
               "docker": "docker.io/rrdockerhub/io_amr_pa:iogen-build-qzislyacaxwdlbwfainigiya-24"
             }
-          ], 
-          "cloudInfra": {
-            "endpoints": [], 
-            "replicas": 1
-          }, 
-          "name": "gazebo", 
+          ],
           "parameters": [
             {
-              "default": "tatsumi", 
-              "name": "WORLD", 
+              "default": "tatsumi",
+              "name": "WORLD",
               "description": ""
-            }, 
+            },
             {
-              "default": "True", 
-              "name": "RACK", 
+              "default": "True",
+              "name": "RACK",
               "description": ""
-            }, 
+            },
             {
-              "default": "autobootstrap", 
-              "name": "GWM_AUTH_TOKEN", 
+              "default": "autobootstrap",
+              "name": "GWM_AUTH_TOKEN",
               "description": ""
-            }, 
+            },
             {
-              "default": "YAML", 
-              "name": "ITEM_SPAWN_FROM", 
+              "default": "YAML",
+              "name": "ITEM_SPAWN_FROM",
               "description": ""
-            }, 
+            },
             {
-              "default": "rapyuta", 
-              "name": "VNC_PASSWORD", 
+              "default": "rapyuta",
+              "name": "VNC_PASSWORD",
               "description": ""
-            }, 
+            },
             {
-              "default": "1280x720", 
-              "name": "VNC_RESOLUTION", 
+              "default": "1280x720",
+              "name": "VNC_RESOLUTION",
               "description": ""
-            }, 
+            },
             {
-              "default": "1", 
-              "name": "PYTHONUNBUFFERED", 
+              "default": "1",
+              "name": "PYTHONUNBUFFERED",
               "description": ""
-            }, 
+            },
             {
-              "default": "[${time}][${severity}][${logger}]: ${message}", 
-              "name": "ROSCONSOLE_FORMAT", 
+              "default": "[${time}][${severity}][${logger}]: ${message}",
+              "name": "ROSCONSOLE_FORMAT",
               "description": ""
-            }, 
+            },
             {
-              "default": "localhost", 
-              "name": "GAZEBO_MASTER_IP", 
+              "default": "localhost",
+              "name": "GAZEBO_MASTER_IP",
               "description": ""
-            }, 
+            },
             {
-              "default": "localhost:11345", 
-              "name": "GAZEBO_MASTER_URI", 
+              "default": "localhost:11345",
+              "name": "GAZEBO_MASTER_URI",
               "description": ""
             }
-          ], 
-          "architecture": "amd64", 
-          "rosBagJobDefs": [], 
-          "requiredRuntime": "cloud", 
-          "ros": {
-            "services": [], 
-            "topics": [], 
-            "ros_distro": "melodic", 
-            "isROS": true, 
-            "actions": []
-          }, 
-          "description": ""
+          ],
+          "rosBagJobDefs": []
         }
-      ], 
-      "exposedParameters": [], 
-      "metadata": {}
+      ],
+      "includePackages": [],
+      "dependentDeployments": [],
+      "inboundROSInterfaces": {
+        "anyIncomingScopedOrTargetedRosConfig": false
+      },
+      "exposedParameters": []
     }
-  ], 
-  "name": "simulator", 
-  "description": ""
+  ]
 }

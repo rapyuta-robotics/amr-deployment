@@ -1,214 +1,214 @@
 {
-  "bindable": true, 
-  "packageVersion": "v22.2.0-0", 
-  "description": "", 
+  "bindable": true,
+  "packageVersion": "v22.2.0-0",
   "plans": [
     {
-      "includePackages": [], 
-      "singleton": false, 
-      "name": "default", 
+      "includePackages": [],
+      "singleton": false,
+      "name": "default",
       "inboundROSInterfaces": {
         "anyIncomingScopedOrTargetedRosConfig": true
-      }, 
-      "dependentDeployments": [], 
+      },
+      "dependentDeployments": [],
       "components": [
         {
           "executables": [
             {
+              "name": "gbc",
               "simulationOptions": {
                 "simulation": false
-              }, 
-              "docker": "docker.io/rrdockerhub/io_amr_pa:iogen-build-omjpdooqferzbedivugqmzzc-4", 
+              },
               "cmd": [
                 "/bin/bash -c \"source /opt/ros/melodic/setup.bash && [ -f /home/rr/catkin_ws/devel/setup.bash ] && source /home/rr/catkin_ws/devel/setup.bash || source /home/rr/catkin_ws/install/setup.bash &&         if [[ ! -z \"$${AUTOBOOTSTRAP}\" ]] && [[ \"$${AUTOBOOTSTRAP}\" == \"true\" ]]; then rosrun gwm_interface sitectl.py -f --site $${SITE}; fi &&         stdbuf -o L roslaunch bringup global.launch site:=$${SITE} || sleep infinity\""
-              ], 
-              "name": "gbc"
-            }, 
+              ],
+              "docker": "docker.io/rrdockerhub/io_amr_pa:iogen-build-omjpdooqferzbedivugqmzzc-10"
+            },
             {
+              "name": "tracing_agent",
               "simulationOptions": {
                 "simulation": false
-              }, 
-              "docker": "jaegertracing/jaeger-agent", 
+              },
               "cmd": [
                 "--reporter.grpc.host-port=trace-collector-kqdbp.ep-r.io:443"
-              ], 
-              "name": "tracing_agent"
+              ],
+              "docker": "jaegertracing/jaeger-agent"
             }
-          ], 
-          "name": "gbc", 
+          ],
+          "name": "gbc",
           "parameters": [
             {
-              "default": "true", 
-              "name": "AUTOBOOTSTRAP", 
+              "default": "true",
+              "name": "AUTOBOOTSTRAP",
               "description": ""
-            }, 
+            },
             {
-              "default": "1", 
-              "name": "PYTHONUNBUFFERED", 
+              "default": "1",
+              "name": "PYTHONUNBUFFERED",
               "description": ""
-            }, 
+            },
             {
-              "default": "YAML", 
-              "name": "ITEM_SPAWN_FROM", 
+              "default": "YAML",
+              "name": "ITEM_SPAWN_FROM",
               "description": ""
-            }, 
+            },
             {
-              "default": "kiba", 
-              "name": "SITE", 
+              "default": "kiba",
+              "name": "SITE",
               "description": ""
             }
-          ], 
-          "restart_policy": "always", 
-          "architecture": "amd64", 
-          "rosBagJobDefs": [], 
-          "requiredRuntime": "device", 
+          ],
+          "architecture": "amd64",
+          "requiredRuntime": "device",
           "ros": {
-            "services": [], 
+            "services": [],
             "topics": [
               {
-                "targeted": false, 
-                "qos": "low", 
-                "name": "/gwm_interface/site/fetch_error_type_response", 
-                "scoped": false, 
-                "compression": ""
-              }, 
+                "name": "/gwm_interface/site/fetch_error_type_response",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
               {
-                "targeted": false, 
-                "qos": "low", 
-                "name": "/plc/move_mobile_rack/cancel", 
-                "scoped": false, 
-                "compression": ""
-              }, 
+                "name": "/plc/move_mobile_rack/cancel",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
               {
-                "targeted": false, 
-                "qos": "low", 
-                "name": "/plc/move_mobile_rack/goal", 
-                "scoped": false, 
-                "compression": ""
-              }, 
+                "name": "/plc/move_mobile_rack/goal",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
               {
-                "targeted": false, 
-                "qos": "low", 
-                "name": "/gbc/ext_device_lock_response", 
-                "scoped": false, 
-                "compression": ""
-              }, 
+                "name": "/gbc/ext_device_lock_response",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
               {
-                "targeted": false, 
-                "qos": "low", 
-                "name": "/gbc/update_task_response", 
-                "scoped": false, 
-                "compression": ""
-              }, 
+                "name": "/gbc/update_task_response",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
               {
-                "targeted": false, 
-                "qos": "low", 
-                "name": "/gwm_interface/site/fetch_external_devices_response", 
-                "scoped": false, 
-                "compression": ""
-              }, 
+                "name": "/gwm_interface/site/fetch_external_devices_response",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
               {
-                "targeted": false, 
-                "qos": "low", 
-                "name": "/gwm_interface/mapping/nodes_disabled", 
-                "scoped": false, 
-                "compression": ""
-              }, 
+                "name": "/gwm_interface/mapping/nodes_disabled",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
               {
-                "targeted": false, 
-                "qos": "low", 
-                "name": "/gwm_interface/mapping/get_spots_response", 
-                "scoped": false, 
-                "compression": ""
-              }, 
+                "name": "/gwm_interface/mapping/get_spots_response",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
               {
-                "targeted": false, 
-                "qos": "low", 
-                "name": "/gwm_interface/mapping/get_regions_response", 
-                "scoped": false, 
-                "compression": ""
-              }, 
+                "name": "/gwm_interface/mapping/get_regions_response",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
               {
-                "targeted": false, 
-                "qos": "low", 
-                "name": "/gwm_interface/mapping/get_graph_response", 
-                "scoped": false, 
-                "compression": ""
-              }, 
+                "name": "/gwm_interface/mapping/get_graph_response",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
               {
-                "targeted": false, 
-                "qos": "low", 
-                "name": "/gbc/error_action_response", 
-                "scoped": false, 
-                "compression": ""
-              }, 
+                "name": "/gbc/error_action_response",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
               {
-                "targeted": false, 
-                "qos": "low", 
-                "name": "/gbc/amr_action_request", 
-                "scoped": false, 
-                "compression": ""
-              }, 
+                "name": "/gbc/amr_action_request",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
               {
-                "targeted": false, 
-                "qos": "low", 
-                "name": "/gwm_interface/mapping/status", 
-                "scoped": false, 
-                "compression": ""
-              }, 
+                "name": "/gwm_interface/mapping/status",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
               {
-                "targeted": false, 
-                "qos": "low", 
-                "name": "/mrrp/route_response", 
-                "scoped": false, 
-                "compression": ""
-              }, 
+                "name": "/mrrp/route_response",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
               {
-                "targeted": false, 
-                "qos": "low", 
-                "name": "/gbc/task", 
-                "scoped": false, 
-                "compression": ""
-              }, 
+                "name": "/gbc/task",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
               {
-                "targeted": false, 
-                "qos": "low", 
-                "name": "/gbc/spots_reservation_status", 
-                "scoped": false, 
-                "compression": ""
-              }, 
+                "name": "/gbc/spots_reservation_status",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
               {
-                "targeted": false, 
-                "qos": "low", 
-                "name": "/gbc/reserve_spot_response", 
-                "scoped": false, 
-                "compression": ""
-              }, 
+                "name": "/gbc/reserve_spot_response",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
               {
-                "targeted": false, 
-                "qos": "low", 
-                "name": "/lbc/set_mode_request", 
-                "scoped": false, 
-                "compression": ""
-              }, 
+                "name": "/lbc/set_mode_request",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
               {
-                "targeted": false, 
-                "qos": "low", 
-                "name": "/lbc/set_mode_response", 
-                "scoped": false, 
-                "compression": ""
+                "name": "/lbc/set_mode_response",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
               }
-            ], 
-            "ros_distro": "melodic", 
-            "isROS": true, 
-            "actions": []
-          }, 
-          "description": ""
+            ],
+            "isROS": true,
+            "actions": [],
+            "ros_distro": "melodic"
+          },
+          "description": "",
+          "restart_policy": "always",
+          "rosBagJobDefs": []
         }
-      ], 
-      "exposedParameters": [], 
+      ],
+      "exposedParameters": [],
       "metadata": {}
     }
-  ], 
-  "name": "server"
+  ],
+  "name": "server",
+  "description": ""
 }

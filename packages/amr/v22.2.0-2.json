@@ -1,6 +1,6 @@
 {
   "bindable": false,
-  "packageVersion": "v21.12.0-16",
+  "packageVersion": "v22.2.0-2",
   "plans": [
     {
       "includePackages": [],
@@ -12,7 +12,76 @@
       "dependentDeployments": [],
       "components": [
         {
+          "name": "vncbridge",
+          "description": "",
+          "cloudInfra": {
+            "replicas": 1,
+            "endpoints": [
+              {
+                "name": "VNC_ENDPOINT",
+                "exposeExternally": true,
+                "port": 443,
+                "targetPort": 6901,
+                "proto": "HTTPS"
+              }
+            ]
+          },
+          "ros": {
+            "topics": [],
+            "services": [],
+            "actions": [],
+            "isROS": false
+          },
+          "requiredRuntime": "cloud",
+          "architecture": "amd64",
           "executables": [
+            {
+              "name": "vnc_forward",
+              "simulationOptions": {
+                "simulation": false
+              },
+              "cmd": [
+                "/bin/bash",
+                "-c",
+                "sleep infinity"
+              ],
+              "limits": {
+                "cpu": 1,
+                "memory": 4096
+              },
+              "docker": "docker.io/rrdockerhub/io_amr_pa:iogen-build-omjpdooqferzbedivugqmzzc-10"
+            }
+          ],
+          "parameters": [
+            {
+              "default": "default_device_name",
+              "name": "RIO_DEVICE_NAME",
+              "description": ""
+            },
+            {
+              "default": "default_email",
+              "name": "VNC_RIO_EMAIL",
+              "description": ""
+            },
+            {
+              "default": "default_password",
+              "name": "VNC_RIO_PASSWORD",
+              "description": ""
+            }
+          ]
+        },
+        {
+          "executables": [
+            {
+              "name": "vnc",
+              "simulationOptions": {
+                "simulation": false
+              },
+              "cmd": [
+                "/bin/bash -c \"unset DISPLAY && /home/rr/headless/install/vnc_startup.sh 'gzclient' || sleep infinity\""
+              ],
+              "docker": "docker.io/rrdockerhub/io_amr_pa:iogen-build-omjpdooqferzbedivugqmzzc-10"
+            },
             {
               "name": "amr",
               "simulationOptions": {
@@ -21,11 +90,16 @@
               "cmd": [
                 "/bin/bash -c \"source /home/rr/catkin_ws/install/setup.bash && roslaunch bringup agent.launch __ns:=amr$${ROBOT_ID} robot_name:=amr$${ROBOT_ID} agent_id:=$${ROBOT_ID} map:=$${MAP} site:=$${SITE} launch_drivers:=true tf_prefix:=amr$${ROBOT_ID}/ x_pos:=$${X_POS} y_pos:=$${Y_POS} robot_ui:=true || sleep infinity\""
               ],
-              "docker": "docker.io/rrdockerhub/io_amr_pa:iogen-build-fxxvhvnmgoudktpxproretbg-24"
+              "docker": "docker.io/rrdockerhub/io_amr_pa:iogen-build-omjpdooqferzbedivugqmzzc-10"
             }
           ],
           "name": "amr",
           "parameters": [
+            {
+              "default": "1280x720",
+              "name": "VNC_RESOLUTION",
+              "description": ""
+            },
             {
               "default": "autobootstrap",
               "name": "GWM_AUTH_TOKEN",
@@ -102,6 +176,13 @@
           "ros": {
             "services": [],
             "topics": [
+              {
+                "name": "/gwm_interface/site/fetch_error_type_request",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
               {
                 "name": "/gbc/reserve_spot_request",
                 "qos": "low",
@@ -252,7 +333,7 @@
             ],
             "isROS": true,
             "actions": [],
-            "ros_distro": "melodic"
+            "ros_distro": "noetic"
           },
           "description": "",
           "restart_policy": "always",
