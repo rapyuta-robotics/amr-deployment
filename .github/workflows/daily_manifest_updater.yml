@@ -31,6 +31,7 @@ jobs:
       run: hub pull origin rr_devel
       
     - name: remove get-pip file
+      continue-on-error: true
       run: rm get-pip.py   
       
     - name: Run playbook update script
