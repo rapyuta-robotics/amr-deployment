@@ -227,6 +227,8 @@
       until: amr_log.finished
       retries: 600
       delay: 20
+      when:
+        - ansible_async|bool == true
       loop:
       - "{{ db_deploy_id }}"
       - "{{ gwm_deploy_id }}"
