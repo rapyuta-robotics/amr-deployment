@@ -1,0 +1,38 @@
+# This is a basic workflow that is manually triggered
+
+name: Deploy Simulation
+
+# Controls when the action will run. Workflow runs when manually triggered using the UI
+# or API.
+on:
+  workflow_dispatch:
+    inputs:
+      rio_project_id:
+        description: 'RIO_PROJECT_ID'
+        default: 'project-pskiyirrlmxarapzlyfbosap'
+        required: true
+      rio_auth_token:
+        description: 'RIO_AUTH_TOKEN'
+        default: '32uHhhiYb5JNIOeBBJR1w52crCb7u72eJVmLiKab'
+        required: true
+
+jobs:
+  deploy_simulation:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: deploy_simulation
+      run: |
+        sudo apt update
+        sudo apt install software-properties-common
+        curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+        sudo python3 get-pip.py
+        sudo python3 -m pip install ansible rapyuta-io
+        ansible-galaxy collection install 'rapyutarobotics.rr_io:<3' --upgrade
+        echo "RIO_PROJECT_ID ${{ github.event.inputs.rio_project_id }}"
+        echo "RIO_AUTH_TOKEN ${{ github.event.inputs.rio_auth_token }}"
+        export RIO_PROJECT_ID="${{ github.event.inputs.rio_project_id }}"
+        export RIO_AUTH_TOKEN="${{ github.event.inputs.rio_auth_token }}"
+        ansible-playbook playbooks/deploy_cloud.yaml --extra-vars "@deploy_configs.yaml" --extra-vars "present=false docker_user=dsatherr docker_password=Funny#Fish"
+        
+                
