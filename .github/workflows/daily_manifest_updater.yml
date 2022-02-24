@@ -44,7 +44,7 @@ jobs:
 
     - name: Check Git Diff
       id: diff
-      run: git diff --name-only origin/rr_devel origin/prbot/package_update_$(date +%F)
+      run: git diff --name-only origin/rr_devel prbot/package_update_$(date +%F)
       
     - name: Create PR
       if: contains(steps.diff.outputs, 'package')
