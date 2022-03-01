@@ -45,7 +45,7 @@ jobs:
       
     - name: Check Git Diff
       id: diff
-      run: echo "::set-output name=differences::$(git diff --name-only origin/rr_devel prbot/package_update_$(date +%F))"
+      run: echo "::set-output name=differences::$(git diff --name-only origin/rr_devel prbot/package_update_$(date +%F) | grep package)"
       
     - name: print
       run: echo ${{ steps.diff.outputs.differences }}
