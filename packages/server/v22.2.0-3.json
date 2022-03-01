@@ -1,0 +1,214 @@
+{
+  "bindable": true,
+  "packageVersion": "v22.2.0-3",
+  "plans": [
+    {
+      "includePackages": [],
+      "singleton": false,
+      "name": "default",
+      "inboundROSInterfaces": {
+        "anyIncomingScopedOrTargetedRosConfig": true
+      },
+      "dependentDeployments": [],
+      "components": [
+        {
+          "executables": [
+            {
+              "name": "gbc",
+              "simulationOptions": {
+                "simulation": false
+              },
+              "buildGUID": "build-ajwpieluotatvbghcplpuiuv",
+              "cmd": [
+                "/bin/bash -c \"source /opt/ros/$${ROS_DISTRO}/setup.bash && [ -f /home/rr/catkin_ws/devel/setup.bash ] && source /home/rr/catkin_ws/devel/setup.bash || source /home/rr/catkin_ws/install/setup.bash &&         if [[ ! -z \"$${AUTOBOOTSTRAP}\" ]] && [[ \"$${AUTOBOOTSTRAP}\" == \"true\" ]]; then rosrun gwm_interface sitectl.py -f --site $${SITE}; fi &&         stdbuf -o L roslaunch bringup global.launch site:=$${SITE} || sleep infinity\""
+              ]
+            },
+            {
+              "name": "tracing_agent",
+              "simulationOptions": {
+                "simulation": false
+              },
+              "cmd": [
+                "--reporter.grpc.host-port=trace-collector-kqdbp.ep-r.io:443"
+              ],
+              "docker": "jaegertracing/jaeger-agent"
+            }
+          ],
+          "name": "gbc",
+          "parameters": [
+            {
+              "default": "true",
+              "name": "AUTOBOOTSTRAP",
+              "description": ""
+            },
+            {
+              "default": "1",
+              "name": "PYTHONUNBUFFERED",
+              "description": ""
+            },
+            {
+              "default": "YAML",
+              "name": "ITEM_SPAWN_FROM",
+              "description": ""
+            },
+            {
+              "default": "kiba",
+              "name": "SITE",
+              "description": ""
+            }
+          ],
+          "architecture": "amd64",
+          "requiredRuntime": "device",
+          "ros": {
+            "services": [],
+            "topics": [
+              {
+                "name": "/gwm_interface/site/fetch_error_type_response",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/plc/move_mobile_rack/cancel",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/plc/move_mobile_rack/goal",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/gbc/ext_device_lock_response",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/gbc/update_task_response",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/gwm_interface/site/fetch_external_devices_response",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/gwm_interface/mapping/nodes_disabled",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/gwm_interface/mapping/get_spots_response",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/gwm_interface/mapping/get_regions_response",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/gwm_interface/mapping/get_graph_response",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/gbc/error_action_response",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/gbc/amr_action_request",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/gwm_interface/mapping/status",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/mrrp/route_response",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/gbc/task",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/gbc/spots_reservation_status",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/gbc/reserve_spot_response",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/lbc/set_mode_request",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/lbc/set_mode_response",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              }
+            ],
+            "isROS": true,
+            "actions": [],
+            "ros_distro": "noetic"
+          },
+          "description": "",
+          "restart_policy": "always",
+          "rosBagJobDefs": []
+        }
+      ],
+      "exposedParameters": [],
+      "metadata": {}
+    }
+  ],
+  "name": "server",
+  "description": ""
+}
