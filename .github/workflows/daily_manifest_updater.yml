@@ -48,10 +48,10 @@ jobs:
       run: git diff --name-only origin/rr_devel prbot/package_update_$(date +%F)
       
     - name: print
-      run: echo ${{ steps.diff.outputs }}
+      run: echo ${{ steps.diff.outputs.* }}
       
     - name: Create PR
-      if: contains(steps.diff.outputs, 'package')
+      if: contains(steps.diff.outputs.*, 'package')
       run: hub pull-request -m "Package Update on $(date +%F)" -p -f -b rr_devel
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
