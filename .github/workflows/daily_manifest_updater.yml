@@ -39,7 +39,9 @@ jobs:
         python scripts/update_deploy_configs.py
 
     - name: create branch
-      run: git push origin prbot/package_update_$(date +%F)
+      run: |
+        hub config user.email "larry.ng@rapyuta-robotics.com" && hub config user.name "Larry Ng" && git status --porcelain | awk '{ print $2}' | xargs -n1 -I repo_name sh -c '{ git add repo_name; git commit --author "$(cd repo_name; git log -1 --pretty="%an <%ae>"; cd ..)" -m "`cd repo_name; git log -1 --pretty="%s"; cd ..`"; echo repo_name; }'
+        git push origin prbot/package_update_$(date +%F)
       
     - name: Check Git Diff
       id: diff
@@ -47,8 +49,6 @@ jobs:
       
     - name: Create PR
       if: contains(steps.diff.outputs, 'package')
-      run: |
-        hub config user.email "larry.ng@rapyuta-robotics.com" && hub config user.name "Larry Ng" && git status --porcelain | awk '{ print $2}' | xargs -n1 -I repo_name sh -c '{ git add repo_name; git commit --author "$(cd repo_name; git log -1 --pretty="%an <%ae>"; cd ..)" -m "`cd repo_name; git log -1 --pretty="%s"; cd ..`"; echo repo_name; }'
-        hub pull-request -m "Package Update on $(date +%F)" -p -f -b rr_devel
+      run: hub pull-request -m "Package Update on $(date +%F)" -p -f -b rr_devel
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
