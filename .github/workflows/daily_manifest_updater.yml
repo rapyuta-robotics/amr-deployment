@@ -38,6 +38,9 @@ jobs:
         python scripts/manifest_updater.py -p ${{ secrets.IO_AMR_PROJECT }} -a ${{ secrets.IO_AUTH_TOKEN }}
         python scripts/update_deploy_configs.py
 
+    - name: create branch
+      run: git push origin prbot/package_update_$(date +%F)
+      
     - name: Check Git Diff
       id: diff
       run: git diff --name-only origin/rr_devel prbot/package_update_$(date +%F)
