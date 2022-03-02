@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 import os
+from os import listdir
+from os.path import isfile, join
 import subprocess
 import time
 import json
@@ -155,40 +157,59 @@ def main(project_id, auth_token):
         print("Getting all subpackages in package: " + package["package_name"])
         subpackages = get_all_subpackages_from_io(project_id, auth_token, package["package_name"])
 
+        work_path = 'packages/' + package["package_name"] + '/'
+        package_files = [f for f in listdir(work_path) if isfile(join(work_path, f))]
+        print("Getting all currently existing versions for package: " + package["package_name"])
+        print(package_files)
+
         for subpackage in subpackages:
             subpackage_manifest = get_subpackage_manifest_from_io(project_id, auth_token, subpackage["packageId"])
-            print("Pulling subpackage " + subpackage_manifest["packageVersion"] + " of " + package["package_name"])
 
-            for container_id in range(0, len(subpackage_manifest["plans"][0]["components"])):
-                for executable_id in range(0, len(subpackage_manifest["plans"][0]["components"][container_id]["executables"])):
-                    container = subpackage_manifest["plans"][0]["components"][container_id]["executables"][executable_id]
-
-                    if "secret" in container:
-                        del subpackage_manifest["plans"][0]["components"][container_id]["executables"][executable_id]["secret"]
-                        print("Removing secret in subpackage " + subpackage_manifest["packageVersion"] + " for executable " + subpackage_manifest["plans"][0]["components"][container_id]["executables"][executable_id]["name"])
-
-                    if "buildGUID" in container:
-                        build = get_build_info_from_io(project_id, auth_token, container["buildGUID"])
+            current_version = subpackage_manifest["packageVersion"]+'.json'
+            if(current_version not in package_files):
+                print("Pulling subpackage " + subpackage_manifest["packageVersion"] + " of " + package["package_name"])
 
 
-                        for j in range(1, len(build["buildRequests"])):
-                            latest_build = build["buildRequests"][len(build["buildRequests"]) - j]
+                for container_id in range(0, len(subpackage_manifest["plans"][0]["components"])):
+                    for executable_id in range(0, len(subpackage_manifest["plans"][0]["components"][container_id]["executables"])):
+                        container = subpackage_manifest["plans"][0]["components"][container_id]["executables"][executable_id]
 
-                            if latest_build["errorString"] == "":
-                                print("Replacing BuildGUID " + container["buildGUID"] + " with Image " +latest_build["executableImageInfo"]["imageInfo"][0]["imageName"])
+                        if "secret" in container:
+                            del subpackage_manifest["plans"][0]["components"][container_id]["executables"][executable_id]["secret"]
+                            print("Removing secret in subpackage " + subpackage_manifest["packageVersion"] + " for executable " + subpackage_manifest["plans"][0]["components"][container_id]["executables"][executable_id]["name"])
+
+                        if "buildGUID" in container:
+                            build = get_build_info_from_io(project_id, auth_token, container["buildGUID"])
+                            print("Found buildGUID for executable " + subpackage_manifest["plans"][0]["components"][container_id]["executables"][executable_id]["name"])
+                            print(build["buildRequests"])
+                            for j in range(1, len(build["buildRequests"])):
+                                latest_build = build["buildRequests"][len(build["buildRequests"]) - j]
+
+                                if latest_build["errorString"] == "":
+                                    print("Replacing BuildGUID " + container["buildGUID"] + " with Image " +latest_build["executableImageInfo"]["imageInfo"][0]["imageName"])
+                                    docker_image = latest_build["executableImageInfo"]["imageInfo"][0]["imageName"]
+                                    subpackage_manifest["plans"][0]["components"][container_id]["executables"][executable_id]["docker"] = docker_image
+                                    del subpackage_manifest["plans"][0]["components"][container_id]["executables"][executable_id]["buildGUID"]
+                                    break
+
+                                if (len(build["buildRequests"]) - j) <= 0:
+                                    print("no successful builds found for subpackage")
+
+                            #case for only having a single build
+                            if (len(build["buildRequests"]) == 1):
+                                latest_build = build["buildRequests"][0]
+                                print("Replacing BuildGUID " + container["buildGUID"] + " with Image " + latest_build["executableImageInfo"]["imageInfo"][0]["imageName"])
                                 docker_image = latest_build["executableImageInfo"]["imageInfo"][0]["imageName"]
                                 subpackage_manifest["plans"][0]["components"][container_id]["executables"][executable_id]["docker"] = docker_image
                                 del subpackage_manifest["plans"][0]["components"][container_id]["executables"][executable_id]["buildGUID"]
-                                break
-
-                            if (len(build["buildRequests"]) - j) <= 0:
-                                print("no successful builds found for subpackage")
 
 
-            #Save to file
-            file = open('packages/'+package["package_name"]+'/'+subpackage_manifest["packageVersion"]+'.json', 'w')
-            file.write(json.dumps(subpackage_manifest, indent=2))
-            file.close()
+                #Save to file
+                file = open('packages/'+package["package_name"]+'/'+subpackage_manifest["packageVersion"]+'.json', 'w')
+                file.write(json.dumps(subpackage_manifest, indent=2))
+                file.close()
+            else:
+                print("version " + subpackage_manifest["packageVersion"] + " exists, will not overwrite")
 
 if __name__ == '__main__':
     project_id, auth_token = get_args(sys.argv[1:])
