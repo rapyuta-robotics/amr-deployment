@@ -96,6 +96,7 @@ Deployment
    .. tab:: Server on cloud
         Onboard a robot
             - Go to Rapyuta Robotics > All Devices > Add New Device and follow the instructions to onboard a device
+            - Allow docker to connect to UI 'echo "xhost +local:docker" >> ~/.bashrc'
             - Once the device is onboarded, Go into the device and fill out the following config variables
                 - X_POS: 20 (Initial X position of the robot)
                 - Y_POS: 12 (Initial Y position of the robot)
@@ -118,7 +119,7 @@ Deployment
             # Get the Authentication token from https://auth.rapyuta.io/authToken/, or clicking the Get Auth Token under your name on the menu
             export RIO_AUTH_TOKEN=AUTH_TOKEN
 
-            # To Deploy (For device deployment use device_deploy.yaml)
+            # To Deploy
             ansible-playbook playbooks/deploy_cloud.yaml --extra-vars "@deploy_configs.yaml" --extra-vars "present=true prefix_name=project_name"
 
             # To Deprovision
@@ -136,6 +137,7 @@ Deployment
                 - ROBOT_GENERATION: gen2 (Depends on the firmware of the robot)
                 - ROBOT_VERSION: v1 (Depends on the firmware of the robot)
                 - ROBOT_ID: 1 (ID of the robot)
+            - Allow docker to connect to UI 'echo "xhost +local:docker" >> ~/.bashrc'
         Edit deploy_configs.yaml
             - obtain access to docker
             - enter your docker username and password (once you obtain access)
@@ -153,7 +155,7 @@ Deployment
             # Get the Authentication token from https://auth.rapyuta.io/authToken/, or clicking the Get Auth Token under your name on the menu
             export RIO_AUTH_TOKEN=AUTH_TOKEN
 
-            # To Deploy (For device deployment use device_deploy.yaml)
+            # To Deploy
             ansible-playbook playbooks/deploy_local.yaml --extra-vars "@deploy_configs.yaml" --extra-vars "present=true prefix_name=project_name"
 
             # To Deprovision
