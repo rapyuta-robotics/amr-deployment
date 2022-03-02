@@ -214,7 +214,7 @@
       poll: 0
       when: routed_network|bool == true
       rapyutarobotics.rr_io.deployments:
-        name: "{{ prefix_name }}_amr_{{ robot_device_name }}"
+        name: "{{ prefix_name }}_amr_{{ item }}"
         component_name: amr
         present: "{{ present }}"
         package_name: "{{ prefix_name }}_amr"
@@ -235,7 +235,7 @@
       poll: 0
       when: native_network|bool == true
       rapyutarobotics.rr_io.deployments:
-        name: "{{ prefix_name }}_amr_{{ robot_device_name }}"
+        name: "{{ prefix_name }}_amr_{{ item }}"
         component_name: amr
         present: "{{ present }}"
         package_name: "{{ prefix_name }}_amr"
