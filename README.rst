@@ -98,7 +98,7 @@ Deployment
             - Go to Rapyuta Robotics > All Devices > Add New Device and follow the instructions to onboard a device
             - Once the device is onboarded, Go into the device and fill out the following config variables
                 - X_POS: 20 (Initial X position of the robot)
-                - Y_POS: 12 (Initial X position of the robot)
+                - Y_POS: 12 (Initial Y position of the robot)
                 - ROBOT_GENERATION: gen2 (Depends on the firmware of the robot)
                 - ROBOT_VERSION: v1 (Depends on the firmware of the robot)
                 - ROBOT_ID: 1 (ID of the robot)
@@ -132,7 +132,7 @@ Deployment
             - Go to Rapyuta Robotics > All Devices > Add New Device and follow the instructions to onboard a device
             - Once the device is onboarded, Go into the device and fill out the following config variables
                 - X_POS: 20 (Initial X position of the robot)
-                - Y_POS: 12 (Initial X position of the robot)
+                - Y_POS: 12 (Initial Y position of the robot)
                 - ROBOT_GENERATION: gen2 (Depends on the firmware of the robot)
                 - ROBOT_VERSION: v1 (Depends on the firmware of the robot)
                 - ROBOT_ID: 1 (ID of the robot)
