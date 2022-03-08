@@ -113,7 +113,7 @@
       rapyutarobotics.rr_io.packages:
         version: auto
         name: "{{ prefix_name }}_postgres"
-        present: "{{ present }}"
+        present: "{{ db_present }}"
         package_from: manifest_path
         manifest_path: /tmp/postgres.json
         executables_info:
