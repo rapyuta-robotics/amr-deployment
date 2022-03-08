@@ -97,7 +97,7 @@
       async: "{{ async_time | default('1000') }}"
       poll: 0
       rapyutarobotics.rr_io.packages:
-        version: auto
+        version: "v1.0.0"
         name: "{{ prefix_name }}_postgres_cloud"
         present: "{{ db_present }}"
         package_from: manifest_path
@@ -110,7 +110,7 @@
       async: "{{ async_time | default('1000') }}"
       poll: 0
       rapyutarobotics.rr_io.packages:
-        version: auto
+        version: "v1.0.0"
         name: "{{ prefix_name }}_gwm_cloud"
         present: "{{ present }}"
         package_from: manifest_path
@@ -123,7 +123,7 @@
       async: "{{ async_time | default('1000') }}"
       poll: 0
       rapyutarobotics.rr_io.packages:
-        version: auto
+        version: "v1.0.0"
         name: "{{ prefix_name }}_amr_ui_cloud"
         present: "{{ present }}"
         package_from: manifest_path
@@ -136,7 +136,7 @@
       async: "{{ async_time | default('1000') }}"
       poll: 0
       rapyutarobotics.rr_io.packages:
-        version: auto
+        version: "v1.0.0"
         name: "{{ prefix_name }}_amr"
         present: "{{ present }}"
         package_from: manifest_path
@@ -149,7 +149,7 @@
       async: "{{ async_time | default('1000') }}"
       poll: 0
       rapyutarobotics.rr_io.packages:
-        version: auto
+        version: "v1.0.0"
         name: "{{ prefix_name }}_server_cloud"
         present: "{{ present }}"
         package_from: manifest_path
