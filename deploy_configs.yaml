@@ -31,6 +31,11 @@ robot_device_name:
 - stg2
 - stg3
 
+package_arguments: {
+  AUTOBOOTSTRAP: 'true',
+  SITE: 'kiba'
+}
+
 nuc_device_name: jason
 nuc_device_network_interface: wlp0s20f3
 robot_device_network_interface: wlp1s0

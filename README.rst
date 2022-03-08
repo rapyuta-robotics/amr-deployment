@@ -173,6 +173,8 @@ Additional Parameters for deploy_configs.yaml:
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 ``present``
  Whether the deployment artifacts should be present in your project, this is controlled by the ``--extra-vars`` passed in the commandline, as such there is no need to change this value
+``db_persists``
+ Whether the Database is to remain existing even if present is set to false
 ``prefix_name``
  prefix to name all components of the simulation by. Please ensure that this value is not the default name ``prefix`` and only contains letters and numbers
 ``docker_password``
@@ -186,13 +188,15 @@ Additional Parameters for deploy_configs.yaml:
 ``ros_distro``
  select ros distro, currently supported are melodic and noetic
 ``robot_device_name``:
-The name of the robot device onboarded to rapyuta.io when device_deploy.yaml is being used.
+ The name of the robot device onboarded to rapyuta.io when device_deploy.yaml is being used.
+``package_arguments``:
+ Add all the environment variables to be inserted or overwritten for ALL packages, this needs to be a dict
 ``robot_device_network_interface``:
-The network interface to be used when native network is used in device_deploy.yaml and native network is deployed on Robot device.
+ The network interface to be used when native network is used in device_deploy.yaml and native network is deployed on Robot device.
 ``nuc_device_name``:
-The list of the NUC devices onboarded to rapyuta.io when device_deploy.yaml is being used.
+ The list of the NUC devices onboarded to rapyuta.io when device_deploy.yaml is being used.
 ``nuc_device_network_interface``:
-The network interface to be used when native network is used in device_deploy.yaml and native network is deployed on NUC device.
+ The network interface to be used when native network is used in device_deploy.yaml and native network is deployed on NUC device.
 
 Troubleshooting Tips:
 ^^^^^^^^^^^
