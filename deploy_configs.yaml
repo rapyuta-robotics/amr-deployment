@@ -33,7 +33,7 @@ robot_device_name:
 - stg3
 
 package_arguments: {
-  AUTOBOOTSTRAP: 'true',
+  AUTOBOOTSTRAP: 'false',
   SITE: 'kiba'
 }
 
