@@ -29,6 +29,14 @@
         native_network: false
         routed_network: true
       when: network_type == "routed"
+    - name: set_db_present_true
+      set_fact:
+        db_present: true
+      when: db_persist|bool == true or present|bool == true
+    - name: set_db_present_false
+      set_fact:
+        db_present: false
+      when: db_persist|bool == false and present|bool == false
 
 - name: Copy manifests to temp directory
   hosts: localhost
@@ -157,8 +165,9 @@
       rapyutarobotics.rr_io.deployments:
         name: "{{ prefix_name }}_postgres_cloud"
         component_name: postgres
-        present: "{{ present }}"
+        present: "{{ db_present }}"
         package_name: "{{ prefix_name }}_postgres_cloud"
+        component_params: "{{ package_arguments }}"
       register: db_deploy_id
     - name: GWM CLOUD deployment
       async: "{{ async_time | default('2000') }}"
@@ -171,6 +180,7 @@
         depends:
           deployments:
             - "{{ prefix_name }}_postgres_cloud"
+        component_params: "{{ package_arguments }}"
       register: gwm_cloud_deploy_id
     - name: AMR UI  deployment
       async: "{{ async_time | default('2600') }}"
@@ -183,6 +193,7 @@
         depends:
           deployments:
             - "{{ prefix_name }}_gwm_cloud"
+        component_params: "{{ package_arguments }}"
       register: amr_ui_cloud_deploy_id
     - name: Simulator  deployment
       async: "{{ async_time | default('2600') }}"
@@ -195,8 +206,7 @@
         depends:
           deployments:
             - "{{ prefix_name }}_gwm_cloud"
-        component_params:
-          SITE: "{{ site_name }}"
+        component_params: "{{ package_arguments }}"
       register: simulator_deploy_id
 
 

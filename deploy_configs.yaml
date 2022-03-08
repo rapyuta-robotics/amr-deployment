@@ -1,5 +1,6 @@
 # Whether the deployment artifacts should be present in your project
 present: "true"
+db_persist: "false"
 
 # The username and password of the dockerhub account with access to the images. This is needed to pull the IO AMR images for the simulation
 docker_user: "insert username"
@@ -30,6 +31,11 @@ robot_device_name:
 - robot_device_1
 - robot_device_2
 - robot_device_3
+
+package_arguments: {
+  AUTOBOOTSTRAP: 'true',
+  SITE: 'kiba'
+}
 
 nuc_device_name: jason
 nuc_device_network_interface: wlp0s20f3
