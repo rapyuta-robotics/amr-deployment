@@ -99,7 +99,7 @@
       rapyutarobotics.rr_io.packages:
         version: auto
         name: "{{ prefix_name }}_postgres_cloud"
-        present: "{{ present }}"
+        present: "{{ db_present }}"
         package_from: manifest_path
         manifest_path: /tmp/postgres_cloud.json
         executables_info:
