@@ -38,6 +38,25 @@
       set_fact:
         db_present: false
       when: db_persist|bool == false and present|bool == false
+    - name: set_temp_package_args
+      set_fact:
+        temp_package_arguments: "{{ package_arguments }}"
+    - name: set_site
+      set_fact:
+        temp_package_arguments: "{{ temp_package_arguments | combine(new_item, recursive=true) }}"
+      vars:
+        new_item: "{ '{{ item.key }}': { 'SITE': '{{ site_name }}' } }"
+      when: item.key == "simulator" or item.key == "server" or item.key == "server_cloud"
+      with_dict: "{{ temp_package_arguments }}"
+    - name: set_temp_robot_devices_args
+      set_fact:
+        temp_robot_devices: "{{ robot_devices }}"
+    - name: set_site_robots
+      set_fact:
+        temp_robot_devices: "{{ temp_robot_devices | combine(new_item, recursive=true) }}"
+      vars:
+        new_item: "{ '{{ item.key }}': { 'SITE': '{{ site_name }}' } }"
+      with_dict: "{{ temp_robot_devices }}"
 
 - name: Copy manifests to temp directory
   hosts: localhost
@@ -97,7 +116,7 @@
       async: "{{ async_time | default('1000') }}"
       poll: 0
       rapyutarobotics.rr_io.packages:
-        version: auto
+        version: "{{ postgres_cloud_version }}"
         name: "{{ prefix_name }}_postgres_cloud"
         present: "{{ db_present }}"
         package_from: manifest_path
@@ -110,7 +129,7 @@
       async: "{{ async_time | default('1000') }}"
       poll: 0
       rapyutarobotics.rr_io.packages:
-        version: auto
+        version: "{{ gwm_cloud_version }}"
         name: "{{ prefix_name }}_gwm_cloud"
         present: "{{ present }}"
         package_from: manifest_path
@@ -123,7 +142,7 @@
       async: "{{ async_time | default('1000') }}"
       poll: 0
       rapyutarobotics.rr_io.packages:
-        version: auto
+        version: "{{ amr_ui_cloud_version }}"
         name: "{{ prefix_name }}_amr_ui_cloud"
         present: "{{ present }}"
         package_from: manifest_path
@@ -136,7 +155,7 @@
       async: "{{ async_time | default('1000') }}"
       poll: 0
       rapyutarobotics.rr_io.packages:
-        version: auto
+        version: "{{ amr_version }}"
         name: "{{ prefix_name }}_amr"
         present: "{{ present }}"
         package_from: manifest_path
@@ -149,7 +168,7 @@
       async: "{{ async_time | default('1000') }}"
       poll: 0
       rapyutarobotics.rr_io.packages:
-        version: auto
+        version: "{{ server_cloud_version }}"
         name: "{{ prefix_name }}_server_cloud"
         present: "{{ present }}"
         package_from: manifest_path
@@ -172,7 +191,8 @@
         component_name: postgres
         present: "{{ db_present }}"
         package_name: "{{ prefix_name }}_postgres_cloud"
-        component_params: "{{ package_arguments }}"
+        package_version: "{{ postgres_cloud_version }}"
+        component_params: "{{ temp_package_arguments }}"
       register: db_deploy_id
     - name: GWM deployment
       async: "{{ async_time | default('2000') }}"
@@ -182,10 +202,11 @@
         component_name: core
         present: "{{ present }}"
         package_name: "{{ prefix_name }}_gwm_cloud"
+        package_version: "{{ gwm_cloud_version }}"
         depends:
           deployments:
             - "{{ prefix_name }}_postgres_cloud"
-        component_params: "{{ package_arguments }}"
+        component_params: "{{ temp_package_arguments }}"
       register: gwm_deploy_id
     - name: User Interface  deployment
       async: "{{ async_time | default('2600') }}"
@@ -195,29 +216,31 @@
         component_name: amr_ui
         present: "{{ present }}"
         package_name: "{{ prefix_name }}_amr_ui_cloud"
+        package_version: "{{ amr_ui_cloud_version }}"
         depends:
           deployments:
             - "{{ prefix_name }}_gwm_cloud"
-        component_params: "{{ package_arguments }}"
+        component_params: "{{ temp_package_arguments }}"
       register: amr_ui_deploy_id
     - name: AMR  deployment (Routed Network)
       async: "{{ async_time | default('2600') }}"
       poll: 0
       rapyutarobotics.rr_io.deployments:
-        name: "{{ prefix_name }}_amr_{{ item }}"
+        name: "{{ prefix_name }}_amr_{{ item.key }}"
         component_name: amr
         present: "{{ present }}"
         package_name: "{{ prefix_name }}_amr"
+        package_version: "{{ amr_version }}"
         runtime: device
-        device_name: "{{ item }}"
+        device_name: "{{ item.key }}"
         networks:
           routed_networks:
             - name: "{{ prefix_name }}_routed_network"
         depends:
           deployments:
             - "{{ prefix_name }}_gwm_cloud"
-        component_params: "{{ package_arguments }}"
-      loop: "{{ robot_device_name }}"
+        component_params: "{{ item }}"
+      with_dict: "{{ temp_robot_devices }}"
       register: amr_routed_deploy_id
     - name: SERVER  deployment (Routed Network)
       async: "{{ async_time | default('2600') }}"
@@ -233,7 +256,7 @@
         depends:
           deployments:
             - "{{ prefix_name }}_gwm_cloud"
-        component_params: "{{ package_arguments }}"
+        component_params: "{{ temp_package_arguments }}"
       register: server_routed_deploy_id
 
 - name: Async wait on deployments
