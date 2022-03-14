@@ -37,6 +37,25 @@
       set_fact:
         db_present: false
       when: db_persist|bool == false and present|bool == false
+    - name: set_temp_package_args
+      set_fact:
+        temp_package_arguments: "{{ package_arguments }}"
+    - name: set_site
+      set_fact:
+        temp_package_arguments: "{{ temp_package_arguments | combine(new_item, recursive=true) }}"
+      vars:
+        new_item: "{ '{{ item.key }}': { 'SITE': '{{ site_name }}' } }"
+      when: item.key == "simulator" or item.key == "server" or item.key == "server_cloud"
+      with_dict: "{{ temp_package_arguments }}"
+    - name: set_temp_robot_devices_args
+      set_fact:
+        temp_robot_devices: "{{ robot_devices }}"
+    - name: set_site_robots
+      set_fact:
+        temp_robot_devices: "{{ temp_robot_devices | combine(new_item, recursive=true) }}"
+      vars:
+        new_item: "{ '{{ item.key }}': { 'SITE': '{{ site_name }}' } }"
+      with_dict: "{{ temp_robot_devices }}"
 
 - name: Copy manifests to temp directory
   hosts: localhost
@@ -111,7 +130,7 @@
       async: "{{ async_time | default('1000') }}"
       poll: 0
       rapyutarobotics.rr_io.packages:
-        version: auto
+        version: "{{ postgres_version }}"
         name: "{{ prefix_name }}_postgres"
         present: "{{ db_present }}"
         package_from: manifest_path
@@ -124,7 +143,7 @@
       async: "{{ async_time | default('1000') }}"
       poll: 0
       rapyutarobotics.rr_io.packages:
-        version: auto
+        version: "{{ gwm_version }}"
         name: "{{ prefix_name }}_gwm"
         present: "{{ present }}"
         package_from: manifest_path
@@ -137,7 +156,7 @@
       async: "{{ async_time | default('1000') }}"
       poll: 0
       rapyutarobotics.rr_io.packages:
-        version: auto
+        version: "{{ amr_ui_version }}"
         name: "{{ prefix_name }}_amr_ui"
         present: "{{ present }}"
         package_from: manifest_path
@@ -150,7 +169,7 @@
       async: "{{ async_time | default('1000') }}"
       poll: 0
       rapyutarobotics.rr_io.packages:
-        version: auto
+        version: "{{ amr_version }}"
         name: "{{ prefix_name }}_amr"
         present: "{{ present }}"
         package_from: manifest_path
@@ -163,7 +182,7 @@
       async: "{{ async_time | default('1000') }}"
       poll: 0
       rapyutarobotics.rr_io.packages:
-        version: auto
+        version: "{{ server_version }}"
         name: "{{ prefix_name }}_server"
         present: "{{ present }}"
         package_from: manifest_path
@@ -186,9 +205,10 @@
         component_name: postgres
         present: "{{ db_present }}"
         package_name: "{{ prefix_name }}_postgres"
+        package_version: "{{ postgres_version }}"
         runtime: device
         device_name: "{{ nuc_device_name }}"
-        component_params: "{{ package_arguments }}"
+        component_params: "{{ temp_package_arguments.postgres }}"
       register: db_deploy_id
     - name: GWM deployment
       async: "{{ async_time | default('2000') }}"
@@ -198,12 +218,13 @@
         component_name: core
         present: "{{ present }}"
         package_name: "{{ prefix_name }}_gwm"
+        package_version: "{{ gwm_version }}"
         runtime: device
         device_name: "{{ nuc_device_name }}"
         depends:
           deployments:
             - "{{ prefix_name }}_postgres"
-        component_params: "{{ package_arguments }}"
+        component_params: "{{ temp_package_arguments.gwm }}"
       register: gwm_deploy_id
     - name: User Interface  deployment
       async: "{{ async_time | default('2600') }}"
@@ -213,52 +234,55 @@
         component_name: amr_ui
         present: "{{ present }}"
         package_name: "{{ prefix_name }}_amr_ui"
+        package_version: "{{ amr_ui_version }}"
         runtime: device
         device_name: "{{ nuc_device_name }}"
         depends:
           deployments:
             - "{{ prefix_name }}_gwm"
-        component_params: "{{ package_arguments }}"
+        component_params: "{{ temp_package_arguments.amr_ui }}"
       register: amr_ui_deploy_id
     - name: AMR  deployment (Routed Network)
       async: "{{ async_time | default('2600') }}"
       poll: 0
       when: routed_network|bool == true
       rapyutarobotics.rr_io.deployments:
-        name: "{{ prefix_name }}_amr_{{ item }}"
+        name: "{{ prefix_name }}_amr_{{ item.key }}"
         component_name: amr
         present: "{{ present }}"
         package_name: "{{ prefix_name }}_amr"
+        package_version: "{{ amr_version }}"
         runtime: device
-        device_name: "{{ item }}"
+        device_name: "{{ item.key }}"
         networks:
           routed_networks:
             - name: "{{ prefix_name }}_routed_network"
         depends:
           deployments:
             - "{{ prefix_name }}_gwm"
-        component_params: "{{ package_arguments }}"
-      loop: "{{ robot_device_name }}"
+        component_params: "{{ item }}"
+      with_dict: "{{ temp_robot_devices }}"
       register: amr_routed_deploy_id
     - name: AMR  deployment (Native Network)
       async: "{{ async_time | default('2600') }}"
       poll: 0
       when: native_network|bool == true
       rapyutarobotics.rr_io.deployments:
-        name: "{{ prefix_name }}_amr_{{ item }}"
+        name: "{{ prefix_name }}_amr_{{ item.key }}"
         component_name: amr
         present: "{{ present }}"
         package_name: "{{ prefix_name }}_amr"
+        package_version: "{{ amr_version }}"
         runtime: device
-        device_name: "{{ item }}"
+        device_name: "{{ item.key }}"
         networks:
           native_networks:
             - name: "{{ prefix_name }}_native_network"
         depends:
           deployments:
             - "{{ prefix_name }}_gwm"
-        component_params: "{{ package_arguments }}"
-      loop: "{{ robot_device_name }}"
+        component_params: "{{ item }}"
+      with_dict: "{{ temp_robot_devices }}"
       register: amr_native_deploy_id
     - name: SERVER  deployment (Routed Network)
       async: "{{ async_time | default('2600') }}"
@@ -269,6 +293,7 @@
         component_name: gbc
         present: "{{ present }}"
         package_name: "{{ prefix_name }}_server"
+        package_version: "{{ server_version }}"
         runtime: device
         device_name: "{{ nuc_device_name }}"
         networks:
@@ -277,7 +302,7 @@
         depends:
           deployments:
             - "{{ prefix_name }}_gwm"
-        component_params: "{{ package_arguments }}"
+        component_params: "{{ temp_package_arguments }}"
       register: server_routed_deploy_id
     - name: SERVER  deployment (Native Network)
       async: "{{ async_time | default('2600') }}"
@@ -288,6 +313,7 @@
         component_name: gbc
         present: "{{ present }}"
         package_name: "{{ prefix_name }}_server"
+        package_version: "{{ server_version }}"
         runtime: device
         device_name: "{{ nuc_device_name }}"
         networks:
@@ -296,7 +322,7 @@
         depends:
           deployments:
             - "{{ prefix_name }}_gwm"
-        component_params: "{{ package_arguments }}"
+        component_params: "{{ temp_package_arguments }}"
       register: server_native_deploy_id
 
 - name: Async wait on deployments

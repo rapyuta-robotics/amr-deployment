@@ -37,6 +37,16 @@
       set_fact:
         db_present: false
       when: db_persist|bool == false and present|bool == false
+    - name: set_temp_package_args
+      set_fact:
+        temp_package_arguments: "{{ package_arguments }}"
+    - name: set_site
+      set_fact:
+        temp_package_arguments: "{{ temp_package_arguments | combine(new_item, recursive=true) }}"
+      vars:
+        new_item: "{ '{{ item.key }}': { 'SITE': '{{ site_name }}' } }"
+      when: item.key == "simulator" or item.key == "server" or item.key == "server_cloud"
+      with_dict: "{{ temp_package_arguments }}"
 
 - name: Copy manifests to temp directory
   hosts: localhost
@@ -105,7 +115,7 @@
       async: "{{ async_time | default('1000') }}"
       poll: 0
       rapyutarobotics.rr_io.packages:
-        version: auto
+        version: "{{ postgres_cloud_version }}"
         name: "{{ prefix_name }}_postgres_cloud"
         present: "{{ db_present }}"
         package_from: manifest_path
@@ -118,7 +128,7 @@
       async: "{{ async_time | default('1000') }}"
       poll: 0
       rapyutarobotics.rr_io.packages:
-        version: auto
+        version: "{{ gwm_cloud_version }}"
         name: "{{ prefix_name }}_gwm_cloud"
         present: "{{ present }}"
         package_from: manifest_path
@@ -131,7 +141,7 @@
       async: "{{ async_time | default('1000') }}"
       poll: 0
       rapyutarobotics.rr_io.packages:
-        version: auto
+        version: "{{ amr_ui_cloud_version }}"
         name: "{{ prefix_name }}_amr_ui_cloud"
         present: "{{ present }}"
         package_from: manifest_path
@@ -144,7 +154,7 @@
       async: "{{ async_time | default('1000') }}"
       poll: 0
       rapyutarobotics.rr_io.packages:
-        version: auto
+        version: "{{ simulator_version }}"
         name: "{{ prefix_name }}_simulator"
         present: "{{ present }}"
         package_from: manifest_path
@@ -167,7 +177,8 @@
         component_name: postgres
         present: "{{ db_present }}"
         package_name: "{{ prefix_name }}_postgres_cloud"
-        component_params: "{{ package_arguments }}"
+        package_version: "{{ postgres_cloud_version }}"
+        component_params: "{{ temp_package_arguments.postgres_cloud }}"
       register: db_deploy_id
     - name: GWM CLOUD deployment
       async: "{{ async_time | default('2000') }}"
@@ -177,10 +188,11 @@
         component_name: core
         present: "{{ present }}"
         package_name: "{{ prefix_name }}_gwm_cloud"
+        package_version: "{{ gwm_cloud_version }}"
         depends:
           deployments:
             - "{{ prefix_name }}_postgres_cloud"
-        component_params: "{{ package_arguments }}"
+        component_params: "{{ temp_package_arguments.gwm_cloud }}"
       register: gwm_cloud_deploy_id
     - name: AMR UI  deployment
       async: "{{ async_time | default('2600') }}"
@@ -190,10 +202,11 @@
         component_name: amr_ui
         present: "{{ present }}"
         package_name: "{{ prefix_name }}_amr_ui_cloud"
+        package_version: "{{ amr_ui_cloud_version }}"
         depends:
           deployments:
             - "{{ prefix_name }}_gwm_cloud"
-        component_params: "{{ package_arguments }}"
+        component_params: "{{ temp_package_arguments.amr_ui_cloud }}"
       register: amr_ui_cloud_deploy_id
     - name: Simulator  deployment
       async: "{{ async_time | default('2600') }}"
@@ -203,10 +216,11 @@
         component_name: gazebo
         present: "{{ present }}"
         package_name: "{{ prefix_name }}_simulator"
+        package_version: "{{ simulator_version }}"
         depends:
           deployments:
             - "{{ prefix_name }}_gwm_cloud"
-        component_params: "{{ package_arguments }}"
+        component_params: "{{ temp_package_arguments.simulator }}"
       register: simulator_deploy_id
 
 

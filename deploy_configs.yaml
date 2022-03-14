@@ -24,17 +24,30 @@ site_name: kiba
 # if routed_networks is set to true, please remember to deleted the routed network after deprovisioning
 # Either "routed" or "native"
 network_type: "routed"
-ansible_async: true
+ansible_async: false
 ros_distro: noetic
 
-robot_device_name:
-- robot_device_1
-- robot_device_2
-- robot_device_3
-
+robot_devices: {
+ robot_device_1: {},
+ robot_device_2: {},
+ robot_device_3: {}
+}
 package_arguments: {
-  AUTOBOOTSTRAP: 'true',
-  SITE: 'kiba'
+  postgres: {},
+  postgres_cloud: {},
+  amr_ui: {},
+  amr_ui_cloud: {},
+  gwm: {},
+  gwm_cloud: {},
+  server: {
+    AUTOBOOTSTRAP: 'true',
+    SITE: 'kiba'
+  },
+  server_cloud: {
+    AUTOBOOTSTRAP: 'true',
+    SITE: 'kiba'
+  },
+  simulator: {}
 }
 
 nuc_device_name: jason
