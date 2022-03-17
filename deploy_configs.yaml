@@ -2,8 +2,8 @@
 present: "true"
 
 # The username and password of the dockerhub account with access to the images. This is needed to pull the IO AMR images for the simulation
-docker_user: "insert username"
-docker_password: "insert password"
+docker_user: "ioamrreadonly"
+docker_password: "#3=L#L_UVSDT{enY"
 
 # The images used for the simulation
 postgres_version: "v1.0.0-3"
@@ -23,7 +23,7 @@ site_name: kiba
 # if routed_networks is set to true, please remember to deleted the routed network after deprovisioning
 # Either "routed" or "native"
 network_type: "routed"
-ansible_async: false
+ansible_async: true
 ros_distro: noetic
 
 robot_device_name:
