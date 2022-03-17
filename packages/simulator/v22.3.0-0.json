@@ -64,7 +64,7 @@
               "cmd": [
                 "/bin/bash",
                 "-c",
-                "source /opt/ros/$${ROS_DISTRO}/setup.bash && [ -f /home/rr/catkin_ws/devel/setup.bash ] && source /home/rr/catkin_ws/devel/setup.bash || source /home/rr/catkin_ws/install/setup.bash &&         if [[ ! -z \"$${AUTOBOOTSTRAP}\" ]] && [[ $${AUTOBOOTSTRAP} == \"true\" ]]; then rosrun gwm_interface sitectl.py -f --site $${SITE}; fi &&         roslaunch bringup simulation_$${SITE}.launch rviz:=false item:=$${ITEM} || sleep infinity"
+                "source /opt/ros/$${ROS_DISTRO}/setup.bash && [ -f /home/rr/catkin_ws/devel/setup.bash ] && source /home/rr/catkin_ws/devel/setup.bash || source /home/rr/catkin_ws/install/setup.bash &&         if [[ ! -z \"$${AUTOBOOTSTRAP}\" ]] && [[ $${AUTOBOOTSTRAP} == \"true\" ]]; then rosrun gwm_interface sitectl.py -f --site $${SITE}; fi &&         roslaunch bringup simulation_$${SITE}.launch rviz:=false || sleep infinity"
               ],
               "limits": {
                 "cpu": 4,
@@ -107,11 +107,6 @@
             {
               "default": "false",
               "name": "LEGACY_LOCALIZATION",
-              "description": ""
-            },
-            {
-              "default": "NONE",
-              "name": "ITEM",
               "description": ""
             },
             {
