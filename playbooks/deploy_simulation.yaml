@@ -152,7 +152,7 @@
   connection: local
   tasks:
     - name: POSTGRES Deployment
-      async: "{{ async_time | default('100') }}"
+      async: "{{ async_time | default('2000') }}"
       poll: 0
       rapyutarobotics.rr_io.deployments:
         name: "{{ prefix_name }}_postgres_cloud"
