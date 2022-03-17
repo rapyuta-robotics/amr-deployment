@@ -215,7 +215,7 @@
       when:
         - ansible_async|bool == true
       loop:
-#       - "{{ db_deploy_id }}"
+       - "{{ db_deploy_id }}"
       - "{{ gwm_cloud_deploy_id }}"
       - "{{ amr_ui_cloud_deploy_id }}"
       - "{{ simulator_deploy_id }}"
@@ -225,7 +225,7 @@
         msg: '{{ item }}'
       when: ansible_async|bool == true
       loop:
-#       - "{{ db_deploy_id }}"
+       - "{{ db_deploy_id }}"
       - "{{ gwm_cloud_deploy_id }}"
       - "{{ amr_ui_cloud_deploy_id }}"
       - "{{ simulator_deploy_id }}"
