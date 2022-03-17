@@ -23,7 +23,7 @@ site_name: kiba
 # if routed_networks is set to true, please remember to deleted the routed network after deprovisioning
 # Either "routed" or "native"
 network_type: "routed"
-ansible_async: true
+ansible_async: false
 ros_distro: noetic
 
 robot_device_name:
