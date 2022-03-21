@@ -15,6 +15,11 @@
           - docker_user  != "insert username"
           - docker_password != "insert password"
         fail_msg: docker username or password is currently set as default values, please check both and try again
+    - name: check if volume variables are correct
+      assert:
+        that:
+          - volume_deploy|bool == true and volume_name != ""
+        fail_msg: volume_deploy is true but no volume_name set, please either set volume_deploy to false or set a name for volume_name
     - name: set_async_status
       set_fact:
         async_time: 0
@@ -110,19 +115,27 @@
       poll: 0
       rapyutarobotics.rr_io.networks:
         name: "{{ prefix_name }}-gwm-cloud"
-        present: true
+        present: "{{ present }}"
         type: static_route
-      when: present == "true"
       register: gwm_static_route_id
     - name: AMR UI Static Route
       async: 100
       poll: 0
       rapyutarobotics.rr_io.networks:
         name: "{{ prefix_name }}-amr-ui-cloud"
-        present: true
+        present: "{{ present }}"
         type: static_route
-      when: present == "true"
       register: amr_ui_static_route_id
+    - name: Volume Deployment
+      async: "{{ async_time | default('100') }}"
+      poll: 0
+      rapyutarobotics.rr_io.volumes:
+        name: "{{ volume_name | default('') }}"
+        present: true
+        type: default
+        capacity: "{{ volume_capacity }}"
+      when: volume_deploy|bool == true
+      register: postgres_volume_id
 
 - name: POSTGRES, GWM, AMR UI CLOUD, SIMULATOR Packages
   hosts: localhost
@@ -197,6 +210,10 @@
         package_name: "{{ prefix_name }}_postgres_cloud"
         package_version: "{{ postgres_cloud_version }}"
         component_params: "{{ temp_package_arguments.postgres_cloud }}"
+        volume:
+          name: "{{ volume_name | default('') }}"
+          mount_path: "/var/lib/postgresql/data"
+          sub_path: "data"
       register: db_deploy_id
     - name: GWM CLOUD deployment
       async: "{{ async_time | default('2000') }}"
@@ -279,20 +296,3 @@
       - "{{ gwm_cloud_deploy_id }}"
       - "{{ amr_ui_cloud_deploy_id }}"
       - "{{ simulator_deploy_id }}"
-
-    - name: GWM Static Route
-      async: 100
-      poll: 0
-      rapyutarobotics.rr_io.networks:
-        name: "{{ prefix_name }}-gwm-cloud"
-        present: "{{ present }}"
-        type: static_route
-      register: gwm_static_route_id
-    - name: AMR UI Static Route
-      async: 100
-      poll: 0
-      rapyutarobotics.rr_io.networks:
-        name: "{{ prefix_name }}-amr-ui-cloud"
-        present: "{{ present }}"
-        type: static_route
-      register: amr_ui_static_route_id

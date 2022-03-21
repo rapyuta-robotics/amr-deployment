@@ -189,6 +189,12 @@ Additional Parameters for deploy_configs.yaml:
  select ros distro, currently supported are melodic and noetic
 ``robot_device_name``:
 The name of the robot device onboarded to rapyuta.io when device_deploy.yaml is being used.
+``volume_name``:
+ will look for a disk with this name, if volume deploy is true, script will create a disk with this name and use it
+``volume_deploy``:
+ set whether to create a new disk or not, requires volume_name to not be empty
+``volume_capacity``:
+ set capacity for disk, this parameter is case insensitive. options are as follows: 4GiB , 8GiB, 16GiB, 32GiB, 64GiB, 128GiB, 256 GiB,  512 GiB
 ``package_arguments``:
 Add all the environment variables to be inserted or overwritten for ALL packages, this needs to be a dict
 ``robot_device_network_interface``:
