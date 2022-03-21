@@ -105,6 +105,24 @@
         resource_type: small
       when: network_type == "routed"
       register: routed_network_id
+    - name: GWM Static Route
+      async: 100
+      poll: 0
+      rapyutarobotics.rr_io.networks:
+        name: "{{ prefix_name }}-gwm-cloud"
+        present: true
+        type: static_route
+      when: present == "true"
+      register: gwm_static_route_id
+    - name: AMR UI Static Route
+      async: 100
+      poll: 0
+      rapyutarobotics.rr_io.networks:
+        name: "{{ prefix_name }}-amr-ui-cloud"
+        present: true
+        type: static_route
+      when: present == "true"
+      register: amr_ui_static_route_id
 
 - name: POSTGRES, GWM, AMR UI CLOUD, SIMULATOR Packages
   hosts: localhost
@@ -189,6 +207,10 @@
         present: "{{ present }}"
         package_name: "{{ prefix_name }}_gwm_cloud"
         package_version: "{{ gwm_cloud_version }}"
+        networks:
+          static_routes:
+            - name: "{{ prefix_name }}-gwm-cloud"
+              endpoint_name: GWM_CORE_URL
         depends:
           deployments:
             - "{{ prefix_name }}_postgres_cloud"
@@ -203,6 +225,10 @@
         present: "{{ present }}"
         package_name: "{{ prefix_name }}_amr_ui_cloud"
         package_version: "{{ amr_ui_cloud_version }}"
+        networks:
+          static_routes:
+            - name: "{{ prefix_name }}-amr-ui-cloud"
+              endpoint_name: AMR_UI
         depends:
           deployments:
             - "{{ prefix_name }}_gwm_cloud"
@@ -253,3 +279,20 @@
       - "{{ gwm_cloud_deploy_id }}"
       - "{{ amr_ui_cloud_deploy_id }}"
       - "{{ simulator_deploy_id }}"
+
+    - name: GWM Static Route
+      async: 100
+      poll: 0
+      rapyutarobotics.rr_io.networks:
+        name: "{{ prefix_name }}-gwm-cloud"
+        present: "{{ present }}"
+        type: static_route
+      register: gwm_static_route_id
+    - name: AMR UI Static Route
+      async: 100
+      poll: 0
+      rapyutarobotics.rr_io.networks:
+        name: "{{ prefix_name }}-amr-ui-cloud"
+        present: "{{ present }}"
+        type: static_route
+      register: amr_ui_static_route_id
