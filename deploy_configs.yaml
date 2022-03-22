@@ -4,7 +4,7 @@ db_persist: "true"
 
 # The username and password of the dockerhub account with access to the images. This is needed to pull the IO AMR images for the simulation
 docker_user: "ioamr"
-docker_password: "airb0urne"
+docker_password: ""
 
 # The images used for the simulation
 postgres_version: "v1.0.0-3"
