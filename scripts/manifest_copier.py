@@ -10,6 +10,7 @@ from rapyuta_io import BuildStatus
 import rapyuta_io
 import pprint
 import sys, getopt
+import shutil
 
 class package_list():
 
@@ -255,3 +256,7 @@ if __name__ == '__main__':
 
     print('Pushing packages to target project ' + target_project_id)
     push_package(target_project_id, auth_token, packages.get_list())
+
+    # clean up temp_projects
+    print('Cleaning up temp files')
+    shutil.rmtree('temp_packages/')
