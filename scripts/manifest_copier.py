@@ -130,15 +130,16 @@ def get_args(argv):
     target_project_id = ''
     auth_token = ''
     target_packages = ''
+    docker_secret_guid = ''
     try:
-        opts, args = getopt.getopt(argv, "hs:t:a:p:", ["help","source_project=", "target_project=", "auth_token=", "target_packages="])
+        opts, args = getopt.getopt(argv, "hs:t:a:p:d:", ["help","source_project=", "target_project=", "auth_token=", "target_packages=", "docker_secret="])
     except getopt.GetoptError as err:
         print(err)
         sys.exit(2)
     for opt, arg in opts:
         if opt in ('-h', '--help'):
             print('Run from amr-deployment directory')
-            print('scripts/manifest_updater.py -s <source_project> -t <target_project> -a <auth_token> -p <target_packages>')
+            print('scripts/manifest_updater.py -s <source_project> -t <target_project> -a <auth_token> -p <target_packages> -d <docker_secret>')
             sys.exit()
         elif opt in ("-s", "--source_project"):
             source_project_id = arg
@@ -148,9 +149,11 @@ def get_args(argv):
             auth_token = arg
         elif opt in ("-p", "--target_packages"):
             target_packages = arg
-    return source_project_id, target_project_id, auth_token, target_packages
+        elif opt in ("-d", "--docker_secret"):
+            docker_secret_guid = arg
+    return source_project_id, target_project_id, auth_token, target_packages, docker_secret_guid
 
-def get_packages(project_id, auth_token, packages):
+def get_packages(project_id, auth_token, packages, secret_guid):
 
     for package in packages:
         print("Getting all subpackages in package: " + package["package_name"])
@@ -179,6 +182,10 @@ def get_packages(project_id, auth_token, packages):
 
                         if "secret" in container:
                             del subpackage_manifest["plans"][0]["components"][container_id]["executables"][executable_id]["secret"]
+                        if secret_guid != '':
+                            subpackage_manifest["plans"][0]["components"][container_id]["executables"][executable_id]["secret"] = secret_guid
+                            print("Replacing secret in subpackage " + subpackage_manifest["packageVersion"] + " for executable " + subpackage_manifest["plans"][0]["components"][container_id]["executables"][executable_id]["name"])
+                        else:
                             print("Removing secret in subpackage " + subpackage_manifest["packageVersion"] + " for executable " + subpackage_manifest["plans"][0]["components"][container_id]["executables"][executable_id]["name"])
 
                         if "buildGUID" in container:
@@ -242,7 +249,7 @@ def push_package(project_id, auth_token, packages):
                 print('Package: ' + package["package_name"] + ' already exists in ' + target_project_id)
 
 if __name__ == '__main__':
-    source_project_id, target_project_id, auth_token, target_packages = get_args(sys.argv[1:])
+    source_project_id, target_project_id, auth_token, target_packages, docker_secret_guid = get_args(sys.argv[1:])
 
     if(target_packages != ''):
         packages = package_list()
@@ -252,7 +259,7 @@ if __name__ == '__main__':
 
     # Get packages from source
     print('Getting packages from source project ' + source_project_id)
-    get_packages(source_project_id, auth_token, packages.get_list())
+    get_packages(source_project_id, auth_token, packages.get_list(), docker_secret_guid)
 
     print('Pushing packages to target project ' + target_project_id)
     push_package(target_project_id, auth_token, packages.get_list())
