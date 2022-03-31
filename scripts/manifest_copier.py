@@ -139,7 +139,7 @@ def get_args(argv):
     for opt, arg in opts:
         if opt in ('-h', '--help'):
             print('Run from amr-deployment directory')
-            print('scripts/manifest_updater.py -s <source_project> -t <target_project> -a <auth_token> -p <target_packages> -d <docker_secret>')
+            print('scripts/manifest_copier.py -s <source_project> -t <target_project> -a <auth_token> -p <target_packages> -d <docker_secret>')
             sys.exit()
         elif opt in ("-s", "--source_project"):
             source_project_id = arg
