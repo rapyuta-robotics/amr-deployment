@@ -1,0 +1,280 @@
+{
+  "bindable": false,
+  "packageVersion": "v22.3.0-7",
+  "plans": [
+    {
+      "includePackages": [],
+      "singleton": false,
+      "name": "default",
+      "inboundROSInterfaces": {
+        "anyIncomingScopedOrTargetedRosConfig": true
+      },
+      "dependentDeployments": [],
+      "components": [
+        {
+          "executables": [
+            {
+              "name": "vnc",
+              "simulationOptions": {
+                "simulation": false
+              },
+              "cmd": [
+                "/bin/bash -c \"unset DISPLAY && /home/rr/headless/install/vnc_startup.sh 'gzclient' || sleep infinity\""
+              ],
+              "docker": "docker.io/rrdockerhub/io_amr_pa:iogen-build-isabuuazzslotvikmzzwppij-21"
+            },
+            {
+              "name": "amr",
+              "simulationOptions": {
+                "simulation": false
+              },
+              "cmd": [
+                "/bin/bash -c \"source /home/rr/catkin_ws/install/setup.bash && roslaunch bringup agent.launch __ns:=amr$${ROBOT_ID} robot_name:=amr$${ROBOT_ID} agent_id:=$${ROBOT_ID} map:=$${MAP} site:=$${SITE} launch_drivers:=true tf_prefix:=amr$${ROBOT_ID}/ x_pos:=$${X_POS} y_pos:=$${Y_POS} robot_ui:=true || sleep infinity\""
+              ],
+              "docker": "docker.io/rrdockerhub/io_amr_pa:iogen-build-isabuuazzslotvikmzzwppij-21"
+            }
+          ],
+          "name": "amr",
+          "parameters": [
+            {
+              "default": "true",
+              "name": "JOYSTICK",
+              "description": ""
+            },
+            {
+              "default": "1280x720",
+              "name": "VNC_RESOLUTION",
+              "description": ""
+            },
+            {
+              "default": "autobootstrap",
+              "name": "GWM_AUTH_TOKEN",
+              "description": ""
+            },
+            {
+              "default": "amcl",
+              "name": "LOCALIZATION_TYPE",
+              "description": ""
+            },
+            {
+              "default": "managed",
+              "name": "LOCALIZATION_MODE",
+              "description": ""
+            },
+            {
+              "default": "2",
+              "name": "MAP_ID",
+              "description": ""
+            },
+            {
+              "default": "kiba_2F",
+              "name": "MAP",
+              "description": ""
+            },
+            {
+              "default": "YAML",
+              "name": "ITEM_SPAWN_FROM",
+              "description": ""
+            },
+            {
+              "default": "1",
+              "name": "PYTHONUNBUFFERED",
+              "description": ""
+            },
+            {
+              "default": "/run/user/1000",
+              "name": "XDG_RUNTIME_DIR",
+              "description": ""
+            },
+            {
+              "default": "NONE",
+              "name": "ITEM",
+              "description": ""
+            },
+            {
+              "default": "kiba",
+              "name": "SITE",
+              "description": ""
+            },
+            {
+              "default": ":0",
+              "name": "DISPLAY",
+              "description": ""
+            }
+          ],
+          "architecture": "amd64",
+          "requiredRuntime": "device",
+          "ros": {
+            "services": [],
+            "topics": [
+              {
+                "name": "/gwm_interface/site/fetch_error_type_request",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/gbc/reserve_spot_request",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/agent_status",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/mrrp/route_request",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/gwm/destination_request",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/AlicaEngine/AlicaEngineInfo",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/AlicaEngine/PlanTreeInfo",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/AlicaEngine/AgentQuery",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/AlicaEngine/AgentAnnouncement",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/AlicaEngine/AllocationAuthorityInfo",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/AlicaEngine/OwnRole",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/AlicaEngine/SolverResult",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/gbc/amr_action_response",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/gbc/error_action_request",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/gwm_interface/mapping/get_graph_request",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/gwm_interface/mapping/get_regions_request",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/gwm_interface/mapping/get_spots_request",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/gwm_interface/site/fetch_external_devices_request",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/gwm_interface/work/fetch_work_request",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/gwm_interface/work/update_work_request",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/gbc/update_task_request",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/gbc/ext_device_lock_request",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              }
+            ],
+            "isROS": true,
+            "actions": [],
+            "ros_distro": "noetic"
+          },
+          "description": "",
+          "restart_policy": "always",
+          "rosBagJobDefs": []
+        }
+      ],
+      "exposedParameters": [],
+      "metadata": {}
+    }
+  ],
+  "name": "amr",
+  "description": "The default amr package."
+}
