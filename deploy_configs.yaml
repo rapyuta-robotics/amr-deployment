@@ -1,5 +1,6 @@
 # Whether the deployment artifacts should be present in your project
 present: "true"
+db_persist: "false"
 
 # The username and password of the dockerhub account with access to the images. This is needed to pull the IO AMR images for the simulation
 docker_user: "insert username"
@@ -26,10 +27,42 @@ network_type: "routed"
 ansible_async: true
 ros_distro: noetic
 
-robot_device_name:
-- robot_device_1
-- robot_device_2
-- robot_device_3
+
+volume_name: "" # will look for a disk with this name, if volume deploy is true, script will create a disk with this name and use it
+volume_deploy: false
+volume_capacity: 4GiB #This parameter is case insensitive.
+    #choices:
+    #- 4GiB
+    #- 8GiB
+    #- 16GiB
+    #- 32GiB
+    #- 64GiB
+    #- 128GiB
+    #- 256 GiB
+    #- 512 GiB
+
+robot_devices: {
+ robot_device_1: {},
+ robot_device_2: {},
+ robot_device_3: {}
+}
+package_arguments: {
+  postgres: {},
+  postgres_cloud: {},
+  amr_ui: {},
+  amr_ui_cloud: {},
+  gwm: {},
+  gwm_cloud: {},
+  server: {
+    AUTOBOOTSTRAP: 'true',
+    SITE: 'kiba'
+  },
+  server_cloud: {
+    AUTOBOOTSTRAP: 'true',
+    SITE: 'kiba'
+  },
+  simulator: {}
+}
 
 nuc_device_name: jason
 nuc_device_network_interface: wlp0s20f3

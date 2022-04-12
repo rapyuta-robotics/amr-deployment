@@ -15,6 +15,11 @@
           - docker_user  != "insert username"
           - docker_password != "insert password"
         fail_msg: docker username or password is currently set as default values, please check both and try again
+    - name: check if volume variables are correct
+      assert:
+        that:
+          - volume_deploy|bool == true and volume_name != ""
+        fail_msg: volume_deploy is true but no volume_name set, please either set volume_deploy to false or set a name for volume_name
     - name: set_async_status
       set_fact:
         async_time: 0
@@ -29,6 +34,24 @@
         native_network: false
         routed_network: true
       when: network_type == "routed"
+    - name: set_db_present_true
+      set_fact:
+        db_present: true
+      when: db_persist|bool == true or present|bool == true
+    - name: set_db_present_false
+      set_fact:
+        db_present: false
+      when: db_persist|bool == false and present|bool == false
+    - name: set_temp_package_args
+      set_fact:
+        temp_package_arguments: "{{ package_arguments }}"
+    - name: set_site
+      set_fact:
+        temp_package_arguments: "{{ temp_package_arguments | combine(new_item, recursive=true) }}"
+      vars:
+        new_item: "{ '{{ item.key }}': { 'SITE': '{{ site_name }}' } }"
+      when: item.key == "simulator" or item.key == "server" or item.key == "server_cloud"
+      with_dict: "{{ temp_package_arguments }}"
 
 - name: Copy manifests to temp directory
   hosts: localhost
@@ -87,6 +110,32 @@
         resource_type: small
       when: network_type == "routed"
       register: routed_network_id
+    - name: GWM Static Route
+      async: 100
+      poll: 0
+      rapyutarobotics.rr_io.networks:
+        name: "{{ prefix_name }}-gwm-cloud"
+        present: "{{ present }}"
+        type: static_route
+      register: gwm_static_route_id
+    - name: AMR UI Static Route
+      async: 100
+      poll: 0
+      rapyutarobotics.rr_io.networks:
+        name: "{{ prefix_name }}-amr-ui-cloud"
+        present: "{{ present }}"
+        type: static_route
+      register: amr_ui_static_route_id
+    - name: Volume Deployment
+      async: "{{ async_time | default('100') }}"
+      poll: 0
+      rapyutarobotics.rr_io.volumes:
+        name: "{{ volume_name | default('') }}"
+        present: true
+        type: default
+        capacity: "{{ volume_capacity }}"
+      when: volume_deploy|bool == true
+      register: postgres_volume_id
 
 - name: POSTGRES, GWM, AMR UI CLOUD, SIMULATOR Packages
   hosts: localhost
@@ -97,9 +146,9 @@
       async: "{{ async_time | default('1000') }}"
       poll: 0
       rapyutarobotics.rr_io.packages:
-        version: auto
+        version: "{{ postgres_cloud_version }}"
         name: "{{ prefix_name }}_postgres_cloud"
-        present: "{{ present }}"
+        present: "{{ db_present }}"
         package_from: manifest_path
         manifest_path: /tmp/postgres_cloud.json
         executables_info:
@@ -110,7 +159,7 @@
       async: "{{ async_time | default('1000') }}"
       poll: 0
       rapyutarobotics.rr_io.packages:
-        version: auto
+        version: "{{ gwm_cloud_version }}"
         name: "{{ prefix_name }}_gwm_cloud"
         present: "{{ present }}"
         package_from: manifest_path
@@ -123,7 +172,7 @@
       async: "{{ async_time | default('1000') }}"
       poll: 0
       rapyutarobotics.rr_io.packages:
-        version: auto
+        version: "{{ amr_ui_cloud_version }}"
         name: "{{ prefix_name }}_amr_ui_cloud"
         present: "{{ present }}"
         package_from: manifest_path
@@ -136,7 +185,7 @@
       async: "{{ async_time | default('1000') }}"
       poll: 0
       rapyutarobotics.rr_io.packages:
-        version: auto
+        version: "{{ simulator_version }}"
         name: "{{ prefix_name }}_simulator"
         present: "{{ present }}"
         package_from: manifest_path
@@ -157,8 +206,14 @@
       rapyutarobotics.rr_io.deployments:
         name: "{{ prefix_name }}_postgres_cloud"
         component_name: postgres
-        present: "{{ present }}"
+        present: "{{ db_present }}"
         package_name: "{{ prefix_name }}_postgres_cloud"
+        package_version: "{{ postgres_cloud_version }}"
+        component_params: "{{ temp_package_arguments.postgres_cloud }}"
+        volume:
+          name: "{{ volume_name | default('') }}"
+          mount_path: "/var/lib/postgresql/data"
+          sub_path: "data"
       register: db_deploy_id
     - name: GWM CLOUD deployment
       async: "{{ async_time | default('2000') }}"
@@ -168,9 +223,15 @@
         component_name: core
         present: "{{ present }}"
         package_name: "{{ prefix_name }}_gwm_cloud"
+        package_version: "{{ gwm_cloud_version }}"
+        networks:
+          static_routes:
+            - name: "{{ prefix_name }}-gwm-cloud"
+              endpoint_name: GWM_CORE_URL
         depends:
           deployments:
             - "{{ prefix_name }}_postgres_cloud"
+        component_params: "{{ temp_package_arguments.gwm_cloud }}"
       register: gwm_cloud_deploy_id
     - name: AMR UI  deployment
       async: "{{ async_time | default('2600') }}"
@@ -180,9 +241,15 @@
         component_name: amr_ui
         present: "{{ present }}"
         package_name: "{{ prefix_name }}_amr_ui_cloud"
+        package_version: "{{ amr_ui_cloud_version }}"
+        networks:
+          static_routes:
+            - name: "{{ prefix_name }}-amr-ui-cloud"
+              endpoint_name: AMR_UI
         depends:
           deployments:
             - "{{ prefix_name }}_gwm_cloud"
+        component_params: "{{ temp_package_arguments.amr_ui_cloud }}"
       register: amr_ui_cloud_deploy_id
     - name: Simulator  deployment
       async: "{{ async_time | default('2600') }}"
@@ -192,11 +259,11 @@
         component_name: gazebo
         present: "{{ present }}"
         package_name: "{{ prefix_name }}_simulator"
+        package_version: "{{ simulator_version }}"
         depends:
           deployments:
             - "{{ prefix_name }}_gwm_cloud"
-        component_params:
-          SITE: "{{ site_name }}"
+        component_params: "{{ temp_package_arguments.simulator }}"
       register: simulator_deploy_id
 
 
