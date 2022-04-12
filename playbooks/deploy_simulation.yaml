@@ -18,8 +18,9 @@
     - name: check if volume variables are correct
       assert:
         that:
-          - volume_deploy|bool == true and volume_name != ""
+          - volume_name != ""
         fail_msg: volume_deploy is true but no volume_name set, please either set volume_deploy to false or set a name for volume_name
+      when: volume_deploy|bool == true
     - name: set_async_status
       set_fact:
         async_time: 0
