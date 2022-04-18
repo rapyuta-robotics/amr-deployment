@@ -260,7 +260,7 @@
         depends:
           deployments:
             - "{{ prefix_name }}_gwm"
-        component_params: "{{ item }}"
+        component_params: "{{ item.value }}"
       with_dict: "{{ temp_robot_devices }}"
       register: amr_routed_deploy_id
     - name: AMR  deployment (Native Network)
@@ -281,7 +281,7 @@
         depends:
           deployments:
             - "{{ prefix_name }}_gwm"
-        component_params: "{{ item }}"
+        component_params: "{{ item.value }}"
       with_dict: "{{ temp_robot_devices }}"
       register: amr_native_deploy_id
     - name: SERVER  deployment (Routed Network)
@@ -302,7 +302,7 @@
         depends:
           deployments:
             - "{{ prefix_name }}_gwm"
-        component_params: "{{ temp_package_arguments }}"
+        component_params: "{{ temp_package_arguments.server }}"
       register: server_routed_deploy_id
     - name: SERVER  deployment (Native Network)
       async: "{{ async_time | default('2600') }}"
@@ -322,7 +322,7 @@
         depends:
           deployments:
             - "{{ prefix_name }}_gwm"
-        component_params: "{{ temp_package_arguments }}"
+        component_params: "{{ temp_package_arguments.server }}"
       register: server_native_deploy_id
 
 - name: Async wait on deployments
