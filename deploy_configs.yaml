@@ -41,11 +41,22 @@ volume_capacity: 4GiB #This parameter is case insensitive.
     #- 256 GiB
     #- 512 GiB
 
+# replace robot_device_1, robot_device_2, robot_device_3 with the name of the robot device you wish to use
+# Add any Component Parameters into the {} as a comma seperated list of Key: Value pairs
+# SITE is not needed if site_name is set, the component parameters for SITE will be automatically populated
+# Empty values for the package component parameters will mean the deployment will use package defaults
+# Package defaults for component parameters will be overwritten if they are specified here
 robot_devices: {
- robot_device_1: {},
+ robot_device_1: {AUTOBOOTSTRAP: 'true'},
  robot_device_2: {},
  robot_device_3: {}
 }
+
+# Add any Component Parameters into the {} as a comma seperated list of Key: Value pairs after each Package key
+# Each package argument is seperate from the others
+# SITE is not needed if site_name is set, the component parameters for SITE will be automatically populated
+# Empty values for the package component parameters will mean the deployment will use package defaults
+# Package defaults for component parameters will be overwritten if they are specified here
 package_arguments: {
   postgres: {},
   postgres_cloud: {},
@@ -61,7 +72,9 @@ package_arguments: {
     AUTOBOOTSTRAP: 'true',
     SITE: 'kiba'
   },
-  simulator: {}
+  simulator: {
+    AUTOBOOTSTRAP: 'false',
+  }
 }
 
 nuc_device_name: jason
