@@ -213,7 +213,6 @@ AMRs don't show
 
 Error such as:
 
-.. tabs::
 fatal: [localhost]: FAILED! => {"changed": false, "msg": "Unsupported parameters for (rapyutarobotics.rr_io.deployments) module: volume. Supported parameters include: device_name, component_name, present, networks, token, component_alias, package_version, name, component_params, package_name, runtime, ignore_device_config, depends, project."}
             
 Try running deploy script with sudo
