@@ -211,8 +211,9 @@ AMRs don't show
  - Redeploy the deployment
  - Redeploy using ansible_async = false
 
-Error such as:
-
-fatal: [localhost]: FAILED! => {"changed": false, "msg": "Unsupported parameters for (rapyutarobotics.rr_io.deployments) module: volume. Supported parameters include: device_name, component_name, present, networks, token, component_alias, package_version, name, component_params, package_name, runtime, ignore_device_config, depends, project."}
+If you get an Error such as
+ fatal: [localhost]: FAILED! => {"changed": false, "msg": "Unsupported parameters for (rapyutarobotics.rr_io.deployments) module: volume. Supported parameters include: device_name, component_name, present, networks, token, component_alias, package_version, name, component_params, package_name, runtime, ignore_device_config, depends, project."}
             
-Try running deploy script with sudo
+Try the following
+ - running deploy script with sudo
+ - adding the following to your deploy command: -e 'ansible_python_interpreter=/usr/bin/python3' 
