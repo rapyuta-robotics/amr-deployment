@@ -1,0 +1,82 @@
+{
+  "bindable": true,
+  "packageVersion": "v1.0.0-6",
+  "plans": [
+    {
+      "includePackages": [],
+      "singleton": false,
+      "name": "default",
+      "inboundROSInterfaces": {
+        "anyIncomingScopedOrTargetedRosConfig": false
+      },
+      "dependentDeployments": [],
+      "components": [
+        {
+          "executables": [
+            {
+              "name": "pgsql",
+              "simulationOptions": {
+                "simulation": false
+              },
+              "cmd": [],
+              "docker": "postgis/postgis:14-3.2-alpine"
+            }
+          ],
+          "name": "postgres",
+          "parameters": [
+            {
+              "default": "/var/log/riouser/pgdata",
+              "name": "PGDATA",
+              "description": ""
+            },
+            {
+              "default": "postgres",
+              "name": "POSTGRES_PASSWORD",
+              "description": ""
+            },
+            {
+              "default": "postgres",
+              "name": "POSTGRES_USER",
+              "description": ""
+            },
+            {
+              "default": "gwm_core",
+              "name": "POSTGRES_DB",
+              "description": ""
+            }
+          ],
+          "architecture": "amd64",
+          "requiredRuntime": "device",
+          "ros": {
+            "services": [],
+            "topics": [],
+            "isROS": false,
+            "actions": []
+          },
+          "description": "",
+          "restart_policy": "always"
+        }
+      ],
+      "exposedParameters": [
+        {
+          "component": "postgres",
+          "param": "POSTGRES_PASSWORD",
+          "targetParam": "POSTGRES_PASSWORD"
+        },
+        {
+          "component": "postgres",
+          "param": "POSTGRES_USER",
+          "targetParam": "POSTGRES_USER"
+        },
+        {
+          "component": "postgres",
+          "param": "POSTGRES_DB",
+          "targetParam": "POSTGRES_DB"
+        }
+      ],
+      "metadata": {}
+    }
+  ],
+  "name": "postgres",
+  "description": ""
+}

@@ -7,8 +7,8 @@ docker_user: "insert username"
 docker_password: "insert password"
 
 # The images used for the simulation
-postgres_version: "v1.0.0-5"
-postgres_cloud_version: "v1.0.0-7"
+postgres_version: "v1.0.0-6"
+postgres_cloud_version: "v1.0.0-8"
 amr_version: "v22.3.0-7"
 amr_ui_version: "v2.6.0-3"
 amr_ui_cloud_version: "v2.6.0-1"
