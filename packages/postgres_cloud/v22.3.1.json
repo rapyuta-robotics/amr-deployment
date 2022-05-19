@@ -1,0 +1,92 @@
+{
+  "bindable": true,
+  "packageVersion": "v22.3.1",
+  "plans": [
+    {
+      "includePackages": [],
+      "singleton": false,
+      "name": "default",
+      "inboundROSInterfaces": {
+        "anyIncomingScopedOrTargetedRosConfig": false
+      },
+      "dependentDeployments": [],
+      "components": [
+        {
+          "executables": [
+            {
+              "name": "pgsql",
+              "simulationOptions": {
+                "simulation": false
+              },
+              "cmd": [],
+              "docker": "mdillon/postgis:latest",
+              "limits": {
+                "cpu": 0.5,
+                "memory": 2048
+              }
+            }
+          ],
+          "name": "postgres",
+          "parameters": [
+            {
+              "default": "postgres",
+              "name": "POSTGRES_PASSWORD",
+              "description": ""
+            },
+            {
+              "default": "postgres",
+              "name": "POSTGRES_USER",
+              "description": ""
+            },
+            {
+              "default": "gwm_core",
+              "name": "POSTGRES_DB",
+              "description": ""
+            }
+          ],
+          "architecture": "amd64",
+          "requiredRuntime": "cloud",
+          "ros": {
+            "services": [],
+            "topics": [],
+            "isROS": false,
+            "actions": []
+          },
+          "description": "",
+          "cloudInfra": {
+            "replicas": 1,
+            "endpoints": [
+              {
+                "name": "POSTGRES",
+                "exposeExternally": false,
+                "port": 5432,
+                "targetPort": 5432,
+                "proto": "TCP"
+              }
+            ]
+          }
+        }
+      ],
+      "exposedParameters": [
+        {
+          "component": "postgres",
+          "param": "POSTGRES_PASSWORD",
+          "targetParam": "POSTGRES_PASSWORD"
+        },
+        {
+          "component": "postgres",
+          "param": "POSTGRES_USER",
+          "targetParam": "POSTGRES_USER"
+        },
+        {
+          "component": "postgres",
+          "param": "POSTGRES_DB",
+          "targetParam": "POSTGRES_DB"
+        }
+      ],
+      "metadata": {}
+    }
+  ],
+  "name": "postgres_cloud",
+  "description": ""
+}
