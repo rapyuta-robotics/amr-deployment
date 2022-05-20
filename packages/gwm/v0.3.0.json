@@ -1,0 +1,109 @@
+{
+  "bindable": true,
+  "plans": [
+    {
+      "includePackages": [],
+      "singleton": false,
+      "name": "default",
+      "inboundROSInterfaces": {
+        "anyIncomingScopedOrTargetedRosConfig": false
+      },
+      "dependentDeployments": [],
+      "components": [
+        {
+          "executables": [
+            {
+              "name": "core",
+              "simulationOptions": {
+                "simulation": false
+              },
+              "cmd": [
+                "python manage.py runserver 0.0.0.0:8000"
+              ],
+              "docker": "docker.io/rrdockerhub/io_amr_gwm:iogen-build-gftwswmuskvqtuusjmetjbvx-2"
+            }
+          ],
+          "name": "core",
+          "parameters": [
+            {
+              "default": "5432",
+              "name": "POSTGRES_PORT",
+              "description": ""
+            },
+            {
+              "default": "localhost",
+              "name": "POSTGRES_HOST",
+              "description": ""
+            },
+            {
+              "default": "postgres",
+              "name": "POSTGRES_USER",
+              "description": ""
+            },
+            {
+              "default": "postgres",
+              "name": "POSTGRES_PASSWORD",
+              "description": ""
+            },
+            {
+              "default": "gwm_core",
+              "name": "POSTGRES_DB",
+              "description": ""
+            },
+            {
+              "default": "true",
+              "name": "DEBUG",
+              "description": ""
+            },
+            {
+              "default": "true",
+              "name": "AUTOBOOTSTRAP",
+              "description": ""
+            },
+            {
+              "default": "autobootstrap",
+              "name": "AUTO_ORG_NAME",
+              "description": "Autocreated organisation name"
+            },
+            {
+              "default": "autobootstrap",
+              "name": "AUTO_ROOT_USER",
+              "description": "Autocreated username"
+            },
+            {
+              "default": "autobootstrap",
+              "name": "AUTO_ROOT_PASS",
+              "description": "Autocreated root password"
+            },
+            {
+              "default": "autobootstrap",
+              "name": "AUTO_AUTH_TOKEN",
+              "description": "Autocreated initial token"
+            }
+          ],
+          "architecture": "amd64",
+          "requiredRuntime": "device",
+          "ros": {
+            "services": [],
+            "topics": [],
+            "isROS": false,
+            "actions": []
+          },
+          "description": "",
+          "restart_policy": "always"
+        }
+      ],
+      "exposedParameters": [
+        {
+          "component": "core",
+          "param": "GWM_AUTH_TOKEN",
+          "targetParam": "AUTO_AUTH_TOKEN"
+        }
+      ],
+      "metadata": {}
+    }
+  ],
+  "name": "gwm",
+  "description": "This package was created from v0.3.0-7",
+  "packageVersion": "v0.3.0"
+}

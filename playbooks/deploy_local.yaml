@@ -63,19 +63,19 @@
   connection: local
   tasks:
     - copy:
-        src: "../packages/postgres/{{ postgres_version }}.json"
+        src: "../packages/postgres/{{ deployment_version }}.json"
         dest: /tmp/postgres.json
     - copy:
-        src: "../packages/gwm/{{ gwm_version }}.json"
+        src: "../packages/gwm/{{ deployment_version }}.json"
         dest: /tmp/gwm.json
     - copy:
-        src: "../packages/amr_ui/{{ amr_ui_version }}.json"
+        src: "../packages/amr_ui/{{ deployment_version }}.json"
         dest: /tmp/amr_ui.json
     - copy:
-        src: "../packages/server/{{ server_version }}.json"
+        src: "../packages/server/{{ deployment_version }}.json"
         dest: /tmp/server.json
     - copy:
-        src: "../packages/amr/{{ amr_version }}.json"
+        src: "../packages/amr/{{ deployment_version }}.json"
         dest: /tmp/amr.json
 
 - name: Secrets, Networks

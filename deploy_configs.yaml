@@ -7,16 +7,7 @@ docker_user: "insert username"
 docker_password: "insert password"
 
 # The images used for the simulation
-postgres_version: "v1.0.0-5"
-postgres_cloud_version: "v1.0.0-7"
-amr_version: "v22.3.0-7"
-amr_ui_version: "v2.6.0-3"
-amr_ui_cloud_version: "v2.6.0-1"
-gwm_version: "v0.4.0-2"
-gwm_cloud_version: "v0.4.0-2"
-server_version: "v22.3.0-3"
-server_cloud_version: "v22.3.0-2"
-simulator_version: "v22.3.0-0"
+deployment_version: "v22.3.1"
 
 prefix_name: "prefix"
 site_name: kiba
@@ -77,6 +68,6 @@ package_arguments: {
   }
 }
 
-nuc_device_name: jason
+nuc_device_name: Edge01
 nuc_device_network_interface: wlp0s20f3
 robot_device_network_interface: wlp1s0
