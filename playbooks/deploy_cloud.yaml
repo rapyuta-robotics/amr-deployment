@@ -148,7 +148,7 @@
       async: "{{ async_time | default('1000') }}"
       poll: 0
       rapyutarobotics.rr_io.packages:
-        version: "{{ postgres_cloud_version }}"
+        version: "{{ deployment_version }}"
         name: "{{ prefix_name }}_postgres_cloud"
         present: "{{ db_present }}"
         package_from: manifest_path
@@ -161,7 +161,7 @@
       async: "{{ async_time | default('1000') }}"
       poll: 0
       rapyutarobotics.rr_io.packages:
-        version: "{{ gwm_cloud_version }}"
+        version: "{{ deployment_version }}"
         name: "{{ prefix_name }}_gwm_cloud"
         present: "{{ present }}"
         package_from: manifest_path
@@ -174,7 +174,7 @@
       async: "{{ async_time | default('1000') }}"
       poll: 0
       rapyutarobotics.rr_io.packages:
-        version: "{{ amr_ui_cloud_version }}"
+        version: "{{ deployment_version }}"
         name: "{{ prefix_name }}_amr_ui_cloud"
         present: "{{ present }}"
         package_from: manifest_path
@@ -187,7 +187,7 @@
       async: "{{ async_time | default('1000') }}"
       poll: 0
       rapyutarobotics.rr_io.packages:
-        version: "{{ amr_version }}"
+        version: "{{ deployment_version }}"
         name: "{{ prefix_name }}_amr"
         present: "{{ present }}"
         package_from: manifest_path
@@ -200,7 +200,7 @@
       async: "{{ async_time | default('1000') }}"
       poll: 0
       rapyutarobotics.rr_io.packages:
-        version: "{{ server_cloud_version }}"
+        version: "{{ deployment_version }}"
         name: "{{ prefix_name }}_server_cloud"
         present: "{{ present }}"
         package_from: manifest_path
@@ -223,7 +223,7 @@
         component_name: postgres
         present: "{{ db_present }}"
         package_name: "{{ prefix_name }}_postgres_cloud"
-        package_version: "{{ postgres_cloud_version }}"
+        package_version: "{{ deployment_version }}"
         component_params: "{{ temp_package_arguments.postgres_cloud }}"
         volume:
           name: "{{ volume_name | default('') }}"
@@ -238,7 +238,7 @@
         component_name: core
         present: "{{ present }}"
         package_name: "{{ prefix_name }}_gwm_cloud"
-        package_version: "{{ gwm_cloud_version }}"
+        package_version: "{{ deployment_version }}"
         networks:
           static_routes:
             - name: "{{ prefix_name }}-gwm-cloud"
@@ -256,7 +256,7 @@
         component_name: amr_ui
         present: "{{ present }}"
         package_name: "{{ prefix_name }}_amr_ui_cloud"
-        package_version: "{{ amr_ui_cloud_version }}"
+        package_version: "{{ deployment_version }}"
         networks:
           static_routes:
             - name: "{{ prefix_name }}-amr-ui-cloud"
@@ -274,7 +274,7 @@
         component_name: amr
         present: "{{ present }}"
         package_name: "{{ prefix_name }}_amr"
-        package_version: "{{ amr_version }}"
+        package_version: "{{ deployment_     }}"
         runtime: device
         device_name: "{{ item.key }}"
         networks:

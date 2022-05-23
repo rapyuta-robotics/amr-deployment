@@ -1,21 +1,21 @@
 # Whether the deployment artifacts should be present in your project
-present: "true"
+present: "false"
 db_persist: "false"
 
 # The username and password of the dockerhub account with access to the images. This is needed to pull the IO AMR images for the simulation
-docker_user: "insert username"
-docker_password: "insert password"
+docker_user: "ioamrreadonly"
+docker_password: "#3=L#L_UVSDT{enY"
 
 # The images used for the simulation
 deployment_version: "v22.3.1"
 
-prefix_name: "prefix"
+prefix_name: itaru
 site_name: kiba
 
 # if routed_networks is set to true, please remember to deleted the routed network after deprovisioning
 # Either "routed" or "native"
 network_type: "routed"
-ansible_async: true
+ansible_async: false
 ros_distro: noetic
 
 
