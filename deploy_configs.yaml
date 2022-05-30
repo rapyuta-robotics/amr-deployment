@@ -1,5 +1,5 @@
 # Whether the deployment artifacts should be present in your project
-present: "false"
+present: "true"
 db_persist: "false"
 
 # The username and password of the dockerhub account with access to the images. This is needed to pull the IO AMR images for the simulation

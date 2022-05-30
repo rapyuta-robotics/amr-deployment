@@ -12,7 +12,7 @@ import pprint
 import sys, getopt
 
 project_id = "project-xbaeosxiygjtkhuanbwhjmhi"
-auth_token = "9IJue9LzzeMqtg9lH53b9pxwPFs1cT4bt3jiWpdG"
+auth_token = "BsCVpr9sJshIhvvMrOFpMofszIMgXAF4fhLdx2Mi"
 
 def package_list():
     pack_list = [
