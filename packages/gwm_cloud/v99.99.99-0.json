@@ -1,0 +1,101 @@
+{
+  "bindable": true,
+  "packageVersion": "v99.99.99-0",
+  "plans": [
+    {
+      "includePackages": [],
+      "singleton": false,
+      "name": "default",
+      "inboundROSInterfaces": {
+        "anyIncomingScopedOrTargetedRosConfig": false
+      },
+      "dependentDeployments": [],
+      "components": [
+        {
+          "executables": [
+            {
+              "name": "core",
+              "simulationOptions": {
+                "simulation": false
+              },
+              "cmd": [
+                "/bin/bash",
+                "-c",
+                "python manage.py runserver 0.0.0.0:8000"
+              ],
+              "limits": {
+                "cpu": 0.5,
+                "memory": 2048
+              },
+              "docker": "docker.io/rrdockerhub/io_amr_gwm:rr_devel"
+            }
+          ],
+          "name": "core",
+          "parameters": [
+            {
+              "default": "true",
+              "name": "DEBUG",
+              "description": ""
+            },
+            {
+              "default": "true",
+              "name": "AUTOBOOTSTRAP",
+              "description": ""
+            },
+            {
+              "default": "autobootstrap",
+              "name": "AUTO_ORG_NAME",
+              "description": "Autocreated organisation name"
+            },
+            {
+              "default": "autobootstrap",
+              "name": "AUTO_ROOT_USER",
+              "description": "Autocreated username"
+            },
+            {
+              "default": "autobootstrap",
+              "name": "AUTO_ROOT_PASS",
+              "description": "Autocreated root password"
+            },
+            {
+              "default": "autobootstrap",
+              "name": "AUTO_AUTH_TOKEN",
+              "description": "Autocreated initial token"
+            }
+          ],
+          "architecture": "amd64",
+          "requiredRuntime": "cloud",
+          "ros": {
+            "services": [],
+            "topics": [],
+            "isROS": false,
+            "actions": []
+          },
+          "description": "",
+          "cloudInfra": {
+            "replicas": 1,
+            "endpoints": [
+              {
+                "name": "GWM_CORE_URL",
+                "exposeExternally": true,
+                "port": 443,
+                "targetPort": 8000,
+                "proto": "HTTPS"
+              }
+            ]
+          }
+        }
+      ],
+      "exposedParameters": [
+        {
+          "component": "core",
+          "param": "GWM_AUTH_TOKEN",
+          "targetParam": "AUTO_AUTH_TOKEN"
+        }
+      ],
+      "metadata": {}
+    }
+  ],
+  "name": "gwm_cloud",
+  "description": ""
+}
