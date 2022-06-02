@@ -1,0 +1,268 @@
+{
+  "bindable": true,
+  "packageVersion": "v22.3.1-0",
+  "plans": [
+    {
+      "includePackages": [],
+      "singleton": false,
+      "name": "default",
+      "inboundROSInterfaces": {
+        "anyIncomingScopedOrTargetedRosConfig": true
+      },
+      "dependentDeployments": [],
+      "components": [
+        {
+          "executables": [
+            {
+              "name": "vnc",
+              "simulationOptions": {
+                "simulation": false
+              },
+              "cmd": [
+                "/bin/bash",
+                "-c",
+                "/home/rr/headless/install/vnc_startup.sh 'sleep infinity' || sleep infinity"
+              ],
+              "limits": {
+                "cpu": 0.5,
+                "memory": 2048
+              },
+              "docker": "docker.io/rrdockerhub/io_amr_pa:iogen-build-jdnyjjsyuanqgktjnhalpytn-47"
+            },
+            {
+              "name": "gbc",
+              "simulationOptions": {
+                "simulation": false
+              },
+              "cmd": [
+                "/bin/bash",
+                "-c",
+                "source /opt/ros/$${ROS_DISTRO}/setup.bash && [ -f /home/rr/catkin_ws/devel/setup.bash ] && source /home/rr/catkin_ws/devel/setup.bash || source /home/rr/catkin_ws/install/setup.bash &&         if [[ ! -z \"$${AUTOBOOTSTRAP}\" ]] && [[ \"$${AUTOBOOTSTRAP}\" == \"true\" ]]; then rosrun gwm_interface sitectl.py -f --site $${SITE}; fi &&         stdbuf -o L roslaunch bringup global.launch site:=$${SITE} || sleep infinity"
+              ],
+              "limits": {
+                "cpu": 2,
+                "memory": 8192
+              },
+              "docker": "docker.io/rrdockerhub/io_amr_pa:iogen-build-jdnyjjsyuanqgktjnhalpytn-47"
+            },
+            {
+              "name": "tracing_agent",
+              "simulationOptions": {
+                "simulation": false
+              },
+              "cmd": [
+                "--reporter.grpc.host-port=trace-collector-kqdbp.ep-r.io:443"
+              ],
+              "docker": "jaegertracing/jaeger-agent",
+              "limits": {
+                "cpu": 0.5,
+                "memory": 2048
+              }
+            }
+          ],
+          "name": "gbc",
+          "parameters": [
+            {
+              "default": "1280x720",
+              "name": "VNC_RESOLUTION",
+              "description": ""
+            },
+            {
+              "default": "rapyuta",
+              "name": "VNC_PASSWORD",
+              "description": ""
+            },
+            {
+              "default": "false",
+              "name": "AUTOBOOTSTRAP",
+              "description": ""
+            },
+            {
+              "default": "1",
+              "name": "PYTHONUNBUFFERED",
+              "description": ""
+            },
+            {
+              "default": "YAML",
+              "name": "ITEM_SPAWN_FROM",
+              "description": ""
+            },
+            {
+              "default": "kiba",
+              "name": "SITE",
+              "description": ""
+            }
+          ],
+          "architecture": "amd64",
+          "requiredRuntime": "cloud",
+          "ros": {
+            "services": [],
+            "topics": [
+              {
+                "name": "/gwm_interface/site/fetch_error_type_response",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/lbc/set_mode_response",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/lbc/set_mode_request",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/gbc/reserve_spot_response",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/gbc/spots_reservation_status",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/gbc/task",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/mrrp/route_response",
+                "qos": "med",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/gwm_interface/mapping/status",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/gbc/amr_action_request",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/gbc/error_action_response",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/gwm_interface/mapping/get_graph_response",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/gwm_interface/mapping/get_regions_response",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/gwm_interface/mapping/get_spots_response",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/gwm_interface/mapping/nodes_disabled",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/gwm_interface/site/fetch_external_devices_response",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/gbc/update_task_response",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/gbc/ext_device_lock_response",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/plc/move_mobile_rack/goal",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              },
+              {
+                "name": "/plc/move_mobile_rack/cancel",
+                "qos": "low",
+                "compression": "",
+                "scoped": false,
+                "targeted": false
+              }
+            ],
+            "isROS": true,
+            "actions": [],
+            "ros_distro": "noetic"
+          },
+          "description": "",
+          "cloudInfra": {
+            "replicas": 1,
+            "endpoints": [
+              {
+                "name": "VNC_ENDPOINT",
+                "exposeExternally": true,
+                "port": 443,
+                "targetPort": 6901,
+                "proto": "HTTPS"
+              },
+              {
+                "name": "GWM_INTERFACE_ENDPOINT",
+                "exposeExternally": true,
+                "port": 443,
+                "targetPort": 8080,
+                "proto": "HTTPS"
+              }
+            ]
+          },
+          "rosBagJobDefs": []
+        }
+      ],
+      "exposedParameters": [],
+      "metadata": {}
+    }
+  ],
+  "name": "server_cloud",
+  "description": ""
+}
