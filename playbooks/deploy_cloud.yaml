@@ -274,7 +274,7 @@
         component_name: amr
         present: "{{ present }}"
         package_name: "{{ prefix_name }}_amr"
-        package_version: "{{ deployment_     }}"
+        package_version: "{{deployment_version}}"
         runtime: device
         device_name: "{{ item.key }}"
         networks:

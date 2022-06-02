@@ -62,7 +62,7 @@
               "cmd": [
                 "/bin/bash",
                 "-c",
-                "source /opt/ros/$${ROS_DISTRO}/setup.bash && [ -f /home/rr/catkin_ws/devel/setup.bash ] && source /home/rr/catkin_ws/devel/setup.bash || source /home/rr/catkin_ws/install/setup.bash &&         if [[ ! -z \"$${AUTOBOOTSTRAP}\" ]] && [[ $${AUTOBOOTSTRAP} == \"true\" ]]; then rosrun bringup sitectl.py -f --site $${SITE}; fi &&         roslaunch bringup simulation_$${SITE}.launch rviz:=false item:=$${ITEM} || sleep infinity"
+                "source /opt/ros/$${ROS_DISTRO}/setup.bash && [ -f /home/rr/catkin_ws/devel/setup.bash ] && source /home/rr/catkin_ws/devel/setup.bash || source /home/rr/catkin_ws/install/setup.bash &&         if [[ ! -z \"$${AUTOBOOTSTRAP}\" ]] && [[ $${AUTOBOOTSTRAP} == \"true\" ]]; then rosrun bringup sitectl.py -f --site $${SITE}; fi &&         roslaunch bringup simulation_$${SITE}.launch rviz:=false item:=$${ITEM} robots:=$${NUM_ROBOTS} || sleep infinity"
               ],
               "limits": {
                 "cpu": 4,
@@ -72,6 +72,11 @@
             }
           ],
           "parameters": [
+            {
+              "default": "1",
+              "name": "NUM_ROBOTS",
+              "description": ""
+            },
             {
               "default": "false",
               "name": "PAYLOAD_STATE_AVAILABLE",
@@ -148,6 +153,6 @@
       "exposedParameters": []
     }
   ],
-  "description": "This package was created from v99.99.99-0",
+  "description": "This package was created from v99.99.99-2",
   "packageVersion": "v99.99.99"
 }
