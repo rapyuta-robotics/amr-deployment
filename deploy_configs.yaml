@@ -2,8 +2,8 @@
 db_persist: "false"
 
 # The username and password of the dockerhub account with access to the images. This is needed to pull the IO AMR images for the simulation
-docker_user: "ioamrreadonly"
-docker_password: "#3=L#L_UVSDT{enY"
+docker_user: ""
+docker_password: ""
 
 # The images used for the simulation
 deployment_version: "v22.3.1"
@@ -36,7 +36,7 @@ volume_capacity: 4GiB #This parameter is case insensitive.
 # Empty values for the package component parameters will mean the deployment will use package defaults
 # Package defaults for component parameters will be overwritten if they are specified here
 robot_devices: {
- robot_device_1: {},
+ sbm3: {},
  robot_device_2: {},
  robot_device_3: {}
 }
@@ -60,7 +60,7 @@ package_arguments: {
     AUTOBOOTSTRAP: 'true'
   },
   simulator: {
-    AUTOBOOTSTRAP: 'true'
+    AUTOBOOTSTRAP: 'true',
     NUM_ROBOTS: '2'
   }
 }
