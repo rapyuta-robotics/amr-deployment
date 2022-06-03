@@ -11,22 +11,10 @@ import rapyuta_io
 import pprint
 import sys, getopt
 
-# project_id = "project-xbaeosxiygjtkhuanbwhjmhi"
-# auth_token = "G7mNtDL2BpS678zI3aAq2wDTCR9vluG3SsPGLFLK"
+project_id = "project-xbaeosxiygjtkhuanbwhjmhi"
+auth_token = "BsCVpr9sJshIhvvMrOFpMofszIMgXAF4fhLdx2Mi"
 
 def package_list():
-    # pack_list = [
-    #     {"package_name": "server", "package_id": "pkg-vlgatdunibgivmnsfyvnivty"},
-    #     {"package_name": "simulator", "package_id": "pkg-aritmtitccpgchpojrtayonq"},
-    #     {"package_name": "amr_ui", "package_id": "pkg-olouyhwsbblfuegstwordpzd"},
-    #     {"package_name": "postgres", "package_id": "pkg-beavpmifdhmkrddgtasgilxi"},
-    #     {"package_name": "gwm", "package_id": "pkg-bzraiovgfcfumdvloodvtlgr"},
-    #     {"package_name": "amr", "package_id": "pkg-fnxxkckyveinjpanbqufzgoc"},
-    #     {"package_name": "server_cloud", "package_id": "pkg-lcbwfjxpzombqppngyrrdzyh"},
-    #     {"package_name": "amr_ui_cloud", "package_id": "pkg-eviegdbjycknlfsycqeojczp"},
-    #     {"package_name": "postgres_cloud", "package_id": "pkg-dpjhwktrjmxntqmerfcchadf"},
-    #     {"package_name": "gwm_cloud", "package_id": "pkg-eyddkkkkwvswaimblqqjwuxs"}
-    # ]
     pack_list = [
         {"package_name": "server", "package_id": None},
         {"package_name": "simulator", "package_id": None},
@@ -57,6 +45,7 @@ def get_package_manifest_from_io(project_id, auth_token, package_uid, package_na
         subpackages = [package for package in packages if str(package.packageName) == package_name]
         if package_version == 'max':
             tmp_list = [semver_to_int(str(package.packageVersion)) for package in subpackages]
+            print("askdfhlaskdfjhalskdjfhsa " + tmp_list)
             latest_package = subpackages[tmp_list.index(max(tmp_list))]
             package_uid = latest_package.packageId
         else:
@@ -154,7 +143,7 @@ def main(project_id, auth_token):
     packages = package_list()
 
     for package in packages:
-        print("Getting all subpackages in package: " + package["package_name"])
+        # print("Getting all subpackages in package: " + package["package_name"])
         subpackages = get_all_subpackages_from_io(project_id, auth_token, package["package_name"])
 
         work_path = 'packages/' + package["package_name"] + '/'
@@ -162,22 +151,53 @@ def main(project_id, auth_token):
         print("Getting all currently existing versions for package: " + package["package_name"])
         print(package_files)
 
+        version= {}
+
         for subpackage in subpackages:
             subpackage_manifest = get_subpackage_manifest_from_io(project_id, auth_token, subpackage["packageId"])
 
+            #Get strings for version
             current_version = subpackage_manifest["packageVersion"]+'.json'
-            if(current_version not in package_files):
-                print("Pulling subpackage " + subpackage_manifest["packageVersion"] + " of " + package["package_name"])
+            old_version = subpackage_manifest["packageVersion"]
 
+            #Change version from vX.X.X-X to X.X.X 
+            version_string = subpackage_manifest["packageVersion"].replace('v', '')
+            major, minor, patch_prerel = version_string.split('.')
+            patch_prerel = patch_prerel.split('-')
+            patch = patch_prerel[0]
+            prerel = 0
+            if len(patch_prerel) == 2:
+                prerel = int(patch_prerel[1])
+            
+            #String and Int Versioning
+            subpackage_version=int(major) * 10**4 + int(minor) * 10**2 + int(patch)
+            subpackage_string_version = major + "." + minor + "." + patch
+            
+            #Check if subpackage_version is already in dictionary if not, add to dictionary
+            if (subpackage_version not in version):
+                version[subpackage_version] = prerel
+
+            #Check if current prerel is larger than the one in the dictionary. If so update the prerel version and create a new pacakge.json
+            if(prerel >= version[subpackage_version]):
+                #Set the minor version
+                version[subpackage_version] = prerel
+                print("Pulling subpackage " + subpackage_manifest["packageVersion"] + " of " + package["package_name"])
 
                 for container_id in range(0, len(subpackage_manifest["plans"][0]["components"])):
                     for executable_id in range(0, len(subpackage_manifest["plans"][0]["components"][container_id]["executables"])):
                         container = subpackage_manifest["plans"][0]["components"][container_id]["executables"][executable_id]
 
+                        #Replace Description and Package version.
+                        del subpackage_manifest["description"]
+                        subpackage_manifest["description"] = "This package was created from " + old_version
+                        print("Replacing description in subpackage " + old_version)
+
+                        #Remove secret
                         if "secret" in container:
                             del subpackage_manifest["plans"][0]["components"][container_id]["executables"][executable_id]["secret"]
                             print("Removing secret in subpackage " + subpackage_manifest["packageVersion"] + " for executable " + subpackage_manifest["plans"][0]["components"][container_id]["executables"][executable_id]["name"])
 
+                        #Replace Build with Docker image
                         if "buildGUID" in container:
                             build = get_build_info_from_io(project_id, auth_token, container["buildGUID"])
                             print("Found buildGUID for executable " + subpackage_manifest["plans"][0]["components"][container_id]["executables"][executable_id]["name"])
@@ -195,22 +215,25 @@ def main(project_id, auth_token):
                                 if (len(build["buildRequests"]) - j) <= 0:
                                     print("no successful builds found for subpackage")
 
-                            #case for only having a single build
+                            #Case for only having a single build
                             if (len(build["buildRequests"]) == 1):
                                 latest_build = build["buildRequests"][0]
                                 print("Replacing BuildGUID " + container["buildGUID"] + " with Image " + latest_build["executableImageInfo"]["imageInfo"][0]["imageName"])
                                 docker_image = latest_build["executableImageInfo"]["imageInfo"][0]["imageName"]
                                 subpackage_manifest["plans"][0]["components"][container_id]["executables"][executable_id]["docker"] = docker_image
-                                del subpackage_manifest["plans"][0]["components"][container_id]["executables"][executable_id]["buildGUID"]
-
+                                del subpackage_manifest["plans"][0]["components"][container_id]["executables"][executable_id]["buildGUID"]                
+                        
+                        print("Replacing packageVersion in subpackage " + subpackage_manifest["packageVersion"])
+                        del subpackage_manifest["packageVersion"]
+                        subpackage_manifest["packageVersion"] = "v" + subpackage_string_version
 
                 #Save to file
-                file = open('packages/'+package["package_name"]+'/'+subpackage_manifest["packageVersion"]+'.json', 'w')
+                file = open('packages/'+package["package_name"]+'/'+ 'v' + subpackage_string_version +'.json', 'w')
                 file.write(json.dumps(subpackage_manifest, indent=2))
                 file.close()
             else:
                 print("version " + subpackage_manifest["packageVersion"] + " exists, will not overwrite")
 
 if __name__ == '__main__':
-    project_id, auth_token = get_args(sys.argv[1:])
+    # project_id, auth_token = get_args(sys.argv[1:])
     main(project_id, auth_token)

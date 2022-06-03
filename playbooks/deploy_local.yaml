@@ -63,19 +63,19 @@
   connection: local
   tasks:
     - copy:
-        src: "../packages/postgres/{{ postgres_version }}.json"
+        src: "../packages/postgres/{{ deployment_version }}.json"
         dest: /tmp/postgres.json
     - copy:
-        src: "../packages/gwm/{{ gwm_version }}.json"
+        src: "../packages/gwm/{{ deployment_version }}.json"
         dest: /tmp/gwm.json
     - copy:
-        src: "../packages/amr_ui/{{ amr_ui_version }}.json"
+        src: "../packages/amr_ui/{{ deployment_version }}.json"
         dest: /tmp/amr_ui.json
     - copy:
-        src: "../packages/server/{{ server_version }}.json"
+        src: "../packages/server/{{ deployment_version }}.json"
         dest: /tmp/server.json
     - copy:
-        src: "../packages/amr/{{ amr_version }}.json"
+        src: "../packages/amr/{{ deployment_version }}.json"
         dest: /tmp/amr.json
 
 - name: Secrets, Networks
@@ -130,7 +130,7 @@
       async: "{{ async_time | default('1000') }}"
       poll: 0
       rapyutarobotics.rr_io.packages:
-        version: "{{ postgres_version }}"
+        version: "{{ deployment_version }}"
         name: "{{ prefix_name }}_postgres"
         present: "{{ db_present }}"
         package_from: manifest_path
@@ -143,7 +143,7 @@
       async: "{{ async_time | default('1000') }}"
       poll: 0
       rapyutarobotics.rr_io.packages:
-        version: "{{ gwm_version }}"
+        version: "{{ deployment_version }}"
         name: "{{ prefix_name }}_gwm"
         present: "{{ present }}"
         package_from: manifest_path
@@ -156,7 +156,7 @@
       async: "{{ async_time | default('1000') }}"
       poll: 0
       rapyutarobotics.rr_io.packages:
-        version: "{{ amr_ui_version }}"
+        version: "{{ deployment_version }}"
         name: "{{ prefix_name }}_amr_ui"
         present: "{{ present }}"
         package_from: manifest_path
@@ -169,7 +169,7 @@
       async: "{{ async_time | default('1000') }}"
       poll: 0
       rapyutarobotics.rr_io.packages:
-        version: "{{ amr_version }}"
+        version: "{{ deployment_version }}"
         name: "{{ prefix_name }}_amr"
         present: "{{ present }}"
         package_from: manifest_path
@@ -182,7 +182,7 @@
       async: "{{ async_time | default('1000') }}"
       poll: 0
       rapyutarobotics.rr_io.packages:
-        version: "{{ server_version }}"
+        version: "{{ deployment_version }}"
         name: "{{ prefix_name }}_server"
         present: "{{ present }}"
         package_from: manifest_path
@@ -205,7 +205,7 @@
         component_name: postgres
         present: "{{ db_present }}"
         package_name: "{{ prefix_name }}_postgres"
-        package_version: "{{ postgres_version }}"
+        package_version: "{{ deployment_version }}"
         runtime: device
         device_name: "{{ nuc_device_name }}"
         component_params: "{{ temp_package_arguments.postgres }}"
@@ -218,7 +218,7 @@
         component_name: core
         present: "{{ present }}"
         package_name: "{{ prefix_name }}_gwm"
-        package_version: "{{ gwm_version }}"
+        package_version: "{{ deployment_version }}"
         runtime: device
         device_name: "{{ nuc_device_name }}"
         depends:
@@ -234,7 +234,7 @@
         component_name: amr_ui
         present: "{{ present }}"
         package_name: "{{ prefix_name }}_amr_ui"
-        package_version: "{{ amr_ui_version }}"
+        package_version: "{{ deployment_version }}"
         runtime: device
         device_name: "{{ nuc_device_name }}"
         depends:
@@ -251,7 +251,7 @@
         component_name: amr
         present: "{{ present }}"
         package_name: "{{ prefix_name }}_amr"
-        package_version: "{{ amr_version }}"
+        package_version: "{{ deployment_version }}"
         runtime: device
         device_name: "{{ item.key }}"
         networks:
@@ -272,7 +272,7 @@
         component_name: amr
         present: "{{ present }}"
         package_name: "{{ prefix_name }}_amr"
-        package_version: "{{ amr_version }}"
+        package_version: "{{ deployment_version }}"
         runtime: device
         device_name: "{{ item.key }}"
         networks:
@@ -293,7 +293,7 @@
         component_name: gbc
         present: "{{ present }}"
         package_name: "{{ prefix_name }}_server"
-        package_version: "{{ server_version }}"
+        package_version: "{{ deployment_version }}"
         runtime: device
         device_name: "{{ nuc_device_name }}"
         networks:
@@ -313,7 +313,7 @@
         component_name: gbc
         present: "{{ present }}"
         package_name: "{{ prefix_name }}_server"
-        package_version: "{{ server_version }}"
+        package_version: "{{ deployment_version }}"
         runtime: device
         device_name: "{{ nuc_device_name }}"
         networks:
