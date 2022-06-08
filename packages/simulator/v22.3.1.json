@@ -52,7 +52,7 @@
                 "cpu": 1,
                 "memory": 4096
               },
-              "docker": "docker.io/rrdockerhub/io_amr_pa:22.03.1"
+              "docker": "docker.io/rrdockerhub/io_amr_pa:iogen-build-jdnyjjsyuanqgktjnhalpytn-47"
             },
             {
               "name": "gazebo",
@@ -68,7 +68,7 @@
                 "cpu": 4,
                 "memory": 16384
               },
-              "docker": "docker.io/rrdockerhub/io_amr_pa:22.03.1"
+              "docker": "docker.io/rrdockerhub/io_amr_pa:iogen-build-jdnyjjsyuanqgktjnhalpytn-47"
             }
           ],
           "parameters": [
