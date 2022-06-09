@@ -20,7 +20,7 @@
               "cmd": [
                 "python manage.py runserver 0.0.0.0:8000"
               ],
-              "docker": "docker.io/rrdockerhub/io_amr_gwm:0.4.0"
+              "docker": "docker.io/rrdockerhub/io_amr_gwm:iogen-build-pbfjghigeznladwpiwkgtzte-30"
             }
           ],
           "name": "core",
