@@ -115,7 +115,9 @@
         name: "{{ prefix_name }}_routed_network"
         present: "{{ present }}"
         type: routed_network
-        runtime: cloud
+        runtime: device
+        device_name: "{{ nuc_device_name }}"
+        network_interface: "{{ nuc_device_network_interface }}"
         ros_distro: "{{ ros_distro }}"
         resource_type: small
       when: routed_network|bool == true
