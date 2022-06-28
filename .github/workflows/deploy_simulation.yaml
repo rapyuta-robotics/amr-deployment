@@ -9,7 +9,7 @@ on:
     inputs:
       branch:
         description: 'Branch of amr_deployment to deploy'
-        default: 'rr_devel'
+        default: 'devel'
         required: true
       package_prefix:
         description: 'Prefix of the packages being used'
