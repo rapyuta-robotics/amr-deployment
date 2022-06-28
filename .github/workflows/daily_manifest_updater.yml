@@ -27,7 +27,7 @@ jobs:
     - name: Create branch
       run: |
         hub checkout -b prbot/package_update_$(date +%F)
-        hub pull origin rr_devel
+        hub pull origin devel
       
     - name: remove get-pip file
       continue-on-error: true
@@ -45,10 +45,10 @@ jobs:
       
     - name: Check Git Diff
       id: diff
-      run: echo "::set-output name=differences::$(git diff --name-only origin/rr_devel prbot/package_update_$(date +%F) | grep package)"
+      run: echo "::set-output name=differences::$(git diff --name-only origin/devel prbot/package_update_$(date +%F) | grep package)"
       
     - name: Create PR
       if: contains(steps.diff.outputs.differences, 'package')
-      run: hub pull-request -m "Package Update on $(date +%F)" -p -f -b rr_devel
+      run: hub pull-request -m "Package Update on $(date +%F)" -p -f -b devel
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
