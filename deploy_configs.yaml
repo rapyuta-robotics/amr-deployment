@@ -8,7 +8,7 @@ docker_password: ""
 # The images used for the simulation
 deployment_version: "v22.3.1"
 
-site_name: kiba
+site_name: hirano
 
 # if routed_networks is set to true, please remember to deleted the routed network after deprovisioning
 # Either "routed" or "native"

@@ -76,7 +76,7 @@ Deployment
             - obtain access to docker
             - enter your docker username and password (once you obtain access)
             - update the package versions if needed (postgres_cloud_version, amr_ui_cloud_version, gwm_cloud_version, simulator_version)
-            - change the name of the site to the site you want to deploy (currently only kiba is available)
+            - change the name of the site to the site you want to deploy (currently only hirano is available)
             - change the prefix to a prefix of your choice
 
         .. code-block:: console
@@ -107,7 +107,7 @@ Deployment
             - obtain access to docker
             - enter your docker username and password (once you obtain access)
             - update the package versions if needed (postgres_cloud_version, amr_ui_cloud_version, gwm_cloud_version, server_cloud_version, amr_version)
-            - change the name of the site to the site you want to deploy (currently only kiba is available)
+            - change the name of the site to the site you want to deploy (currently only hirano is available)
             - change the robots list to the name of the robot (that is used in rapyuta.io)
             - change the prefix to a prefix of your choice
 
@@ -142,7 +142,7 @@ Deployment
             - obtain access to docker
             - enter your docker username and password (once you obtain access)
             - update the package versions if needed (postgres_version, amr_ui_version, gwm_version, server_version, amr_version)
-            - change the name of the site to the site you want to deploy (currently only kiba is available)
+            - change the name of the site to the site you want to deploy (currently only hirano is available)
             - change the robots list to the name of the robot (that is used in rapyuta.io)
             - change the nuc device name to the name of the server (that is used in rapyuta.io)
             - change the prefix to a prefix of your choice

@@ -8,7 +8,7 @@ on:
         required: true
       package_prefix:
         description: 'Prefix of the packages being used'
-        default: 'kiba'
+        default: 'hirano'
         required: true
       rio_project_id:
         description: 'RIO_PROJECT_ID'
