@@ -66,12 +66,12 @@
               "description": ""
             },
             {
-              "default": "hirano_2F",
+              "default": "kiba_2F",
               "name": "MAP",
               "description": ""
             },
             {
-              "default": "hirano",
+              "default": "kiba",
               "name": "WORLD",
               "description": ""
             },
@@ -96,7 +96,7 @@
               "description": ""
             },
             {
-              "default": "hirano",
+              "default": "kiba",
               "name": "SITE",
               "description": ""
             },
