@@ -52,7 +52,7 @@
                 "cpu": 1,
                 "memory": 4096
               },
-              "docker": "docker.io/rrdockerhub/io_amr_pa:devel"
+              "docker": "docker.io/rrdockerhub/io_amr_pa:rr_devel"
             },
             {
               "name": "gazebo",
@@ -68,7 +68,7 @@
                 "cpu": 4,
                 "memory": 16384
               },
-              "docker": "docker.io/rrdockerhub/io_amr_pa:devel"
+              "docker": "docker.io/rrdockerhub/io_amr_pa:rr_devel"
             }
           ],
           "parameters": [
@@ -118,7 +118,7 @@
               "description": ""
             },
             {
-              "default": "hirano",
+              "default": "kiba",
               "name": "SITE",
               "description": ""
             },
