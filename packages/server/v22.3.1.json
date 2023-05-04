@@ -20,7 +20,7 @@
               "cmd": [
                 "/bin/bash -c \"source /opt/ros/$${ROS_DISTRO}/setup.bash && [ -f /home/rr/catkin_ws/devel/setup.bash ] && source /home/rr/catkin_ws/devel/setup.bash || source /home/rr/catkin_ws/install/setup.bash &&         if [[ ! -z \"$${AUTOBOOTSTRAP}\" ]] && [[ \"$${AUTOBOOTSTRAP}\" == \"true\" ]]; then rosrun gwm_interface sitectl.py --upload -f --site $${SITE}; fi &&         stdbuf -o L roslaunch bringup global.launch site:=$${SITE} || sleep infinity\""
               ],
-              "docker": "docker.io/rrdockerhub/io_amr_pa:22.03.1"
+              "docker": "docker.io/rrdockerhub/io_amr_pa:22.03"
             },
             {
               "name": "tracing_agent",
@@ -56,7 +56,7 @@
               "description": ""
             },
             {
-              "default": "hirano",
+              "default": "kiba",
               "name": "SITE",
               "description": ""
             }
